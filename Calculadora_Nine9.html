@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora CNC Taller - Nine9</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e9ecef;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .calculator {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            max-width: 450px;
+            width: 100%;
+        }
+        h2 {
+            text-align: center;
+            color: #0056b3;
+            margin-top: 0;
+            margin-bottom: 5px;
+        }
+        h4 {
+            text-align: center;
+            color: #555;
+            margin-top: 0;
+            font-weight: normal;
+        }
+        label {
+            font-weight: bold;
+            margin-top: 15px;
+            display: block;
+            color: #333;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 15px;
+        }
+        button {
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 25px;
+            font-size: 16px;
+            padding: 12px;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #004494;
+        }
+        .results {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 6px solid #0056b3;
+        }
+        .results p {
+            margin: 10px 0;
+            font-size: 15px;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px dashed #ccc;
+            padding-bottom: 5px;
+        }
+        .results p:last-child {
+            border-bottom: none;
+        }
+        .highlight {
+            font-weight: bold;
+            color: #0056b3;
+            font-size: 16px;
+        }
+        .limit-warning {
+            color: #d32f2f;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .note {
+            font-size: 12px;
+            color: #666;
+            margin-top: 15px;
+            font-style: italic;
+            text-align: justify;
+        }
+    </style>
+</head>
+<body>
+
+<div class="calculator">
+    <h2>Nine9 - NC Spot Drill</h2>
+    <h4>Avance Dinámico + Tope 8000 RPM</h4>
+    
+    <label for="depth">1. Profundidad en Z (t) en mm:</label>
+    <input type="number" id="depth" value="1.0" step="0.1" min="0.1">
+
+    <label for="material">2. Material a mecanizar:</label>
+    <select id="material">
+        <option value="carbon_low">Acero al Carbono < 0.3% (F-111, F-112)</option>
+        <option value="carbon_high">Acero Aleado / > 0.3% (F-114, ST52)</option>
+        <option value="inox">Acero Inoxidable (304, 316)</option>
+        <option value="cast_iron">Fundición (GG25, GGG40)</option>
+        <option value="alu">Aluminio y No Férricos</option>
+        <option value="titanium">Aleaciones de Titanio</option>
+        <option value="hardened">Acero Templado (40 - 56 HRC)</option>
+    </select>
+
+    <button onclick="calcular()">Calcular Programa</button>
+
+    <div class="results" id="resultados" style="display: none;">
+        <p>Diámetro efectivo (d): <span class="highlight" id="res_d"></span></p>
+        <p>Revoluciones (S): <span class="highlight" id="res_s"></span></p>
+        <p>F (Avance PUNTEAR): <span class="highlight" id="res_f_spot"></span></p>
+        <p>F (Avance ACHAFLANAR): <span class="highlight" id="res_f_chamf"></span></p>
+    </div>
+
+    <p class="note">⚠️ <b>Truco de taller:</b> Si es un chaflán libre, recuerda sumar +1 mm a tu profundidad "t" en esta calculadora y en tu programa CNC. Así usas el centro del filo y dejas un acabado perfecto.</p>
+</div>
+
+<script>
+    function calcular() {
+        let t = parseFloat(document.getElementById("depth").value);
+        let mat = document.getElementById("material").value;
+        const RPM_MAX = 8000;
+
+        if (isNaN(t) || t <= 0) {
+            alert("Mete una profundidad válida.");
+            return;
+        }
+
+        let d = t * 2;
+        let vc, f_spot_max, f_spot_min, f_chamf_max, f_chamf_min;
+
+        // Base de datos con rangos máximos y mínimos del catálogo
+        switch(mat) {
+            case "carbon_low":   vc=180; f_spot_max=0.10; f_spot_min=0.05; f_chamf_max=0.24; f_chamf_min=0.10; break; 
+            case "carbon_high":  vc=140; f_spot_max=0.08; f_spot_min=0.04; f_chamf_max=0.20; f_chamf_min=0.08; break; 
+            case "inox":         vc=90;  f_spot_max=0.06; f_spot_min=0.03; f_chamf_max=0.20; f_chamf_min=0.08; break; 
+            case "cast_iron":    vc=180; f_spot_max=0.10; f_spot_min=0.05; f_chamf_max=0.25; f_chamf_min=0.10; break; 
+            case "alu":          vc=250; f_spot_max=0.10; f_spot_min=0.05; f_chamf_max=0.25; f_chamf_min=0.10; break; 
+            case "titanium":     vc=55;  f_spot_max=0.08; f_spot_min=0.03; f_chamf_max=0.08; f_chamf_min=0.03; break; 
+            case "hardened":     vc=45;  f_spot_max=0.08; f_spot_min=0.03; f_chamf_max=0.08; f_chamf_min=0.03; break; 
+        }
+
+        // Interpolación: Calcula qué porcentaje de la herramienta estás usando (asumiendo max 20mm de mango)
+        // Si d es pequeño (ej. 2mm), el ratio es 0 (usa el avance máximo). Si d es grande (ej. 18mm), el ratio es 1 (usa avance mínimo)
+        let ratio = Math.max(0, Math.min(1, (d - 2) / 16)); 
+        
+        let f_spot_actual = f_spot_max - ratio * (f_spot_max - f_spot_min);
+        let f_chamf_actual = f_chamf_max - ratio * (f_chamf_max - f_chamf_min);
+
+        // RPM con límite
+        let s_teorico = Math.round((vc * 1000) / (Math.PI * d));
+        let s_real = Math.min(s_teorico, RPM_MAX);
+
+        // Avances calculados con el 'f' dinámico adaptado a la profundidad
+        let avance_puntear = Math.round(s_real * f_spot_actual);
+        let avance_chaflan = Math.round(s_real * f_chamf_actual);
+
+        let texto_rpm = s_real + " RPM";
+        if (s_teorico > RPM_MAX) {
+            texto_rpm = "<span class='limit-warning'>" + s_real + " RPM (Tope)</span>";
+        }
+
+        document.getElementById("res_d").innerText = d.toFixed(1) + " mm";
+        document.getElementById("res_s").innerHTML = texto_rpm;
+        document.getElementById("res_f_spot").innerText = "F " + avance_puntear;
+        document.getElementById("res_f_chamf").innerText = "F " + avance_chaflan;
+        
+        document.getElementById("resultados").style.display = "block";
+    }
+</script>
+
+</body>
+</html>
