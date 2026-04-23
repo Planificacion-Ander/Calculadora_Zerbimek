@@ -93,6 +93,10 @@
         
         .badge { background-color: #444; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
         .badge-warn { background-color: #E3000F; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+
+        /* Estilo para las secciones de roscas */
+        .rosca-section { margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .rosca-section:last-of-type { border-bottom: none; margin-bottom: 0; padding-bottom: 0;}
     </style>
 </head>
 <body>
@@ -282,13 +286,15 @@
         </div>
     </div>
 
-    <!-- PESTAÑA 8: ROSCAS (ACTUALIZADA CON TABLAS GARANT) -->
+    <!-- PESTAÑA 8: ROSCAS -->
     <div id="calcRosca" class="tab-content">
-        <h2>Consulta de Roscas (DIN336)</h2>
-        <label>Tipo de Rosca:</label>
-        <select id="select_rosca" onchange="actualizarRosca()">
-            <option value="">Selecciona...</option>
-            <optgroup label="Métrica Normal (M)">
+        <h2>Consulta de Roscas</h2>
+        <h4>Recomendaciones Broca (DIN336)</h4>
+        
+        <div class="rosca-section">
+            <label>Métrica Normal (M):</label>
+            <select id="select_rosca_m" onchange="actualizarRosca('m')">
+                <option value="">Selecciona...</option>
                 <option value="M3">M3</option>
                 <option value="M4">M4</option>
                 <option value="M5">M5</option>
@@ -299,8 +305,13 @@
                 <option value="M16">M16</option>
                 <option value="M20">M20</option>
                 <option value="M24">M24</option>
-            </optgroup>
-            <optgroup label="Métrica Fina (MF)">
+            </select>
+        </div>
+
+        <div class="rosca-section">
+            <label>Métrica Fina (MF):</label>
+            <select id="select_rosca_mf" onchange="actualizarRosca('mf')">
+                <option value="">Selecciona...</option>
                 <option value="M6x0.75">M6 x 0.75</option>
                 <option value="M8x1">M8 x 1</option>
                 <option value="M10x1">M10 x 1</option>
@@ -309,20 +320,25 @@
                 <option value="M12x1.25">M12 x 1.25</option>
                 <option value="M12x1.5">M12 x 1.5</option>
                 <option value="M16x1.5">M16 x 1.5</option>
-            </optgroup>
-            <optgroup label="Rosca Gas (G)">
+            </select>
+        </div>
+
+        <div class="rosca-section">
+            <label>Rosca Gas (G):</label>
+            <select id="select_rosca_g" onchange="actualizarRosca('g')">
+                <option value="">Selecciona...</option>
                 <option value="G1/8">G 1/8"</option>
                 <option value="G1/4">G 1/4"</option>
                 <option value="G3/8">G 3/8"</option>
                 <option value="G1/2">G 1/2"</option>
-            </optgroup>
-        </select>
-        <div class="results" id="res_rosca" style="display: none;">
+            </select>
+        </div>
+
+        <div class="results" id="res_rosca" style="display: none; margin-top: 15px;">
             <p>Paso / Hilos: <span class="highlight" id="r_paso"></span></p>
-            <p>Broca (Corte): <span class="highlight" id="r_corte"></span></p>
+            <p id="p_corte">Broca (Corte): <span class="highlight" id="r_corte"></span></p>
             <p id="p_laminacion">Broca (Laminación): <span class="highlight" id="r_laminacion"></span></p>
         </div>
-        <p class="note">Tolerancias de corte extraídas de tablas Garant (DIN336).</p>
     </div>
 
 </div>
@@ -497,9 +513,8 @@
 
         let texto_rpm = rpm_teo > MAX_RPM ? "<span class='limit-warning'>" + rpm + " (Tope)</span>" : rpm + " RPM";
 
-        // --- CORRECCIÓN DEL PICOTEO (Q) ---
         let multiplicador_q;
-        if (mat === "acero") multiplicador_q = 0.6; // Reducido para mayor seguridad
+        if (mat === "acero") multiplicador_q = 0.6;
         else if (mat === "alu") multiplicador_q = 0.6;
         else multiplicador_q = 0.5;
 
@@ -579,44 +594,73 @@
         document.getElementById("res_placas").style.display = "block";
     }
 
-    // --- NUEVO SISTEMA DE ROSCAS (BASADO EN TABLAS GARANT) ---
-    function actualizarRosca() {
-        let val = document.getElementById("select_rosca").value;
-        if (!val) return document.getElementById("res_rosca").style.display = "none";
+    // --- SISTEMA DE ROSCAS ---
+    function actualizarRosca(tipo) {
+        let val = "";
+        
+        if (tipo === 'm') {
+            val = document.getElementById("select_rosca_m").value;
+            document.getElementById("select_rosca_mf").value = "";
+            document.getElementById("select_rosca_g").value = "";
+        } else if (tipo === 'mf') {
+            val = document.getElementById("select_rosca_mf").value;
+            document.getElementById("select_rosca_m").value = "";
+            document.getElementById("select_rosca_g").value = "";
+        } else if (tipo === 'g') {
+            val = document.getElementById("select_rosca_g").value;
+            document.getElementById("select_rosca_m").value = "";
+            document.getElementById("select_rosca_mf").value = "";
+        }
+
+        if (!val) {
+            document.getElementById("res_rosca").style.display = "none";
+            return;
+        }
         
         const roscas_data = {
-            "M3": { paso: "0.5 mm", min: 2.5, max: 2.599, lam: 2.75 },
-            "M4": { paso: "0.7 mm", min: 3.3, max: 3.422, lam: 3.65 },
-            "M5": { paso: "0.8 mm", min: 4.2, max: 4.334, lam: 4.60 },
-            "M6": { paso: "1.0 mm", min: 5.0, max: 5.153, lam: 5.50 },
-            "M8": { paso: "1.25 mm", min: 6.8, max: 6.912, lam: 7.38 },
-            "M10": { paso: "1.5 mm", min: 8.5, max: 8.676, lam: 9.25 },
-            "M12": { paso: "1.75 mm", min: 10.2, max: 10.441, lam: 11.12 },
-            "M16": { paso: "2.0 mm", min: 14.0, max: 14.210, lam: 15.00 },
-            "M20": { paso: "2.5 mm", min: 17.5, max: 17.744, lam: 18.75 },
-            "M24": { paso: "3.0 mm", min: 21.0, max: 21.252, lam: 22.50 },
+            // Métrica Normal (M3 a M12 marcadas para ocultar corte)
+            "M3": { paso: "0.5 mm", broca: 2.5, lam: 2.75, solo_lam: true },
+            "M4": { paso: "0.7 mm", broca: 3.3, lam: 3.65, solo_lam: true },
+            "M5": { paso: "0.8 mm", broca: 4.2, lam: 4.60, solo_lam: true },
+            "M6": { paso: "1.0 mm", broca: 5.0, lam: 5.50, solo_lam: true },
+            "M8": { paso: "1.25 mm", broca: 6.8, lam: 7.38, solo_lam: true },
+            "M10": { paso: "1.5 mm", broca: 8.5, lam: 9.25, solo_lam: true },
+            "M12": { paso: "1.75 mm", broca: 10.2, lam: 11.12, solo_lam: true },
+            "M16": { paso: "2.0 mm", broca: 14.0, lam: 15.00 },
+            "M20": { paso: "2.5 mm", broca: 17.5, lam: 18.75 },
+            "M24": { paso: "3.0 mm", broca: 21.0, lam: 22.50 },
             
-            "M6x0.75": { paso: "0.75 mm", min: 5.2, max: 5.378, lam: 5.62 },
-            "M8x1": { paso: "1.0 mm", min: 7.0, max: 7.153, lam: 7.50 },
-            "M10x1": { paso: "1.0 mm", min: 9.0, max: 9.153, lam: 9.50 },
-            "M10x1.25": { paso: "1.25 mm", min: 8.8, max: 8.912, lam: 9.38 },
-            "M12x1": { paso: "1.0 mm", min: 11.0, max: 11.153, lam: 11.50 },
-            "M12x1.25": { paso: "1.25 mm", min: 10.8, max: 10.912, lam: 11.38 },
-            "M12x1.5": { paso: "1.5 mm", min: 10.5, max: 10.676, lam: 11.25 },
-            "M16x1.5": { paso: "1.5 mm", min: 14.5, max: 14.676, lam: 15.25 },
+            // Métrica Fina
+            "M6x0.75": { paso: "0.75 mm", broca: 5.2, lam: 5.62 },
+            "M8x1": { paso: "1.0 mm", broca: 7.0, lam: 7.50 },
+            "M10x1": { paso: "1.0 mm", broca: 9.0, lam: 9.50 },
+            "M10x1.25": { paso: "1.25 mm", broca: 8.8, lam: 9.38 },
+            "M12x1": { paso: "1.0 mm", broca: 11.0, lam: 11.50 },
+            "M12x1.25": { paso: "1.25 mm", broca: 10.8, lam: 11.38 },
+            "M12x1.5": { paso: "1.5 mm", broca: 10.5, lam: 11.25 },
+            "M16x1.5": { paso: "1.5 mm", broca: 14.5, lam: 15.25 },
 
-            "G1/8": { paso: "28 Gg/1\"", min: 8.8, max: 8.848, lam: null },
-            "G1/4": { paso: "19 Gg/1\"", min: 11.8, max: 11.890, lam: null },
-            "G3/8": { paso: "19 Gg/1\"", min: 15.25, max: 15.395, lam: null },
-            "G1/2": { paso: "14 Gg/1\"", min: 19.0, max: 19.172, lam: null }
+            // Gas
+            "G1/8": { paso: "28 Gg/1\"", broca: 8.8, lam: null },
+            "G1/4": { paso: "19 Gg/1\"", broca: 11.8, lam: null },
+            "G3/8": { paso: "19 Gg/1\"", broca: 15.25, lam: null },
+            "G1/2": { paso: "14 Gg/1\"", broca: 19.0, lam: null }
         };
 
         let d = roscas_data[val];
         document.getElementById("r_paso").innerText = d.paso;
-        document.getElementById("r_corte").innerText = "Ø " + d.min.toFixed(2).replace(".",",") + " - " + d.max.toFixed(3).replace(".",",");
         
+        // Controlar si se oculta la fila de corte
+        if (d.solo_lam) {
+            document.getElementById("p_corte").style.display = "none";
+        } else {
+            document.getElementById("p_corte").style.display = "flex";
+            document.getElementById("r_corte").innerText = "Ø " + d.broca.toString().replace(".",",") + " mm";
+        }
+        
+        // Controlar si se oculta la fila de laminación
         if (d.lam) {
-            document.getElementById("r_laminacion").innerText = "Ø " + d.lam.toFixed(2).replace(".",",");
+            document.getElementById("r_laminacion").innerText = "Ø " + d.lam.toFixed(2).replace(".",",") + " mm";
             document.getElementById("p_laminacion").style.display = "flex";
         } else {
             document.getElementById("p_laminacion").style.display = "none";
