@@ -99,7 +99,7 @@
 
 <div class="app-container">
     
-    <!-- CABECERA DE MARCA -->
+    <!-- CABECERA -->
     <div class="header-zerbimek">
         <div class="header-logo">
             <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="55" height="55">
@@ -188,7 +188,6 @@
             <p>Pasada (Ap): <span class="highlight" id="ap_tungaloy"></span></p>
             <p>Avance rev. (fn): <span class="highlight" id="fn_tungaloy"></span></p>
         </div>
-        <p class="note">Valores exactos obtenidos de las especificaciones Tungaloy.</p>
     </div>
 
     <!-- PESTAÑA 4: BROCA INTERNA -->
@@ -233,7 +232,6 @@
             <p>Pasada (Q): <span class="highlight" id="q_broca_ext"></span></p>
             <p>Avance rev. (fn): <span class="highlight" id="fn_broca_ext"></span></p>
         </div>
-        <p class="note">Parámetros conservadores calculados para garantizar la evacuación de viruta y evitar sobrecalentamientos.</p>
     </div>
 
     <!-- PESTAÑA 6: BROCAS HSS -->
@@ -257,7 +255,6 @@
             <p>Pasada (Q): <span class="highlight" id="q_broca_hss"></span></p>
             <p>Avance rev. (fn): <span class="highlight" id="fn_broca_hss"></span></p>
         </div>
-        <p class="note">Valores HSS conservadores ajustados desde catálogo Hoffmann.</p>
     </div>
 
     <!-- PESTAÑA 7: BROCA PLACAS -->
@@ -282,9 +279,9 @@
         </div>
     </div>
 
-    <!-- PESTAÑA 8: ROSCAS (REDESARROLLADA CON 3 SECCIONES) -->
+    <!-- PESTAÑA 8: ROSCAS -->
     <div id="calcRosca" class="tab-content">
-        <h2>Roscado (Guhring)</h2>
+        <h2>Roscado</h2>
         <h4>Broca Previa y Condiciones (G84)</h4>
         
         <label>Tipo de Rosca:</label>
@@ -295,7 +292,6 @@
         </select>
 
         <label>Medida:</label>
-        <!-- Desplegable M -->
         <select id="select_rosca_m" onchange="actualizarRosca()">
             <option value="">Selecciona...</option>
             <option value="M3">M3</option>
@@ -309,7 +305,6 @@
             <option value="M20">M20</option>
             <option value="M24">M24</option>
         </select>
-        <!-- Desplegable MF -->
         <select id="select_rosca_mf" onchange="actualizarRosca()" style="display: none;">
             <option value="">Selecciona...</option>
             <option value="M6x0.75">M6 x 0.75</option>
@@ -321,7 +316,6 @@
             <option value="M12x1.5">M12 x 1.5</option>
             <option value="M16x1.5">M16 x 1.5</option>
         </select>
-        <!-- Desplegable G -->
         <select id="select_rosca_g" onchange="actualizarRosca()" style="display: none;">
             <option value="">Selecciona...</option>
             <option value="G1/8">G 1/8"</option>
@@ -345,6 +339,7 @@
             <p>Avance (F = S × Paso): <span class="highlight" id="r_f_rosca"></span></p>
             <p class="note" id="r_tipo_macho" style="margin-bottom: 0; color: #444; font-weight: bold; font-size: 14px;"></p>
         </div>
+        <p class="note" style="margin-top: 15px;">Valores reducidos (coeficiente seguridad taller) sobre máximo Garant.</p>
     </div>
 
 </div>
@@ -415,40 +410,14 @@
         let mat = document.getElementById("mat_tungaloy").value;
 
         const datos = {
-            "50": {
-                "acero_blando": { vc: 180, fn: 6.0, ap: "0,5" },
-                "acero_duro":   { vc: 140, fn: 6.0, ap: "0,5" },
-                "inox":         { vc: 120, fn: 6.0, ap: "0,5" },
-                "inox_duro":    { vc: 100, fn: 6.0, ap: "0,5" }
-            },
-            "25": {
-                "acero_blando": { vc: 180, fn: 2.7, ap: "0,5" },
-                "acero_duro":   { vc: 140, fn: 2.7, ap: "0,5" },
-                "inox":         { vc: 120, fn: 2.7, ap: "0,5" },
-                "inox_duro":    { vc: 100, fn: 2.7, ap: "0,5" }
-            },
-            "20": {
-                "acero_blando": { vc: 180, fn: 1.8, ap: "0,5" },
-                "acero_duro":   { vc: 140, fn: 1.8, ap: "0,5" },
-                "inox":         { vc: 120, fn: 1.8, ap: "0,5" },
-                "inox_duro":    { vc: 100, fn: 1.8, ap: "0,5" }
-            },
-            "16": {
-                "acero_blando": { vc: 180, fn: 1.0, ap: "0,5" },
-                "acero_duro":   { vc: 140, fn: 1.0, ap: "0,5" },
-                "inox":         { vc: 120, fn: 1.0, ap: "0,5" },
-                "inox_duro":    { vc: 100, fn: 1.0, ap: "0,5" }
-            },
-            "12": {
-                "acero_blando": { vc: 200, fn: 0.5, ap: "0,3" },
-                "acero_duro":   { vc: 150, fn: 0.4, ap: "0,2" },
-                "inox":         { vc: 120, fn: 0.4, ap: "0,2" },
-                "inox_duro":    { vc: 100, fn: 0.3, ap: "0,2" }
-            }
+            "50": { "acero_blando": { vc: 180, fn: 6.0, ap: "0,5" }, "acero_duro": { vc: 140, fn: 6.0, ap: "0,5" }, "inox": { vc: 120, fn: 6.0, ap: "0,5" }, "inox_duro": { vc: 100, fn: 6.0, ap: "0,5" } },
+            "25": { "acero_blando": { vc: 180, fn: 2.7, ap: "0,5" }, "acero_duro": { vc: 140, fn: 2.7, ap: "0,5" }, "inox": { vc: 120, fn: 2.7, ap: "0,5" }, "inox_duro": { vc: 100, fn: 2.7, ap: "0,5" } },
+            "20": { "acero_blando": { vc: 180, fn: 1.8, ap: "0,5" }, "acero_duro": { vc: 140, fn: 1.8, ap: "0,5" }, "inox": { vc: 120, fn: 1.8, ap: "0,5" }, "inox_duro": { vc: 100, fn: 1.8, ap: "0,5" } },
+            "16": { "acero_blando": { vc: 180, fn: 1.0, ap: "0,5" }, "acero_duro": { vc: 140, fn: 1.0, ap: "0,5" }, "inox": { vc: 120, fn: 1.0, ap: "0,5" }, "inox_duro": { vc: 100, fn: 1.0, ap: "0,5" } },
+            "12": { "acero_blando": { vc: 200, fn: 0.5, ap: "0,3" }, "acero_duro": { vc: 150, fn: 0.4, ap: "0,2" }, "inox": { vc: 120, fn: 0.4, ap: "0,2" }, "inox_duro": { vc: 100, fn: 0.3, ap: "0,2" } }
         };
 
         let d = datos[diam][mat];
-        
         let rpm_teo = (d.vc * 1000) / (Math.PI * parseInt(diam));
         let rpm = redondear(rpm_teo, 50);
         let f_val = redondear(rpm * d.fn, 10);
@@ -481,18 +450,15 @@
 
         let rpm_teo = (vc * 1000) / (Math.PI * diam);
         let rpm = redondear(Math.min(rpm_teo, MAX_RPM), 50);
-        
         let f_total = redondear(rpm * fn, 10);
 
-        let texto_rpm = rpm_teo > MAX_RPM ? "<span class='limit-warning'>" + rpm + " (Tope)</span>" : rpm + " RPM";
-
-        document.getElementById("s_broca").innerHTML = texto_rpm;
+        document.getElementById("s_broca").innerHTML = rpm_teo > MAX_RPM ? "<span class='limit-warning'>" + rpm + " (Tope)</span>" : rpm + " RPM";
         document.getElementById("f_broca").innerText = "F " + f_total + " mm/min";
         document.getElementById("fn_broca").innerText = fn.toFixed(3) + " mm/rev";
         document.getElementById("res_broca").style.display = "block";
     }
 
-    // Cálculos Brocas EXT (Ajustadas para ser productivas pero con picoteo seguro)
+    // Cálculos Brocas EXT
     function calcularBrocaExt() {
         let diam = parseFloat(document.getElementById("diam_broca_ext").value);
         let mat = document.getElementById("mat_broca_ext").value;
@@ -508,18 +474,13 @@
         else if (mat === "alu") vc = 90; 
 
         let fn = 0.060 + (diam * 0.005); 
-        
         if (mat === "alu") fn += 0.02;
         if (mat === "inox" || mat === "acero_duro") fn -= 0.01;
 
         let rpm_teo = (vc * 1000) / (Math.PI * diam);
         let rpm = redondear(Math.min(rpm_teo, MAX_RPM), 50);
-        
         let f_total = redondear(rpm * fn, 10);
 
-        let texto_rpm = rpm_teo > MAX_RPM ? "<span class='limit-warning'>" + rpm + " (Tope)</span>" : rpm + " RPM";
-
-        // CORRECCIÓN: Picoteo reducido en Acero para mayor seguridad sin taladrina
         let multiplicador_q;
         if (mat === "acero") multiplicador_q = 0.6; 
         else if (mat === "alu") multiplicador_q = 0.6;
@@ -528,7 +489,7 @@
         let q_picoteo = Math.round(diam * multiplicador_q);
         if (q_picoteo < 1) q_picoteo = 1;
 
-        document.getElementById("s_broca_ext").innerHTML = texto_rpm;
+        document.getElementById("s_broca_ext").innerHTML = rpm_teo > MAX_RPM ? "<span class='limit-warning'>" + rpm + " (Tope)</span>" : rpm + " RPM";
         document.getElementById("f_broca_ext").innerText = "F " + f_total + " mm/min";
         document.getElementById("q_broca_ext").innerText = "Q " + q_picoteo + " mm";
         document.getElementById("fn_broca_ext").innerText = fn.toFixed(3) + " mm/rev";
@@ -563,15 +524,12 @@
 
         let rpm_teo = (vc * 1000) / (Math.PI * diam);
         let rpm = redondear(Math.min(rpm_teo, MAX_RPM), 50);
-        
         let f_total = redondear(rpm * fn, 10);
-
-        let texto_rpm = rpm_teo > MAX_RPM ? "<span class='limit-warning'>" + rpm + " (Tope)</span>" : rpm + " RPM";
 
         let q_picoteo = Math.round(diam * 0.5);
         if (q_picoteo < 1) q_picoteo = 1;
 
-        document.getElementById("s_broca_hss").innerHTML = texto_rpm;
+        document.getElementById("s_broca_hss").innerHTML = rpm_teo > MAX_RPM ? "<span class='limit-warning'>" + rpm + " (Tope)</span>" : rpm + " RPM";
         document.getElementById("f_broca_hss").innerText = "F " + f_total + " mm/min";
         document.getElementById("q_broca_hss").innerText = "Q " + q_picoteo + " mm";
         document.getElementById("fn_broca_hss").innerText = fn.toFixed(3) + " mm/rev";
@@ -601,16 +559,13 @@
         document.getElementById("res_placas").style.display = "block";
     }
 
-    // --- NUEVO SISTEMA DE ROSCAS CON LÓGICA GUHRING ---
+    // --- ROSCAS CON COEFICIENTE DE SEGURIDAD (TALLER) ---
     function mostrarDesplegableRosca() {
         let tipo = document.getElementById("tipo_rosca").value;
-        
-        // Mostrar solo el desplegable correspondiente
         document.getElementById("select_rosca_m").style.display = (tipo === 'M') ? "block" : "none";
         document.getElementById("select_rosca_mf").style.display = (tipo === 'MF') ? "block" : "none";
         document.getElementById("select_rosca_g").style.display = (tipo === 'G') ? "block" : "none";
         
-        // Resetear valores para forzar nueva selección
         document.getElementById("select_rosca_m").value = "";
         document.getElementById("select_rosca_mf").value = "";
         document.getElementById("select_rosca_g").value = "";
@@ -621,7 +576,6 @@
         let tipo = document.getElementById("tipo_rosca").value;
         let val = "";
         
-        // Leer el valor del desplegable activo
         if (tipo === 'M') val = document.getElementById("select_rosca_m").value;
         else if (tipo === 'MF') val = document.getElementById("select_rosca_mf").value;
         else if (tipo === 'G') val = document.getElementById("select_rosca_g").value;
@@ -633,7 +587,6 @@
 
         let mat = document.getElementById("mat_rosca").value;
 
-        // Base de datos de métricas y pasos. (d_calc usado para fórmula de RPM)
         const roscas_data = {
             "M3": { paso: 0.5, d_calc: 3, broca_corte: 2.5, broca_lam: 2.75 },
             "M4": { paso: 0.7, d_calc: 4, broca_corte: 3.3, broca_lam: 3.65 },
@@ -662,36 +615,30 @@
         };
 
         let d = roscas_data[val];
-        
-        // Identificar automáticamente si es de laminación según la norma del taller (M3 a M12 Normal)
         let usa_lam = (tipo === 'M' && d.d_calc <= 12);
 
-        // Condiciones de corte basadas en machos Guhring HSS-E TiN
         let vc;
+        // Valores conservadores (-25/30%) respecto a máximos de catálogo para no romper
         if (usa_lam) {
-            // Valores para machos de laminación (más rápidos)
-            if (mat === "acero") vc = 20;
-            else if (mat === "acero_duro") vc = 15;
-            else if (mat === "inox") vc = 12;
-            else if (mat === "alu") vc = 30;
+            if (mat === "acero") vc = 20; 
+            else if (mat === "acero_duro") vc = 12; 
+            else if (mat === "inox") vc = 8; 
+            else if (mat === "alu") vc = 22; 
         } else {
-            // Valores para machos de corte (más conservadores)
-            if (mat === "acero") vc = 15;
-            else if (mat === "acero_duro") vc = 10;
-            else if (mat === "inox") vc = 8;
+            if (mat === "acero") vc = 20;
+            else if (mat === "acero_duro") vc = 8; 
+            else if (mat === "inox") vc = 7;
             else if (mat === "alu") vc = 20;
         }
 
-        // Cálculos matemáticos G84 Rígido
         let rpm_teo = (vc * 1000) / (Math.PI * d.d_calc);
         let rpm = redondear(rpm_teo, 10);
-        let f_total = Math.round(rpm * d.paso); // El avance debe ser EXACTO en el roscado rígido
+        let f_total = Math.round(rpm * d.paso); 
         
-        // Representación en pantalla
         let paso_str = d.hilos ? `${d.paso} mm (${d.hilos})` : `${d.paso} mm`;
         document.getElementById("r_paso").innerText = paso_str;
         
-        let tipo_macho = usa_lam ? "Laminación (Guhring)" : "Corte (DIN336)";
+        let tipo_macho = usa_lam ? "Laminación" : "Corte";
         document.getElementById("r_tipo_macho").innerHTML = `Ciclo: <span class='badge'>G84 Rígido</span> | Macho: <b>${tipo_macho}</b>`;
         
         if (usa_lam) {
