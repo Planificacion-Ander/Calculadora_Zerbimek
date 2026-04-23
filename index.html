@@ -282,27 +282,47 @@
         </div>
     </div>
 
-    <!-- PESTAÑA 8: ROSCAS -->
+    <!-- PESTAÑA 8: ROSCAS (ACTUALIZADA CON TABLAS GARANT) -->
     <div id="calcRosca" class="tab-content">
-        <h2>Consulta de Roscas</h2>
-        <label>Métrica:</label>
+        <h2>Consulta de Roscas (DIN336)</h2>
+        <label>Tipo de Rosca:</label>
         <select id="select_rosca" onchange="actualizarRosca()">
             <option value="">Selecciona...</option>
-            <option value="3|0.5">M3 x 0.5</option>
-            <option value="4|0.7">M4 x 0.7</option>
-            <option value="5|0.8">M5 x 0.8</option>
-            <option value="6|1">M6 x 1.0</option>
-            <option value="8|1.25">M8 x 1.25</option>
-            <option value="10|1.5">M10 x 1.5</option>
-            <option value="12|1.75">M12 x 1.75</option>
-            <option value="16|2">M16 x 2.0</option>
+            <optgroup label="Métrica Normal (M)">
+                <option value="M3">M3</option>
+                <option value="M4">M4</option>
+                <option value="M5">M5</option>
+                <option value="M6">M6</option>
+                <option value="M8">M8</option>
+                <option value="M10">M10</option>
+                <option value="M12">M12</option>
+                <option value="M16">M16</option>
+                <option value="M20">M20</option>
+                <option value="M24">M24</option>
+            </optgroup>
+            <optgroup label="Métrica Fina (MF)">
+                <option value="M6x0.75">M6 x 0.75</option>
+                <option value="M8x1">M8 x 1</option>
+                <option value="M10x1">M10 x 1</option>
+                <option value="M10x1.25">M10 x 1.25</option>
+                <option value="M12x1">M12 x 1</option>
+                <option value="M12x1.25">M12 x 1.25</option>
+                <option value="M12x1.5">M12 x 1.5</option>
+                <option value="M16x1.5">M16 x 1.5</option>
+            </optgroup>
+            <optgroup label="Rosca Gas (G)">
+                <option value="G1/8">G 1/8"</option>
+                <option value="G1/4">G 1/4"</option>
+                <option value="G3/8">G 3/8"</option>
+                <option value="G1/2">G 1/2"</option>
+            </optgroup>
         </select>
         <div class="results" id="res_rosca" style="display: none;">
-            <p>Paso: <span class="highlight" id="r_paso"></span></p>
+            <p>Paso / Hilos: <span class="highlight" id="r_paso"></span></p>
             <p>Broca (Corte): <span class="highlight" id="r_corte"></span></p>
-            <p>Broca (Laminación): <span class="highlight" id="r_laminacion"></span></p>
+            <p id="p_laminacion">Broca (Laminación): <span class="highlight" id="r_laminacion"></span></p>
         </div>
-        <p class="note">Corte: Broca = Diám - Paso. <br> Laminación: Broca = Diám - (Paso/2).</p>
+        <p class="note">Tolerancias de corte extraídas de tablas Garant (DIN336).</p>
     </div>
 
 </div>
@@ -450,7 +470,7 @@
         document.getElementById("res_broca").style.display = "block";
     }
 
-    // Cálculos Brocas EXT (Ajustadas para ser MUY conservadoras)
+    // Cálculos Brocas EXT
     function calcularBrocaExt() {
         let diam = parseFloat(document.getElementById("diam_broca_ext").value);
         let mat = document.getElementById("mat_broca_ext").value;
@@ -460,16 +480,14 @@
         let vc;
         const MAX_RPM = 8000;
 
-        // Vc muy conservadoras para brocas de metal duro sin taladrina interna
-        if (mat === "acero") vc = 25; 
-        else if (mat === "acero_duro") vc = 15; 
-        else if (mat === "inox") vc = 15; 
-        else if (mat === "alu") vc = 80; 
+        if (mat === "acero") vc = 45; 
+        else if (mat === "acero_duro") vc = 30; 
+        else if (mat === "inox") vc = 30; 
+        else if (mat === "alu") vc = 90; 
 
-        // Avance ligeramente suavizado
-        let fn = 0.040 + (diam * 0.003); 
+        let fn = 0.060 + (diam * 0.005); 
         
-        if (mat === "alu") fn += 0.01;
+        if (mat === "alu") fn += 0.02;
         if (mat === "inox" || mat === "acero_duro") fn -= 0.01;
 
         let rpm_teo = (vc * 1000) / (Math.PI * diam);
@@ -479,11 +497,11 @@
 
         let texto_rpm = rpm_teo > MAX_RPM ? "<span class='limit-warning'>" + rpm + " (Tope)</span>" : rpm + " RPM";
 
-        // Lógica de picoteo (Q) conservadora para evitar emboces, sobre todo en aluminio
+        // --- CORRECCIÓN DEL PICOTEO (Q) ---
         let multiplicador_q;
-        if (mat === "alu") multiplicador_q = 0.4; // Picoteo más corto en aluminio por ser pegajoso
-        else if (mat === "acero") multiplicador_q = 0.5;
-        else multiplicador_q = 0.3; // Inox y duros muy corto para no partir
+        if (mat === "acero") multiplicador_q = 0.6; // Reducido para mayor seguridad
+        else if (mat === "alu") multiplicador_q = 0.6;
+        else multiplicador_q = 0.5;
 
         let q_picoteo = Math.round(diam * multiplicador_q);
         if (q_picoteo < 1) q_picoteo = 1;
@@ -510,7 +528,6 @@
         else if (mat === "inox") vc = 8;
         else if (mat === "alu") vc = 45;
 
-        // Tramos de avance basados en catálogo para que la F fluctúe de manera realista
         let fn;
         if (diam <= 3) fn = 0.03;
         else if (diam <= 5) fn = 0.05;
@@ -562,14 +579,49 @@
         document.getElementById("res_placas").style.display = "block";
     }
 
-    // Consulta de Roscas
+    // --- NUEVO SISTEMA DE ROSCAS (BASADO EN TABLAS GARANT) ---
     function actualizarRosca() {
         let val = document.getElementById("select_rosca").value;
         if (!val) return document.getElementById("res_rosca").style.display = "none";
-        let [diam, paso] = val.split("|").map(Number);
-        document.getElementById("r_paso").innerText = paso + " mm";
-        document.getElementById("r_corte").innerText = "Ø " + (diam - paso).toFixed(2);
-        document.getElementById("r_laminacion").innerText = "Ø " + (diam - (paso/2)).toFixed(2);
+        
+        const roscas_data = {
+            "M3": { paso: "0.5 mm", min: 2.5, max: 2.599, lam: 2.75 },
+            "M4": { paso: "0.7 mm", min: 3.3, max: 3.422, lam: 3.65 },
+            "M5": { paso: "0.8 mm", min: 4.2, max: 4.334, lam: 4.60 },
+            "M6": { paso: "1.0 mm", min: 5.0, max: 5.153, lam: 5.50 },
+            "M8": { paso: "1.25 mm", min: 6.8, max: 6.912, lam: 7.38 },
+            "M10": { paso: "1.5 mm", min: 8.5, max: 8.676, lam: 9.25 },
+            "M12": { paso: "1.75 mm", min: 10.2, max: 10.441, lam: 11.12 },
+            "M16": { paso: "2.0 mm", min: 14.0, max: 14.210, lam: 15.00 },
+            "M20": { paso: "2.5 mm", min: 17.5, max: 17.744, lam: 18.75 },
+            "M24": { paso: "3.0 mm", min: 21.0, max: 21.252, lam: 22.50 },
+            
+            "M6x0.75": { paso: "0.75 mm", min: 5.2, max: 5.378, lam: 5.62 },
+            "M8x1": { paso: "1.0 mm", min: 7.0, max: 7.153, lam: 7.50 },
+            "M10x1": { paso: "1.0 mm", min: 9.0, max: 9.153, lam: 9.50 },
+            "M10x1.25": { paso: "1.25 mm", min: 8.8, max: 8.912, lam: 9.38 },
+            "M12x1": { paso: "1.0 mm", min: 11.0, max: 11.153, lam: 11.50 },
+            "M12x1.25": { paso: "1.25 mm", min: 10.8, max: 10.912, lam: 11.38 },
+            "M12x1.5": { paso: "1.5 mm", min: 10.5, max: 10.676, lam: 11.25 },
+            "M16x1.5": { paso: "1.5 mm", min: 14.5, max: 14.676, lam: 15.25 },
+
+            "G1/8": { paso: "28 Gg/1\"", min: 8.8, max: 8.848, lam: null },
+            "G1/4": { paso: "19 Gg/1\"", min: 11.8, max: 11.890, lam: null },
+            "G3/8": { paso: "19 Gg/1\"", min: 15.25, max: 15.395, lam: null },
+            "G1/2": { paso: "14 Gg/1\"", min: 19.0, max: 19.172, lam: null }
+        };
+
+        let d = roscas_data[val];
+        document.getElementById("r_paso").innerText = d.paso;
+        document.getElementById("r_corte").innerText = "Ø " + d.min.toFixed(2).replace(".",",") + " - " + d.max.toFixed(3).replace(".",",");
+        
+        if (d.lam) {
+            document.getElementById("r_laminacion").innerText = "Ø " + d.lam.toFixed(2).replace(".",",");
+            document.getElementById("p_laminacion").style.display = "flex";
+        } else {
+            document.getElementById("p_laminacion").style.display = "none";
+        }
+
         document.getElementById("res_rosca").style.display = "block";
     }
 </script>
