@@ -559,7 +559,7 @@
         document.getElementById("res_placas").style.display = "block";
     }
 
-    // --- ROSCAS CON REDONDEO INTELIGENTE Y VC DE TALLER ---
+    // --- ROSCAS CON REDONDEO INTELIGENTE Y DIÁMETROS DE TALLER ---
     function mostrarDesplegableRosca() {
         let tipo = document.getElementById("tipo_rosca").value;
         document.getElementById("select_rosca_m").style.display = (tipo === 'M') ? "block" : "none";
@@ -588,13 +588,13 @@
         let mat = document.getElementById("mat_rosca").value;
 
         const roscas_data = {
-            "M3": { paso: 0.5, d_calc: 3, broca_corte: 2.5, broca_lam: 2.75 },
-            "M4": { paso: 0.7, d_calc: 4, broca_corte: 3.3, broca_lam: 3.65 },
-            "M5": { paso: 0.8, d_calc: 5, broca_corte: 4.2, broca_lam: 4.60 },
-            "M6": { paso: 1.0, d_calc: 6, broca_corte: 5.0, broca_lam: 5.50 },
-            "M8": { paso: 1.25, d_calc: 8, broca_corte: 6.8, broca_lam: 7.38 },
-            "M10": { paso: 1.5, d_calc: 10, broca_corte: 8.5, broca_lam: 9.25 },
-            "M12": { paso: 1.75, d_calc: 12, broca_corte: 10.2, broca_lam: 11.12 },
+            "M3": { paso: 0.5, d_calc: 3, broca_corte: 2.5, broca_lam: 2.8 },
+            "M4": { paso: 0.7, d_calc: 4, broca_corte: 3.3, broca_lam: 3.7 },
+            "M5": { paso: 0.8, d_calc: 5, broca_corte: 4.2, broca_lam: 4.65 },
+            "M6": { paso: 1.0, d_calc: 6, broca_corte: 5.0, broca_lam: 5.55 },
+            "M8": { paso: 1.25, d_calc: 8, broca_corte: 6.8, broca_lam: 7.45 },
+            "M10": { paso: 1.5, d_calc: 10, broca_corte: 8.5, broca_lam: 9.4 },
+            "M12": { paso: 1.75, d_calc: 12, broca_corte: 10.2, broca_lam: 11.2 },
             "M16": { paso: 2.0, d_calc: 16, broca_corte: 14.0 },
             "M20": { paso: 2.5, d_calc: 20, broca_corte: 17.5 },
             "M24": { paso: 3.0, d_calc: 24, broca_corte: 21.0 },
@@ -634,8 +634,7 @@
         let base_rpm = Math.round(rpm_teo / 10) * 10; 
         let rpm = base_rpm;
         
-        // Redondeo inteligente: Buscar una S que dé una F limpia (entera y preferiblemente terminada en 0)
-        if (d.paso % 0.01 === 0) { // Solo para métricas
+        if (d.paso % 0.01 === 0) { 
             let found_perfect = false;
             let found_integer = false;
             let backup_rpm = base_rpm;
@@ -644,7 +643,6 @@
                 let test_up = base_rpm + offset;
                 let test_down = base_rpm - offset;
                 
-                // Prioridad 1: F termina en 0
                 if (!found_perfect && (test_up * d.paso) % 10 === 0) {
                     rpm = test_up;
                     found_perfect = true;
@@ -654,7 +652,6 @@
                     found_perfect = true;
                 }
 
-                // Prioridad 2: F es un número entero
                 if (!found_integer && (test_up * d.paso) % 1 === 0) {
                     backup_rpm = test_up;
                     found_integer = true;
