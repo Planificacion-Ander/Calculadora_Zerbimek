@@ -6,12 +6,40 @@
     <title>App Taller CNC</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background-color: #e9ecef; color: #333; margin: 0; padding: 10px; display: flex; justify-content: center; }
-        .app-container { background-color: #fff; border-radius: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); max-width: 450px; width: 100%; overflow: hidden; }
         
-        .menu { display: flex; background-color: #333; overflow-x: auto; white-space: nowrap; scrollbar-width: none; }
-        .menu::-webkit-scrollbar { display: none; }
-        .menu button { flex: 1; min-width: 85px; background-color: inherit; color: white; border: none; padding: 15px 5px; cursor: pointer; font-size: 13px; font-weight: bold; transition: 0.3s; border-bottom: 3px solid transparent; }
-        .menu button.active { background-color: #444; border-bottom: 3px solid #007bff; color: #007bff; }
+        .app-container { 
+            background-color: #fff; 
+            border-radius: 12px; 
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1); 
+            max-width: 500px; /* Ensanchado para que entre bien todo */
+            width: 100%; 
+            overflow: hidden; 
+        }
+        
+        /* Menú convertido en cuadrícula de 3 columnas */
+        .menu { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            background-color: #333; 
+        }
+        
+        .menu button { 
+            background-color: inherit; 
+            color: white; 
+            border: none; 
+            padding: 12px 5px; 
+            cursor: pointer; 
+            font-size: 13px; 
+            font-weight: bold; 
+            transition: 0.3s; 
+            border-bottom: 3px solid #333; 
+        }
+        
+        .menu button.active { 
+            background-color: #444; 
+            border-bottom: 3px solid #007bff; 
+            color: #007bff; 
+        }
         
         .tab-content { display: none; padding: 20px; animation: fadeEffect 0.4s; }
         @keyframes fadeEffect { from {opacity: 0;} to {opacity: 1;} }
@@ -74,7 +102,7 @@
         <input type="number" id="fz_fresa" value="0.05" step="0.01">
         <button class="btn-calcular" onclick="calcularFresado()">Calcular Avance</button>
         <div class="results" id="res_fresa" style="display: none;">
-            <p>Avance (F): <span class="highlight" id="f_total_fresa"></span></p>
+            <p>Avance trabajo (F): <span class="highlight" id="f_total_fresa"></span></p>
         </div>
     </div>
 
@@ -94,15 +122,15 @@
         <button class="btn-calcular" onclick="calcularBrocaInt()">Calcular Parámetros</button>
         <div class="results" id="res_broca" style="display: none;">
             <p>Revoluciones (S): <span class="highlight" id="s_broca"></span></p>
-            <p>Avance rev. (fn): <span class="highlight" id="fn_broca"></span></p>
             <p>Avance trabajo (F): <span class="highlight" id="f_broca"></span></p>
+            <p>Avance rev. (fn): <span class="highlight" id="fn_broca"></span></p>
         </div>
     </div>
 
-    <!-- PESTAÑA 4: BROCA EXTERNA (CORREGIDA) -->
+    <!-- PESTAÑA 4: BROCA EXTERNA -->
     <div id="calcBrocaExt" class="tab-content">
         <h2>Brocas EXT</h2>
-        <h4>Sin refrigeración interna (G83)</h4>
+        <h4>Sin refrigeración interna (G82)</h4>
         <label>Diámetro de la broca (mm):</label>
         <input type="number" id="diam_broca_ext" value="5.0" step="0.1">
         <label>Material a mecanizar:</label>
@@ -114,11 +142,11 @@
         </select>
         <button class="btn-calcular" onclick="calcularBrocaExt()">Calcular Parámetros</button>
         <div class="results" id="res_broca_ext" style="display: none;">
-            <p>Ciclo sugerido: <span class="badge-warn">G83 (Picoteo)</span></p>
+            <p>Ciclo sugerido: <span class="badge-warn">G82</span></p>
             <p>Revoluciones (S): <span class="highlight" id="s_broca_ext"></span></p>
-            <p>Avance rev. (fn): <span class="highlight" id="fn_broca_ext"></span></p>
             <p>Avance trabajo (F): <span class="highlight" id="f_broca_ext"></span></p>
-            <p>Pasada Picoteo (Q): <span class="highlight" id="q_broca_ext"></span></p>
+            <p>Pasada (Q): <span class="highlight" id="q_broca_ext"></span></p>
+            <p>Avance rev. (fn): <span class="highlight" id="fn_broca_ext"></span></p>
         </div>
         <p class="note">Parámetros conservadores calculados para garantizar la evacuación de viruta y evitar calentamiento.</p>
     </div>
@@ -140,8 +168,8 @@
         <div class="results" id="res_placas" style="display: none;">
             <p>Ciclo: <span class="badge">G81 (Sin picoteo)</span></p>
             <p>Revoluciones (S): <span class="highlight" id="s_placas"></span></p>
-            <p>Avance rev. (fn): <span class="highlight" id="fn_placas"></span></p>
             <p>Avance trabajo (F): <span class="highlight" id="f_placas"></span></p>
+            <p>Avance rev. (fn): <span class="highlight" id="fn_placas"></span></p>
         </div>
     </div>
 
@@ -256,12 +284,12 @@
         let texto_rpm = rpm_teo > MAX_RPM ? "<span class='limit-warning'>" + rpm + " (Tope)</span>" : rpm + " RPM";
 
         document.getElementById("s_broca").innerHTML = texto_rpm;
-        document.getElementById("fn_broca").innerText = fn.toFixed(3) + " mm/rev";
         document.getElementById("f_broca").innerText = "F " + f_total + " mm/min";
+        document.getElementById("fn_broca").innerText = fn.toFixed(3) + " mm/rev";
         document.getElementById("res_broca").style.display = "block";
     }
 
-    // Cálculos Brocas EXT (Corregida basándose en las Brocas INT)
+    // Cálculos Brocas EXT
     function calcularBrocaExt() {
         let diam = parseFloat(document.getElementById("diam_broca_ext").value);
         let mat = document.getElementById("mat_broca_ext").value;
@@ -271,16 +299,13 @@
         let vc;
         const MAX_RPM = 8000;
 
-        // Vc más bajas que las de INT
         if (mat === "acero") vc = 35;
         else if (mat === "acero_duro") vc = 25;
         else if (mat === "inox") vc = 25;
         else if (mat === "alu") vc = 120;
 
-        // Fórmula de avance más suave que la de INT
         let fn = 0.060 + (diam * 0.004); 
         
-        // Ajustes finos de avance
         if (mat === "alu") fn += 0.01;
         if (mat === "inox" || mat === "acero_duro") fn -= 0.01;
 
@@ -291,12 +316,13 @@
 
         let texto_rpm = rpm_teo > MAX_RPM ? "<span class='limit-warning'>" + rpm + " (Tope)</span>" : rpm + " RPM";
 
-        let q_picoteo = (diam * 0.5).toFixed(1);
+        // Pasada (Q) redondeada a número entero
+        let q_picoteo = Math.round(diam * 0.5);
 
         document.getElementById("s_broca_ext").innerHTML = texto_rpm;
-        document.getElementById("fn_broca_ext").innerText = fn.toFixed(3) + " mm/rev";
         document.getElementById("f_broca_ext").innerText = "F " + f_total + " mm/min";
         document.getElementById("q_broca_ext").innerText = "Q " + q_picoteo + " mm";
+        document.getElementById("fn_broca_ext").innerText = fn.toFixed(3) + " mm/rev";
         document.getElementById("res_broca_ext").style.display = "block";
     }
 
@@ -318,8 +344,8 @@
         let f_total = redondear(rpm * fn, 10);
 
         document.getElementById("s_placas").innerText = rpm + " RPM";
-        document.getElementById("fn_placas").innerText = fn.toFixed(2) + " mm/rev";
         document.getElementById("f_placas").innerText = "F " + f_total + " mm/min";
+        document.getElementById("fn_placas").innerText = fn.toFixed(2) + " mm/rev";
         document.getElementById("res_placas").style.display = "block";
     }
 
