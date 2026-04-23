@@ -25,7 +25,7 @@
             border-top: 5px solid #E3000F; 
         }
 
-        /* --- CABECERA CON LOGO VECTORIAL (SVG) EXACTO --- */
+        /* --- CABECERA CON LOGO VECTORIAL (SVG) EXACTO Y CORTADO --- */
         .header-zerbimek {
             display: flex;
             align-items: center;
@@ -99,14 +99,16 @@
 
 <div class="app-container">
     
-    <!-- CABECERA DE MARCA CON LOGO VECTORIAL -->
+    <!-- CABECERA DE MARCA CON LOGO VECTORIAL IDÉNTICO AL ORIGINAL -->
     <div class="header-zerbimek">
         <div class="header-logo">
-            <!-- Dibujo matemático del Logo de Zerbimek Ajustado -->
+            <!-- Dibujo matemático de Zerbimek (Corte oblicuo incorporado) -->
             <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="55" height="55">
                 <circle cx="100" cy="100" r="100" fill="#E3000F"/>
-                <!-- Coordenadas calculadas para replicar el grosor, altura y cortes rectos -->
-                <polygon points="35,35 165,35 105,130 165,130 165,165 35,165 95,70 35,70" fill="#ffffff"/>
+                <!-- Pieza 1: Fragmento superior izquierdo -->
+                <polygon points="40,45 85,45 65,85 40,85" fill="#ffffff"/>
+                <!-- Pieza 2: Cuerpo principal de la Z con la diagonal ancha -->
+                <polygon points="97,45 160,45 120,125 160,125 160,165 40,165 40,125 57,125" fill="#ffffff"/>
             </svg>
         </div>
         <div class="header-text">
