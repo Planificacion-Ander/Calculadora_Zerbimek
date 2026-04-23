@@ -7,20 +7,27 @@
     <style>
         body { font-family: 'Segoe UI', sans-serif; background-color: #e9ecef; color: #333; margin: 0; padding: 10px; display: flex; justify-content: center; }
         .app-container { background-color: #fff; border-radius: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); max-width: 450px; width: 100%; overflow: hidden; }
-        .menu { display: flex; background-color: #333; overflow-x: auto; white-space: nowrap; }
-        .menu button { flex: 1; min-width: 90px; background-color: inherit; color: white; border: none; padding: 15px 5px; cursor: pointer; font-size: 14px; font-weight: bold; transition: 0.3s; border-bottom: 3px solid transparent; }
+        
+        /* Ajuste del menú para que entren las 5 pestañas con scroll si es necesario */
+        .menu { display: flex; background-color: #333; overflow-x: auto; white-space: nowrap; scrollbar-width: none; }
+        .menu::-webkit-scrollbar { display: none; }
+        .menu button { flex: 1; min-width: 85px; background-color: inherit; color: white; border: none; padding: 15px 5px; cursor: pointer; font-size: 13px; font-weight: bold; transition: 0.3s; border-bottom: 3px solid transparent; }
         .menu button.active { background-color: #444; border-bottom: 3px solid #007bff; color: #007bff; }
+        
         .tab-content { display: none; padding: 20px; animation: fadeEffect 0.4s; }
         @keyframes fadeEffect { from {opacity: 0;} to {opacity: 1;} }
         h2 { text-align: center; color: #0056b3; margin-top: 0; font-size: 1.4rem; }
         h4 { text-align: center; color: #666; margin-top: 0; font-weight: normal; font-size: 0.9rem; }
         label { font-weight: bold; margin-top: 15px; display: block; }
         input, select { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
-        .btn-calcular { background-color: #0056b3; color: white; border: none; cursor: pointer; font-weight: bold; margin-top: 20px; font-size: 16px; padding: 15px; width: 100%; border-radius: 8px; }
+        .btn-calcular { background-color: #0056b3; color: white; border: none; cursor: pointer; font-weight: bold; margin-top: 20px; font-size: 16px; padding: 15px; width: 100%; border-radius: 8px; transition: 0.2s;}
+        .btn-calcular:active { transform: scale(0.98); }
         .results { margin-top: 20px; padding: 15px; background-color: #f8f9fa; border-radius: 8px; border-left: 6px solid #0056b3; }
         .results p { margin: 10px 0; font-size: 15px; display: flex; justify-content: space-between; border-bottom: 1px dashed #ccc; padding-bottom: 5px; }
         .highlight { font-weight: bold; color: #0056b3; }
+        .limit-warning { color: #d32f2f; font-weight: bold; font-size: 14px; }
         .note { font-size: 12px; color: #777; margin-top: 15px; font-style: italic; }
+        .badge { background-color: #28a745; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -29,9 +36,10 @@
     <!-- MENÚ SUPERIOR -->
     <div class="menu">
         <button class="pestana active" onclick="abrirHerramienta(event, 'calcNine9')">Nine9</button>
-        <button class="pestana" onclick="abrirHerramienta(event, 'calcFresado')">Fresado</button>
+        <button class="pestana" onclick="abrirHerramienta(event, 'calcFresado')">Fresa</button>
+        <button class="pestana" onclick="abrirHerramienta(event, 'calcBrocaInt')">Broca MDI</button>
+        <button class="pestana" onclick="abrirHerramienta(event, 'calcBrocaPlacas')">Placas</button>
         <button class="pestana" onclick="abrirHerramienta(event, 'calcRosca')">Roscas</button>
-        <button class="pestana" onclick="abrirHerramienta(event, 'calcBrocaInt')">Broca Int.</button>
     </div>
 
     <!-- PESTAÑA 1: NINE9 -->
@@ -41,9 +49,10 @@
         <input type="number" id="depth" value="1.0" step="0.1">
         <label>Material:</label>
         <select id="material_nine9">
-            <option value="carbon_low">Acero Carbono < 0.3%</option>
-            <option value="carbon_high">Acero Aleado / > 0.3%</option>
-            <option value="alu">Aluminio / No Férricos</option>
+            <option value="acero">Acero General</option>
+            <option value="acero_duro">Acero Duro / Aleado</option>
+            <option value="inox">Acero Inoxidable</option>
+            <option value="alu">Aluminio</option>
         </select>
         <button class="btn-calcular" onclick="calcularNine9()">Calcular</button>
         <div class="results" id="res_nine9" style="display: none;">
@@ -69,7 +78,59 @@
         </div>
     </div>
 
-    <!-- PESTAÑA 3: ROSCAS -->
+    <!-- PESTAÑA 3: BROCA INTERNA (MDI) -->
+    <div id="calcBrocaInt" class="tab-content">
+        <h2>Broca MDI</h2>
+        <h4>Refrigeración Interna (Tope 9000)</h4>
+        
+        <label>Diámetro de la broca (mm):</label>
+        <input type="number" id="diam_broca" value="5.0" step="0.1">
+
+        <label>Material a mecanizar:</label>
+        <select id="mat_broca">
+            <option value="acero">Acero General</option>
+            <option value="acero_duro">Acero Duro / Aleado</option>
+            <option value="inox">Acero Inoxidable</option>
+            <option value="alu">Aluminio</option>
+        </select>
+
+        <button class="btn-calcular" onclick="calcularBrocaInt()">Calcular Parámetros</button>
+
+        <div class="results" id="res_broca" style="display: none;">
+            <p>Revoluciones (S): <span class="highlight" id="s_broca"></span></p>
+            <p>Avance rev. (fn): <span class="highlight" id="fn_broca"></span></p>
+            <p>Avance trabajo (F): <span class="highlight" id="f_broca"></span></p>
+        </div>
+    </div>
+
+    <!-- PESTAÑA 4: BROCA PLACAS (NUEVA) -->
+    <div id="calcBrocaPlacas" class="tab-content">
+        <h2>Broca Placas</h2>
+        <h4>U-Drill / Taladrado Directo</h4>
+        
+        <label>Diámetro de la broca (mm):</label>
+        <input type="number" id="diam_placas" value="25" step="1">
+
+        <label>Material a mecanizar:</label>
+        <select id="mat_placas">
+            <option value="acero">Acero General</option>
+            <option value="acero_duro">Acero Duro / Aleado</option>
+            <option value="inox">Acero Inoxidable</option>
+            <option value="alu">Aluminio</option>
+        </select>
+
+        <button class="btn-calcular" onclick="calcularBrocaPlacas()">Calcular Parámetros</button>
+
+        <div class="results" id="res_placas" style="display: none;">
+            <p>Ciclo: <span class="badge">G81 (Sin picoteo)</span></p>
+            <p>Revoluciones (S): <span class="highlight" id="s_placas"></span></p>
+            <p>Avance rev. (fn): <span class="highlight" id="fn_placas"></span></p>
+            <p>Avance trabajo (F): <span class="highlight" id="f_placas"></span></p>
+        </div>
+        <p class="note">Valores obtenidos de tabla de referencia del taller.</p>
+    </div>
+
+    <!-- PESTAÑA 5: ROSCAS -->
     <div id="calcRosca" class="tab-content">
         <h2>Consulta de Roscas</h2>
         <label>Métrica:</label>
@@ -92,39 +153,6 @@
         <p class="note">Corte: Broca = Diám - Paso. <br> Laminación: Broca = Diám - (Paso/2).</p>
     </div>
 
-    <!-- PESTAÑA 4: BROCA INTERNA -->
-    <div id="calcBrocaInt" class="tab-content">
-        <h2>Broca Ref. Interna</h2>
-        <h4>Datos para brocas MDI (Ej. HOLEX)</h4>
-        
-        <label>Diámetro de la broca (mm):</label>
-        <input type="number" id="diam_broca" value="5.5" step="0.1">
-
-        <label>Material a mecanizar:</label>
-        <select id="mat_broca">
-            <option value="250">Aluminio, plásticos (250 m/min)</option>
-            <option value="200">Aluminio viruta corta (200 m/min)</option>
-            <option value="160">Aluminio > 10% Si (160 m/min)</option>
-            <option value="125">Acero < 500 N/mm² (125 m/min)</option>
-            <option value="115">Acero < 750 N/mm² (115 m/min)</option>
-            <option value="95">Acero < 900 N/mm² (95 m/min)</option>
-            <option value="90">Acero < 1100 N/mm² (90 m/min)</option>
-            <option value="65">Acero < 1400 N/mm² (65 m/min)</option>
-            <option value="35">INOX < 900 N/mm² (35 m/min)</option>
-            <option value="30">INOX > 900 N/mm² (30 m/min)</option>
-            <option value="100">Fundición GG (100 m/min)</option>
-            <option value="65">Fundición GGG (65 m/min)</option>
-        </select>
-
-        <button class="btn-calcular" onclick="calcularBrocaInt()">Calcular Parámetros</button>
-
-        <div class="results" id="res_broca" style="display: none;">
-            <p>Revoluciones (S): <span class="highlight" id="s_broca"></span></p>
-            <p>Avance rev. (fn): <span class="highlight" id="fn_broca"></span></p>
-            <p>Avance trabajo (F): <span class="highlight" id="f_broca"></span></p>
-        </div>
-        <p class="note">Parámetros basados en velocidad de corte (Vc) de catálogo para herramientas MDI. El avance fn se calcula proporcionalmente al diámetro.</p>
-    </div>
 </div>
 
 <script>
@@ -146,16 +174,22 @@
         if (!t || t <= 0) return;
         let d = t * 2;
         let vc, f_spot_max, f_spot_min, f_chamf_max, f_chamf_min;
-        if (mat === "carbon_low") { vc=180; f_spot_max=0.10; f_spot_min=0.05; f_chamf_max=0.24; f_chamf_min=0.10; }
-        else if (mat === "carbon_high") { vc=140; f_spot_max=0.08; f_spot_min=0.04; f_chamf_max=0.20; f_chamf_min=0.08; }
-        else { vc=250; f_spot_max=0.10; f_spot_min=0.05; f_chamf_max=0.25; f_chamf_min=0.10; }
+        
+        if (mat === "acero") { vc=180; f_spot_max=0.10; f_spot_min=0.05; f_chamf_max=0.24; f_chamf_min=0.10; }
+        else if (mat === "acero_duro") { vc=140; f_spot_max=0.08; f_spot_min=0.04; f_chamf_max=0.20; f_chamf_min=0.08; }
+        else if (mat === "inox") { vc=120; f_spot_max=0.07; f_spot_min=0.03; f_chamf_max=0.15; f_chamf_min=0.06; }
+        else if (mat === "alu") { vc=250; f_spot_max=0.10; f_spot_min=0.05; f_chamf_max=0.25; f_chamf_min=0.10; }
+
         let ratio = Math.max(0, Math.min(1, (d - 2) / 16)); 
         let f_spot = f_spot_max - ratio * (f_spot_max - f_spot_min);
         let f_chamf = f_chamf_max - ratio * (f_chamf_max - f_chamf_min);
         let s_teo = Math.round((vc * 1000) / (Math.PI * d));
         let s_real = Math.min(s_teo, RPM_MAX);
+        
+        let texto_rpm = s_teo > RPM_MAX ? "<span class='limit-warning'>" + s_real + " (Tope)</span>" : s_real + " RPM";
+
         document.getElementById("d_nine9").innerText = d.toFixed(1) + " mm";
-        document.getElementById("s_nine9").innerText = s_real + " RPM";
+        document.getElementById("s_nine9").innerHTML = texto_rpm;
         document.getElementById("f_spot_nine9").innerText = "F " + Math.round(s_real * f_spot);
         document.getElementById("f_chamf_nine9").innerText = "F " + Math.round(s_real * f_chamf);
         document.getElementById("res_nine9").style.display = "block";
@@ -171,6 +205,60 @@
         document.getElementById("res_fresa").style.display = "block";
     }
 
+    // Cálculos Broca MDI (Revisado con tope 9000)
+    function calcularBrocaInt() {
+        let diam = parseFloat(document.getElementById("diam_broca").value);
+        let mat = document.getElementById("mat_broca").value;
+
+        if (!diam || diam <= 0) return alert("Introduce un diámetro válido.");
+
+        let vc;
+        const MAX_RPM = 9000; // TOPE ACTUALIZADO A 9000
+
+        if (mat === "acero") vc = 50;
+        else if (mat === "acero_duro") vc = 35;
+        else if (mat === "inox") vc = 35;
+        else if (mat === "alu") vc = 200;
+
+        let fn = 0.085 + (diam * 0.005); 
+        if (mat === "alu") fn += 0.01;
+
+        let rpm_teo = Math.round((vc * 1000) / (Math.PI * diam));
+        let rpm = Math.min(rpm_teo, MAX_RPM);
+        
+        let texto_rpm = rpm_teo > MAX_RPM ? "<span class='limit-warning'>" + rpm + " (Tope)</span>" : rpm + " RPM";
+        let f_total = Math.round(rpm * fn);
+
+        document.getElementById("s_broca").innerHTML = texto_rpm;
+        document.getElementById("fn_broca").innerText = fn.toFixed(3) + " mm/rev";
+        document.getElementById("f_broca").innerText = "F " + f_total + " mm/min";
+        document.getElementById("res_broca").style.display = "block";
+    }
+
+    // NUEVO: Cálculos Broca de Placas
+    function calcularBrocaPlacas() {
+        let diam = parseFloat(document.getElementById("diam_placas").value);
+        let mat = document.getElementById("mat_placas").value;
+
+        if (!diam || diam <= 0) return alert("Introduce un diámetro válido.");
+
+        let vc, fn;
+
+        // Datos extraídos de la tabla fotográfica "BROCAS PLACAS"
+        if (mat === "acero") { vc = 120; fn = 0.08; }
+        else if (mat === "acero_duro") { vc = 90; fn = 0.07; } // Ajuste conservador
+        else if (mat === "inox") { vc = 100; fn = 0.08; }
+        else if (mat === "alu") { vc = 135; fn = 0.10; }
+
+        let rpm = Math.round((vc * 1000) / (Math.PI * diam));
+        let f_total = Math.round(rpm * fn);
+
+        document.getElementById("s_placas").innerText = rpm + " RPM";
+        document.getElementById("fn_placas").innerText = fn.toFixed(2) + " mm/rev";
+        document.getElementById("f_placas").innerText = "F " + f_total + " mm/min";
+        document.getElementById("res_placas").style.display = "block";
+    }
+
     // Consulta de Roscas
     function actualizarRosca() {
         let val = document.getElementById("select_rosca").value;
@@ -180,32 +268,6 @@
         document.getElementById("r_corte").innerText = "Ø " + (diam - paso).toFixed(2);
         document.getElementById("r_laminacion").innerText = "Ø " + (diam - (paso/2)).toFixed(2);
         document.getElementById("res_rosca").style.display = "block";
-    }
-
-    // Cálculos Broca Taladrina Interna
-    function calcularBrocaInt() {
-        let diam = parseFloat(document.getElementById("diam_broca").value);
-        let vc = parseFloat(document.getElementById("mat_broca").value);
-
-        if (!diam || diam <= 0) return alert("Introduce un diámetro válido.");
-
-        // Cálculo de RPM
-        let rpm = Math.round((vc * 1000) / (Math.PI * diam));
-
-        // Factor de avance por revolución base (0.025 mm/rev por cada mm de diámetro)
-        let factorAvance = 0.025; 
-        
-        // Corrección de avance según material (más bajo en inox, más alto en aluminio)
-        if (vc <= 35) factorAvance = 0.018; // Inox
-        else if (vc >= 160) factorAvance = 0.035; // Aluminio y plásticos
-
-        let fn = diam * factorAvance;
-        let f_total = Math.round(rpm * fn);
-
-        document.getElementById("s_broca").innerText = rpm + " RPM";
-        document.getElementById("fn_broca").innerText = fn.toFixed(2) + " mm/rev";
-        document.getElementById("f_broca").innerText = "F " + f_total + " mm/min";
-        document.getElementById("res_broca").style.display = "block";
     }
 </script>
 </body>
