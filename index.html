@@ -64,7 +64,7 @@
         
         /* --- MENÚ --- */
         .menu { display: grid; grid-template-columns: repeat(3, 1fr); background-color: #222; }
-        .menu button { background-color: inherit; color: #ccc; border: none; padding: 12px 5px; cursor: pointer; font-size: 13px; font-weight: bold; transition: 0.3s; border-bottom: 3px solid #222; }
+        .menu button { background-color: inherit; color: #ccc; border: none; padding: 12px 2px; cursor: pointer; font-size: 13px; font-weight: bold; transition: 0.3s; border-bottom: 3px solid #222; }
         .menu button:hover { color: #fff; }
         .menu button.active { background-color: #333; border-bottom: 3px solid #E3000F; color: #E3000F; }
         .menu button.full-width { grid-column: span 3; }
@@ -100,14 +100,14 @@
 
 <div class="app-container">
     
-    <!-- CABECERA DE MARCA CON LOGO VECTORIAL INTACTO -->
+    <!-- CABECERA DE MARCA CON LOGO VECTORIAL -->
     <div class="header-zerbimek">
         <div class="header-logo">
             <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="55" height="55">
                 <circle cx="100" cy="100" r="100" fill="#E3000F"/>
-                <!-- Pieza 1: El cuadradito superior izquierdo -->
+                <!-- Pieza 1 -->
                 <polygon points="50,45 90,45 75,75 50,75" fill="#ffffff"/>
-                <!-- Pieza 2: La Z principal -->
+                <!-- Pieza 2 -->
                 <polygon points="105,45 152,45 112,125 152,125 152,155 50,155" fill="#ffffff"/>
             </svg>
         </div>
@@ -117,11 +117,11 @@
         </div>
     </div>
 
-    <!-- MENÚ ACTUALIZADO CON TUNGALOY -->
+    <!-- MENÚ -->
     <div class="menu">
         <button class="pestana active" onclick="abrirHerramienta(event, 'calcNine9')">Nine9</button>
         <button class="pestana" onclick="abrirHerramienta(event, 'calcFresado')">Fresa</button>
-        <button class="pestana" onclick="abrirHerramienta(event, 'calcTungaloy')">Tungaloy</button>
+        <button class="pestana" onclick="abrirHerramienta(event, 'calcTungaloy')">Platos Tungaloy</button>
         <button class="pestana" onclick="abrirHerramienta(event, 'calcBrocaInt')">Brocas INT</button>
         <button class="pestana" onclick="abrirHerramienta(event, 'calcBrocaExt')">Brocas EXT</button>
         <button class="pestana" onclick="abrirHerramienta(event, 'calcBrocaPlacas')">Broca Placas</button>
@@ -164,17 +164,17 @@
         </div>
     </div>
 
-    <!-- NUEVA PESTAÑA 3: PLATOS TUNGALOY -->
+    <!-- PESTAÑA 3: PLATOS TUNGALoy -->
     <div id="calcTungaloy" class="tab-content">
         <h2>Platos Tungaloy</h2>
         <h4>Condiciones Turbo Tungaloy</h4>
         <label>Diámetro del plato (mm):</label>
         <select id="diam_tungaloy">
-            <option value="50">Ø 50 TURBO</option>
-            <option value="25">Ø 25 TURBO</option>
-            <option value="20">Ø 20 TURBO</option>
-            <option value="16">Ø 16 TURBO</option>
-            <option value="12">Ø 12 TURBO</option>
+            <option value="50">50</option>
+            <option value="25">25</option>
+            <option value="20">20</option>
+            <option value="16">16</option>
+            <option value="12">12</option>
         </select>
         <label>Material a mecanizar:</label>
         <select id="mat_tungaloy">
@@ -196,7 +196,7 @@
     <!-- PESTAÑA 4: BROCA INTERNA -->
     <div id="calcBrocaInt" class="tab-content">
         <h2>Brocas INT</h2>
-        <h4>Refrigeración Interna (Tope 9000)</h4>
+        <h4>Refrigeración Interna (G81 o G82)</h4>
         <label>Diámetro de la broca (mm):</label>
         <input type="number" id="diam_broca" value="5.0" step="0.1">
         <label>Material a mecanizar:</label>
@@ -241,7 +241,7 @@
     <!-- PESTAÑA 6: BROCA PLACAS -->
     <div id="calcBrocaPlacas" class="tab-content">
         <h2>Broca Placas</h2>
-        <h4>U-Drill / Taladrado Directo</h4>
+        <h4>Refrigeración Interna (G81)</h4>
         <label>Diámetro de la broca (mm):</label>
         <input type="number" id="diam_placas" value="25" step="1">
         <label>Material a mecanizar:</label>
@@ -345,12 +345,11 @@
         document.getElementById("res_fresa").style.display = "block";
     }
 
-    // NUEVO: Cálculos Platos Tungaloy
+    // Cálculos Platos Tungaloy
     function calcularTungaloy() {
         let diam = document.getElementById("diam_tungaloy").value;
         let mat = document.getElementById("mat_tungaloy").value;
 
-        // Base de datos extraída de la imagen "CONDICIONES PLATOS TURBO TUNGALOY"
         const datos = {
             "50": {
                 "acero_blando": { vc: 180, fn_min: 5.6, fn_max: 7.0, ap: "0,5 - 1" },
@@ -380,17 +379,15 @@
                 "acero_blando": { vc: 200, fn_min: 0.5, fn_max: 0.5, ap: "0,3" },
                 "acero_duro":   { vc: 150, fn_min: 0.4, fn_max: 0.4, ap: "0,2" },
                 "inox":         { vc: 120, fn_min: 0.4, fn_max: 0.4, ap: "0,2" },
-                "inox_duro":    { vc: 100, fn_min: 0.3, fn_max: 0.3, ap: "0,2" } // Ajuste lógico para inox duro
+                "inox_duro":    { vc: 100, fn_min: 0.3, fn_max: 0.3, ap: "0,2" }
             }
         };
 
         let d = datos[diam][mat];
         
-        // Cálculo de revoluciones
         let rpm_teo = (d.vc * 1000) / (Math.PI * parseInt(diam));
         let rpm = redondear(rpm_teo, 50);
 
-        // Cálculo de avance
         let f_str = "";
         if(d.fn_min === d.fn_max) {
             f_str = "F " + redondear(rpm * d.fn_min, 10);
@@ -400,7 +397,6 @@
             f_str = "F " + f1 + " - " + f2;
         }
         
-        // Cadena de avance por revolución
         let fn_str = (d.fn_min === d.fn_max) ? d.fn_min.toFixed(2) : d.fn_min.toFixed(2) + " - " + d.fn_max.toFixed(2);
 
         document.getElementById("s_tungaloy").innerText = rpm + " RPM";
