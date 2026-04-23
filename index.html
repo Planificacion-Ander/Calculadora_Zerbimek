@@ -559,7 +559,7 @@
         document.getElementById("res_placas").style.display = "block";
     }
 
-    // --- ROSCAS CON RPM CLAVADO A 350 PARA M6 ACERO ---
+    // --- ROSCAS ---
     function mostrarDesplegableRosca() {
         let tipo = document.getElementById("tipo_rosca").value;
         document.getElementById("select_rosca_m").style.display = (tipo === 'M') ? "block" : "none";
@@ -618,14 +618,12 @@
         let usa_lam = (tipo === 'M' && d.d_calc <= 12);
 
         let vc;
-        // Ajustado matemáticamente para que el M6 (D=6) devuelva exactamente 350 RPM en Acero Laminación
         if (usa_lam) {
             if (mat === "acero") vc = 6.6; 
             else if (mat === "acero_duro") vc = 4; 
             else if (mat === "inox") vc = 4; 
             else if (mat === "alu") vc = 10; 
         } else {
-            // Machos de corte escalados un poco por debajo
             if (mat === "acero") vc = 5.6;
             else if (mat === "acero_duro") vc = 3; 
             else if (mat === "inox") vc = 3;
@@ -633,7 +631,8 @@
         }
 
         let rpm_teo = (vc * 1000) / (Math.PI * d.d_calc);
-        let rpm = redondear(rpm_teo, 10); 
+        // REDONDEO A 50 RPM PARA NÚMEROS LIMPIOS EN EL CONTROL
+        let rpm = redondear(rpm_teo, 50); 
         let f_total = Math.round(rpm * d.paso); 
         
         let paso_str = d.hilos ? `${d.paso} mm (${d.hilos})` : `${d.paso} mm`;
