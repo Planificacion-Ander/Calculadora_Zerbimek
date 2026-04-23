@@ -8,7 +8,7 @@
         body { font-family: 'Segoe UI', sans-serif; background-color: #e9ecef; color: #333; margin: 0; padding: 10px; display: flex; justify-content: center; }
         .app-container { background-color: #fff; border-radius: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); max-width: 450px; width: 100%; overflow: hidden; }
         
-        /* Ajuste del menú para que entren las 5 pestañas con scroll si es necesario */
+        /* Ajuste del menú para pestañas */
         .menu { display: flex; background-color: #333; overflow-x: auto; white-space: nowrap; scrollbar-width: none; }
         .menu::-webkit-scrollbar { display: none; }
         .menu button { flex: 1; min-width: 85px; background-color: inherit; color: white; border: none; padding: 15px 5px; cursor: pointer; font-size: 13px; font-weight: bold; transition: 0.3s; border-bottom: 3px solid transparent; }
@@ -37,8 +37,8 @@
     <div class="menu">
         <button class="pestana active" onclick="abrirHerramienta(event, 'calcNine9')">Nine9</button>
         <button class="pestana" onclick="abrirHerramienta(event, 'calcFresado')">Fresa</button>
-        <button class="pestana" onclick="abrirHerramienta(event, 'calcBrocaInt')">Broca MDI</button>
-        <button class="pestana" onclick="abrirHerramienta(event, 'calcBrocaPlacas')">Placas</button>
+        <button class="pestana" onclick="abrirHerramienta(event, 'calcBrocaInt')">Brocas INT</button>
+        <button class="pestana" onclick="abrirHerramienta(event, 'calcBrocaPlacas')">Broca Placas</button>
         <button class="pestana" onclick="abrirHerramienta(event, 'calcRosca')">Roscas</button>
     </div>
 
@@ -49,9 +49,9 @@
         <input type="number" id="depth" value="1.0" step="0.1">
         <label>Material:</label>
         <select id="material_nine9">
-            <option value="acero">Acero General</option>
+            <option value="acero">Acero</option>
             <option value="acero_duro">Acero Duro / Aleado</option>
-            <option value="inox">Acero Inoxidable</option>
+            <option value="inox">Inoxidable</option>
             <option value="alu">Aluminio</option>
         </select>
         <button class="btn-calcular" onclick="calcularNine9()">Calcular</button>
@@ -67,7 +67,7 @@
     <div id="calcFresado" class="tab-content">
         <h2>Fresa General</h2>
         <label>RPM (S):</label>
-        <input type="number" id="rpm_fresa" value="3000">
+        <input type="number" id="rpm_fresa" value="3000" step="50">
         <label>Nº Labios (Z):</label>
         <input type="number" id="z_fresa" value="4">
         <label>Avance/Diente (fz):</label>
@@ -78,9 +78,9 @@
         </div>
     </div>
 
-    <!-- PESTAÑA 3: BROCA INTERNA (MDI) -->
+    <!-- PESTAÑA 3: BROCA INTERNA -->
     <div id="calcBrocaInt" class="tab-content">
-        <h2>Broca MDI</h2>
+        <h2>Brocas INT</h2>
         <h4>Refrigeración Interna (Tope 9000)</h4>
         
         <label>Diámetro de la broca (mm):</label>
@@ -88,9 +88,9 @@
 
         <label>Material a mecanizar:</label>
         <select id="mat_broca">
-            <option value="acero">Acero General</option>
+            <option value="acero">Acero</option>
             <option value="acero_duro">Acero Duro / Aleado</option>
-            <option value="inox">Acero Inoxidable</option>
+            <option value="inox">Inoxidable</option>
             <option value="alu">Aluminio</option>
         </select>
 
@@ -103,7 +103,7 @@
         </div>
     </div>
 
-    <!-- PESTAÑA 4: BROCA PLACAS (NUEVA) -->
+    <!-- PESTAÑA 4: BROCA PLACAS -->
     <div id="calcBrocaPlacas" class="tab-content">
         <h2>Broca Placas</h2>
         <h4>U-Drill / Taladrado Directo</h4>
@@ -113,9 +113,9 @@
 
         <label>Material a mecanizar:</label>
         <select id="mat_placas">
-            <option value="acero">Acero General</option>
+            <option value="acero">Acero</option>
             <option value="acero_duro">Acero Duro / Aleado</option>
-            <option value="inox">Acero Inoxidable</option>
+            <option value="inox">Inoxidable</option>
             <option value="alu">Aluminio</option>
         </select>
 
@@ -156,6 +156,11 @@
 </div>
 
 <script>
+    // Función general para redondear a múltiplos (ej. 50 para RPM, 10 para F)
+    function redondear(valor, multiplo) {
+        return Math.round(valor / multiplo) * multiplo;
+    }
+
     // Navegación de pestañas
     function abrirHerramienta(evento, idHerramienta) {
         let contenidos = document.getElementsByClassName("tab-content");
@@ -183,15 +188,19 @@
         let ratio = Math.max(0, Math.min(1, (d - 2) / 16)); 
         let f_spot = f_spot_max - ratio * (f_spot_max - f_spot_min);
         let f_chamf = f_chamf_max - ratio * (f_chamf_max - f_chamf_min);
-        let s_teo = Math.round((vc * 1000) / (Math.PI * d));
-        let s_real = Math.min(s_teo, RPM_MAX);
+        
+        let s_teo = (vc * 1000) / (Math.PI * d);
+        let s_real = redondear(Math.min(s_teo, RPM_MAX), 50); // Redondeo RPM a 50
+        
+        let f_spot_val = redondear(s_real * f_spot, 10); // Redondeo F a 10
+        let f_chamf_val = redondear(s_real * f_chamf, 10); // Redondeo F a 10
         
         let texto_rpm = s_teo > RPM_MAX ? "<span class='limit-warning'>" + s_real + " (Tope)</span>" : s_real + " RPM";
 
         document.getElementById("d_nine9").innerText = d.toFixed(1) + " mm";
         document.getElementById("s_nine9").innerHTML = texto_rpm;
-        document.getElementById("f_spot_nine9").innerText = "F " + Math.round(s_real * f_spot);
-        document.getElementById("f_chamf_nine9").innerText = "F " + Math.round(s_real * f_chamf);
+        document.getElementById("f_spot_nine9").innerText = "F " + f_spot_val;
+        document.getElementById("f_chamf_nine9").innerText = "F " + f_chamf_val;
         document.getElementById("res_nine9").style.display = "block";
     }
 
@@ -201,11 +210,14 @@
         let z = parseFloat(document.getElementById("z_fresa").value);
         let fz = parseFloat(document.getElementById("fz_fresa").value);
         if (!rpm || !z || !fz) return;
-        document.getElementById("f_total_fresa").innerText = "F " + Math.round(rpm * z * fz);
+        
+        let f_total = redondear(rpm * z * fz, 10); // Redondeo F a 10
+        
+        document.getElementById("f_total_fresa").innerText = "F " + f_total;
         document.getElementById("res_fresa").style.display = "block";
     }
 
-    // Cálculos Broca MDI (Revisado con tope 9000)
+    // Cálculos Brocas INT
     function calcularBrocaInt() {
         let diam = parseFloat(document.getElementById("diam_broca").value);
         let mat = document.getElementById("mat_broca").value;
@@ -213,7 +225,7 @@
         if (!diam || diam <= 0) return alert("Introduce un diámetro válido.");
 
         let vc;
-        const MAX_RPM = 9000; // TOPE ACTUALIZADO A 9000
+        const MAX_RPM = 9000;
 
         if (mat === "acero") vc = 50;
         else if (mat === "acero_duro") vc = 35;
@@ -223,11 +235,12 @@
         let fn = 0.085 + (diam * 0.005); 
         if (mat === "alu") fn += 0.01;
 
-        let rpm_teo = Math.round((vc * 1000) / (Math.PI * diam));
-        let rpm = Math.min(rpm_teo, MAX_RPM);
+        let rpm_teo = (vc * 1000) / (Math.PI * diam);
+        let rpm = redondear(Math.min(rpm_teo, MAX_RPM), 50); // Redondeo RPM a 50
         
+        let f_total = redondear(rpm * fn, 10); // Redondeo F a 10
+
         let texto_rpm = rpm_teo > MAX_RPM ? "<span class='limit-warning'>" + rpm + " (Tope)</span>" : rpm + " RPM";
-        let f_total = Math.round(rpm * fn);
 
         document.getElementById("s_broca").innerHTML = texto_rpm;
         document.getElementById("fn_broca").innerText = fn.toFixed(3) + " mm/rev";
@@ -235,7 +248,7 @@
         document.getElementById("res_broca").style.display = "block";
     }
 
-    // NUEVO: Cálculos Broca de Placas
+    // Cálculos Broca Placas
     function calcularBrocaPlacas() {
         let diam = parseFloat(document.getElementById("diam_placas").value);
         let mat = document.getElementById("mat_placas").value;
@@ -244,14 +257,13 @@
 
         let vc, fn;
 
-        // Datos extraídos de la tabla fotográfica "BROCAS PLACAS"
         if (mat === "acero") { vc = 120; fn = 0.08; }
-        else if (mat === "acero_duro") { vc = 90; fn = 0.07; } // Ajuste conservador
+        else if (mat === "acero_duro") { vc = 90; fn = 0.07; }
         else if (mat === "inox") { vc = 100; fn = 0.08; }
         else if (mat === "alu") { vc = 135; fn = 0.10; }
 
-        let rpm = Math.round((vc * 1000) / (Math.PI * diam));
-        let f_total = Math.round(rpm * fn);
+        let rpm = redondear((vc * 1000) / (Math.PI * diam), 50); // Redondeo RPM a 50
+        let f_total = redondear(rpm * fn, 10); // Redondeo F a 10
 
         document.getElementById("s_placas").innerText = rpm + " RPM";
         document.getElementById("fn_placas").innerText = fn.toFixed(2) + " mm/rev";
