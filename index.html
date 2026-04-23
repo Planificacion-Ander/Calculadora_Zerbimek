@@ -88,7 +88,8 @@
         .results p { margin: 10px 0; font-size: 15px; display: flex; justify-content: space-between; border-bottom: 1px dashed #ddd; padding-bottom: 6px; }
         .results p:last-child { border-bottom: none; padding-bottom: 0; }
         
-        .highlight { font-weight: bold; color: #E3000F; font-size: 16px;}
+        /* Cambiado a negro/gris oscuro para que no sea tan llamativo */
+        .highlight { font-weight: bold; color: #333; font-size: 16px;}
         .limit-warning { color: #d32f2f; font-weight: bold; font-size: 14px; }
         .note { font-size: 12px; color: #888; margin-top: 15px; font-style: italic; text-align: center;}
         
@@ -105,9 +106,7 @@
         <div class="header-logo">
             <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="55" height="55">
                 <circle cx="100" cy="100" r="100" fill="#E3000F"/>
-                <!-- Pieza 1 -->
                 <polygon points="50,45 90,45 75,75 50,75" fill="#ffffff"/>
-                <!-- Pieza 2 -->
                 <polygon points="105,45 152,45 112,125 152,125 152,155 50,155" fill="#ffffff"/>
             </svg>
         </div>
@@ -119,7 +118,7 @@
 
     <!-- MENÚ -->
     <div class="menu">
-        <button class="pestana active" onclick="abrirHerramienta(event, 'calcNine9')">Nine9</button>
+        <button class="pestana active" onclick="abrirHerramienta(event, 'calcNine9')">Punteado</button>
         <button class="pestana" onclick="abrirHerramienta(event, 'calcFresado')">Fresa</button>
         <button class="pestana" onclick="abrirHerramienta(event, 'calcTungaloy')">Platos Tungaloy</button>
         <button class="pestana" onclick="abrirHerramienta(event, 'calcBrocaInt')">Brocas INT</button>
@@ -128,9 +127,9 @@
         <button class="pestana full-width" onclick="abrirHerramienta(event, 'calcRosca')">Roscas</button>
     </div>
 
-    <!-- PESTAÑA 1: NINE9 -->
+    <!-- PESTAÑA 1: NINE9 (AHORA PUNTEADO) -->
     <div id="calcNine9" class="tab-content" style="display: block;">
-        <h2>Nine9 - NC Spot</h2>
+        <h2>Punteado / Chaflán</h2>
         <label>Profundidad Z (mm):</label>
         <input type="number" id="depth" value="1.0" step="0.1">
         <label>Material:</label>
@@ -164,7 +163,7 @@
         </div>
     </div>
 
-    <!-- PESTAÑA 3: PLATOS TUNGALoy -->
+    <!-- PESTAÑA 3: PLATOS TUNGALOY (VALORES EXACTOS) -->
     <div id="calcTungaloy" class="tab-content">
         <h2>Platos Tungaloy</h2>
         <h4>Condiciones Turbo Tungaloy</h4>
@@ -190,7 +189,7 @@
             <p>Pasada (Ap): <span class="highlight" id="ap_tungaloy"></span></p>
             <p>Avance rev. (fn): <span class="highlight" id="fn_tungaloy"></span></p>
         </div>
-        <p class="note">Valores obtenidos de las especificaciones Tungaloy del taller.</p>
+        <p class="note">Valores exactos obtenidos de las especificaciones Tungaloy.</p>
     </div>
 
     <!-- PESTAÑA 4: BROCA INTERNA -->
@@ -235,7 +234,7 @@
             <p>Pasada (Q): <span class="highlight" id="q_broca_ext"></span></p>
             <p>Avance rev. (fn): <span class="highlight" id="fn_broca_ext"></span></p>
         </div>
-        <p class="note">Parámetros conservadores calculados para garantizar la evacuación de viruta y evitar calentamiento.</p>
+        <p class="note">Parámetros conservadores calculados para garantizar la evacuación de viruta.</p>
     </div>
 
     <!-- PESTAÑA 6: BROCA PLACAS -->
@@ -299,7 +298,7 @@
         evento.currentTarget.classList.add("active");
     }
 
-    // Cálculos Nine9
+    // Cálculos Punteado (Nine9)
     function calcularNine9() {
         let t = parseFloat(document.getElementById("depth").value);
         let mat = document.getElementById("material_nine9").value;
@@ -345,41 +344,41 @@
         document.getElementById("res_fresa").style.display = "block";
     }
 
-    // Cálculos Platos Tungaloy
+    // Cálculos Platos Tungaloy (Simplificado a valor exacto)
     function calcularTungaloy() {
         let diam = document.getElementById("diam_tungaloy").value;
         let mat = document.getElementById("mat_tungaloy").value;
 
         const datos = {
             "50": {
-                "acero_blando": { vc: 180, fn_min: 5.6, fn_max: 7.0, ap: "0,5 - 1" },
-                "acero_duro":   { vc: 140, fn_min: 5.6, fn_max: 7.0, ap: "0,5 - 0,75" },
-                "inox":         { vc: 120, fn_min: 5.6, fn_max: 7.0, ap: "0,5 - 0,75" },
-                "inox_duro":    { vc: 100, fn_min: 5.6, fn_max: 7.0, ap: "0,5 - 0,75" }
+                "acero_blando": { vc: 180, fn: 6.0, ap: "0,5" },
+                "acero_duro":   { vc: 140, fn: 6.0, ap: "0,5" },
+                "inox":         { vc: 120, fn: 6.0, ap: "0,5" },
+                "inox_duro":    { vc: 100, fn: 6.0, ap: "0,5" }
             },
             "25": {
-                "acero_blando": { vc: 180, fn_min: 2.4, fn_max: 3.0, ap: "0,5 - 0,75" },
-                "acero_duro":   { vc: 140, fn_min: 2.4, fn_max: 3.0, ap: "0,5" },
-                "inox":         { vc: 120, fn_min: 2.4, fn_max: 3.0, ap: "0,5" },
-                "inox_duro":    { vc: 100, fn_min: 2.4, fn_max: 3.0, ap: "0,5" }
+                "acero_blando": { vc: 180, fn: 2.7, ap: "0,5" },
+                "acero_duro":   { vc: 140, fn: 2.7, ap: "0,5" },
+                "inox":         { vc: 120, fn: 2.7, ap: "0,5" },
+                "inox_duro":    { vc: 100, fn: 2.7, ap: "0,5" }
             },
             "20": {
-                "acero_blando": { vc: 180, fn_min: 1.5, fn_max: 2.1, ap: "0,5" },
-                "acero_duro":   { vc: 140, fn_min: 1.5, fn_max: 2.1, ap: "0,5" },
-                "inox":         { vc: 120, fn_min: 1.5, fn_max: 2.1, ap: "0,5" },
-                "inox_duro":    { vc: 100, fn_min: 1.5, fn_max: 2.1, ap: "0,5" }
+                "acero_blando": { vc: 180, fn: 1.8, ap: "0,5" },
+                "acero_duro":   { vc: 140, fn: 1.8, ap: "0,5" },
+                "inox":         { vc: 120, fn: 1.8, ap: "0,5" },
+                "inox_duro":    { vc: 100, fn: 1.8, ap: "0,5" }
             },
             "16": {
-                "acero_blando": { vc: 180, fn_min: 1.0, fn_max: 1.0, ap: "0,5" },
-                "acero_duro":   { vc: 140, fn_min: 1.0, fn_max: 1.0, ap: "0,5" },
-                "inox":         { vc: 120, fn_min: 1.0, fn_max: 1.0, ap: "0,5" },
-                "inox_duro":    { vc: 100, fn_min: 1.0, fn_max: 1.0, ap: "0,5" }
+                "acero_blando": { vc: 180, fn: 1.0, ap: "0,5" },
+                "acero_duro":   { vc: 140, fn: 1.0, ap: "0,5" },
+                "inox":         { vc: 120, fn: 1.0, ap: "0,5" },
+                "inox_duro":    { vc: 100, fn: 1.0, ap: "0,5" }
             },
             "12": {
-                "acero_blando": { vc: 200, fn_min: 0.5, fn_max: 0.5, ap: "0,3" },
-                "acero_duro":   { vc: 150, fn_min: 0.4, fn_max: 0.4, ap: "0,2" },
-                "inox":         { vc: 120, fn_min: 0.4, fn_max: 0.4, ap: "0,2" },
-                "inox_duro":    { vc: 100, fn_min: 0.3, fn_max: 0.3, ap: "0,2" }
+                "acero_blando": { vc: 200, fn: 0.5, ap: "0,3" },
+                "acero_duro":   { vc: 150, fn: 0.4, ap: "0,2" },
+                "inox":         { vc: 120, fn: 0.4, ap: "0,2" },
+                "inox_duro":    { vc: 100, fn: 0.3, ap: "0,2" }
             }
         };
 
@@ -387,22 +386,13 @@
         
         let rpm_teo = (d.vc * 1000) / (Math.PI * parseInt(diam));
         let rpm = redondear(rpm_teo, 50);
-
-        let f_str = "";
-        if(d.fn_min === d.fn_max) {
-            f_str = "F " + redondear(rpm * d.fn_min, 10);
-        } else {
-            let f1 = redondear(rpm * d.fn_min, 10);
-            let f2 = redondear(rpm * d.fn_max, 10);
-            f_str = "F " + f1 + " - " + f2;
-        }
-        
-        let fn_str = (d.fn_min === d.fn_max) ? d.fn_min.toFixed(2) : d.fn_min.toFixed(2) + " - " + d.fn_max.toFixed(2);
+        let f_val = redondear(rpm * d.fn, 10);
+        let fn_str = d.fn.toFixed(2).replace(/\./g, ",");
 
         document.getElementById("s_tungaloy").innerText = rpm + " RPM";
-        document.getElementById("f_tungaloy").innerText = f_str + " mm/min";
+        document.getElementById("f_tungaloy").innerText = "F " + f_val + " mm/min";
         document.getElementById("ap_tungaloy").innerText = d.ap + " mm";
-        document.getElementById("fn_tungaloy").innerText = fn_str.replace(/\./g, ",") + " mm/rev";
+        document.getElementById("fn_tungaloy").innerText = fn_str + " mm/rev";
         document.getElementById("res_tungaloy").style.display = "block";
     }
 
