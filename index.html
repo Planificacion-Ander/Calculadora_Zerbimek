@@ -25,32 +25,20 @@
             border-top: 5px solid #E3000F; 
         }
 
-        /* --- CABECERA CON LOGO RECREADO EN CSS --- */
+        /* --- CABECERA CON LOGO VECTORIAL (SVG) EXACTO --- */
         .header-zerbimek {
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px 10px 15px 10px;
             background-color: #ffffff;
-            gap: 15px; /* Separación entre logo y texto */
+            gap: 15px;
         }
         
-        /* El círculo rojo con la Z */
-        .logo-z {
-            background-color: #E3000F;
-            color: white;
-            width: 55px;
-            height: 55px;
-            border-radius: 50%; /* Lo hace redondo */
+        .header-logo {
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 42px;
-            font-weight: 900;
-            font-style: italic; /* Z inclinada */
-            font-family: 'Arial Black', Impact, sans-serif; /* Fuente gruesa */
-            line-height: 1;
-            padding-right: 4px; /* Ajuste óptico para centrar la cursiva */
         }
 
         .header-text {
@@ -111,9 +99,16 @@
 
 <div class="app-container">
     
-    <!-- CABECERA DE MARCA -->
+    <!-- CABECERA DE MARCA CON LOGO VECTORIAL -->
     <div class="header-zerbimek">
-        <div class="logo-z">Z</div>
+        <div class="header-logo">
+            <!-- Dibujo matemático del Logo de Zerbimek -->
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="55" height="55">
+                <circle cx="100" cy="100" r="100" fill="#E3000F"/>
+                <!-- Coordenadas exactas para calcar los cortes de la 'Z' -->
+                <polygon points="50,45 150,45 100,115 150,115 150,155 50,155 100,85 50,85" fill="#ffffff"/>
+            </svg>
+        </div>
         <div class="header-text">
             <h1>ZERBIMEK</h1>
             <span>Calculadora CNC</span>
