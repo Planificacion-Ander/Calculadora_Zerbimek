@@ -339,7 +339,7 @@
             <p>Avance (F = S × Paso): <span class="highlight" id="r_f_rosca"></span></p>
             <p class="note" id="r_tipo_macho" style="margin-bottom: 0; color: #444; font-weight: bold; font-size: 14px;"></p>
         </div>
-        <p class="note" style="margin-top: 15px;">Velocidades muy conservadoras y seguras para el día a día del taller.</p>
+        <p class="note" style="margin-top: 15px;">Ajustado para ~350 RPM en M6 Acero.</p>
     </div>
 
 </div>
@@ -559,7 +559,7 @@
         document.getElementById("res_placas").style.display = "block";
     }
 
-    // --- ROSCAS SÚPER CONSERVADORAS ---
+    // --- ROSCAS CON RPM CLAVADO A 350 PARA M6 ACERO ---
     function mostrarDesplegableRosca() {
         let tipo = document.getElementById("tipo_rosca").value;
         document.getElementById("select_rosca_m").style.display = (tipo === 'M') ? "block" : "none";
@@ -618,22 +618,23 @@
         let usa_lam = (tipo === 'M' && d.d_calc <= 12);
 
         let vc;
-        // Valores SUPER conservadores (muy por debajo de catálogo) para evitar sustos
+        // Ajustado matemáticamente para que el M6 (D=6) devuelva exactamente 350 RPM en Acero Laminación
         if (usa_lam) {
-            if (mat === "acero") vc = 10; 
-            else if (mat === "acero_duro") vc = 5; 
-            else if (mat === "inox") vc = 5; 
-            else if (mat === "alu") vc = 15; 
-        } else {
-            if (mat === "acero") vc = 8;
+            if (mat === "acero") vc = 6.6; 
             else if (mat === "acero_duro") vc = 4; 
-            else if (mat === "inox") vc = 4;
-            else if (mat === "alu") vc = 12;
+            else if (mat === "inox") vc = 4; 
+            else if (mat === "alu") vc = 10; 
+        } else {
+            // Machos de corte escalados un poco por debajo
+            if (mat === "acero") vc = 5.6;
+            else if (mat === "acero_duro") vc = 3; 
+            else if (mat === "inox") vc = 3;
+            else if (mat === "alu") vc = 8;
         }
 
         let rpm_teo = (vc * 1000) / (Math.PI * d.d_calc);
-        let rpm = redondear(rpm_teo, 10); // Redondeo a decenas para no tener números raros
-        let f_total = Math.round(rpm * d.paso); // El avance debe ser EXACTO
+        let rpm = redondear(rpm_teo, 10); 
+        let f_total = Math.round(rpm * d.paso); 
         
         let paso_str = d.hilos ? `${d.paso} mm (${d.hilos})` : `${d.paso} mm`;
         document.getElementById("r_paso").innerText = paso_str;
