@@ -25,7 +25,7 @@
             border-top: 5px solid #E3000F; 
         }
 
-        /* --- CABECERA CON LOGO VECTORIAL IDÉNTICO Y LIMPIO --- */
+        /* --- CABECERA CON LOGO VECTORIAL --- */
         .header-zerbimek {
             display: flex;
             align-items: center;
@@ -102,17 +102,15 @@
     <!-- CABECERA DE MARCA CON LOGO VECTORIAL -->
     <div class="header-zerbimek">
         <div class="header-logo">
-            <!-- Polígonos matemáticos corregidos para que la línea blanca sea coincidente -->
+            <!-- Polígonos con el recorte exacto en la derecha -->
             <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="55" height="55">
                 <circle cx="100" cy="100" r="100" fill="#E3000F"/>
                 
-                <!-- Pieza 1: El cuadradito superior izquierdo -->
-                <!-- El lado derecho (80 a 65) es exactamente paralelo a la diagonal principal -->
+                <!-- Pieza 1: El cuadradito superior izquierdo (sin tocar) -->
                 <polygon points="40,45 80,45 65,75 40,75" fill="#ffffff"/>
                 
-                <!-- Pieza 2: La Z principal -->
-                <!-- El lado izquierdo de la diagonal (40,155 hasta 95,45) es una línea recta perfecta -->
-                <polygon points="95,45 160,45 160,75 125,75 100,125 160,125 160,155 40,155" fill="#ffffff"/>
+                <!-- Pieza 2: La Z principal (Lado derecho recortado a 142) -->
+                <polygon points="95,45 142,45 142,75 125,75 100,125 142,125 142,155 40,155" fill="#ffffff"/>
             </svg>
         </div>
         <div class="header-text">
