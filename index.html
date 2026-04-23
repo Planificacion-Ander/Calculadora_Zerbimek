@@ -3,189 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora CNC Taller - Nine9</title>
+    <title>App Taller CNC</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #e9ecef;
-            color: #333;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .calculator {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-            max-width: 450px;
-            width: 100%;
-        }
-        h2 {
-            text-align: center;
-            color: #0056b3;
-            margin-top: 0;
-            margin-bottom: 5px;
-        }
-        h4 {
-            text-align: center;
-            color: #555;
-            margin-top: 0;
-            font-weight: normal;
-        }
-        label {
-            font-weight: bold;
-            margin-top: 15px;
-            display: block;
-            color: #333;
-        }
-        input, select, button {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-            font-size: 15px;
-        }
-        button {
-            background-color: #0056b3;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            margin-top: 25px;
-            font-size: 16px;
-            padding: 12px;
-            transition: background 0.3s;
-        }
-        button:hover {
-            background-color: #004494;
-        }
-        .results {
-            margin-top: 25px;
-            padding: 15px;
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            border-left: 6px solid #0056b3;
-        }
-        .results p {
-            margin: 10px 0;
-            font-size: 15px;
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 1px dashed #ccc;
-            padding-bottom: 5px;
-        }
-        .results p:last-child {
-            border-bottom: none;
-        }
-        .highlight {
-            font-weight: bold;
-            color: #0056b3;
-            font-size: 16px;
-        }
-        .limit-warning {
-            color: #d32f2f;
-            font-weight: bold;
-            font-size: 14px;
-        }
-        .note {
-            font-size: 12px;
-            color: #666;
-            margin-top: 15px;
-            font-style: italic;
-            text-align: justify;
-        }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #e9ecef; color: #333; margin: 0; padding: 10px; display: flex; justify-content: center; }
+        .app-container { background-color: #fff; border-radius: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); max-width: 450px; width: 100%; overflow: hidden; }
+        .menu { display: flex; background-color: #333; overflow-x: auto; white-space: nowrap; }
+        .menu button { flex: 1; min-width: 90px; background-color: inherit; color: white; border: none; padding: 15px 5px; cursor: pointer; font-size: 14px; font-weight: bold; transition: 0.3s; border-bottom: 3px solid transparent; }
+        .menu button.active { background-color: #444; border-bottom: 3px solid #007bff; color: #007bff; }
+        .tab-content { display: none; padding: 20px; animation: fadeEffect 0.4s; }
+        @keyframes fadeEffect { from {opacity: 0;} to {opacity: 1;} }
+        h2 { text-align: center; color: #0056b3; margin-top: 0; font-size: 1.4rem; }
+        h4 { text-align: center; color: #666; margin-top: 0; font-weight: normal; font-size: 0.9rem; }
+        label { font-weight: bold; margin-top: 15px; display: block; }
+        input, select { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
+        .btn-calcular { background-color: #0056b3; color: white; border: none; cursor: pointer; font-weight: bold; margin-top: 20px; font-size: 16px; padding: 15px; width: 100%; border-radius: 8px; }
+        .results { margin-top: 20px; padding: 15px; background-color: #f8f9fa; border-radius: 8px; border-left: 6px solid #0056b3; }
+        .results p { margin: 10px 0; font-size: 15px; display: flex; justify-content: space-between; border-bottom: 1px dashed #ccc; padding-bottom: 5px; }
+        .highlight { font-weight: bold; color: #0056b3; }
+        .note { font-size: 12px; color: #777; margin-top: 15px; font-style: italic; }
     </style>
 </head>
 <body>
 
-<div class="calculator">
-    <h2>Nine9 - NC Spot Drill</h2>
-    <h4>Avance Dinámico + Tope 8000 RPM</h4>
-    
-    <label for="depth">1. Profundidad en Z (t) en mm:</label>
-    <input type="number" id="depth" value="1.0" step="0.1" min="0.1">
-
-    <label for="material">2. Material a mecanizar:</label>
-    <select id="material">
-        <option value="carbon_low">Acero al Carbono < 0.3% (F-111, F-112)</option>
-        <option value="carbon_high">Acero Aleado / > 0.3% (F-114, ST52)</option>
-        <option value="inox">Acero Inoxidable (304, 316)</option>
-        <option value="cast_iron">Fundición (GG25, GGG40)</option>
-        <option value="alu">Aluminio y No Férricos</option>
-        <option value="titanium">Aleaciones de Titanio</option>
-        <option value="hardened">Acero Templado (40 - 56 HRC)</option>
-    </select>
-
-    <button onclick="calcular()">Calcular Programa</button>
-
-    <div class="results" id="resultados" style="display: none;">
-        <p>Diámetro efectivo (d): <span class="highlight" id="res_d"></span></p>
-        <p>Revoluciones (S): <span class="highlight" id="res_s"></span></p>
-        <p>F (Avance PUNTEAR): <span class="highlight" id="res_f_spot"></span></p>
-        <p>F (Avance ACHAFLANAR): <span class="highlight" id="res_f_chamf"></span></p>
+<div class="app-container">
+    <!-- MENÚ SUPERIOR -->
+    <div class="menu">
+        <button class="pestana active" onclick="abrirHerramienta(event, 'calcNine9')">Nine9</button>
+        <button class="pestana" onclick="abrirHerramienta(event, 'calcFresado')">Fresado</button>
+        <button class="pestana" onclick="abrirHerramienta(event, 'calcRosca')">Roscas</button>
+        <button class="pestana" onclick="abrirHerramienta(event, 'calcBrocaInt')">Broca Int.</button>
     </div>
 
-    <p class="note">⚠️ <b>Truco de taller:</b> Si es un chaflán libre, recuerda sumar +1 mm a tu profundidad "t" en esta calculadora y en tu programa CNC. Así usas el centro del filo y dejas un acabado perfecto.</p>
+    <!-- PESTAÑA 1: NINE9 -->
+    <div id="calcNine9" class="tab-content" style="display: block;">
+        <h2>Nine9 - NC Spot</h2>
+        <label>Profundidad Z (mm):</label>
+        <input type="number" id="depth" value="1.0" step="0.1">
+        <label>Material:</label>
+        <select id="material_nine9">
+            <option value="carbon_low">Acero Carbono < 0.3%</option>
+            <option value="carbon_high">Acero Aleado / > 0.3%</option>
+            <option value="alu">Aluminio / No Férricos</option>
+        </select>
+        <button class="btn-calcular" onclick="calcularNine9()">Calcular</button>
+        <div class="results" id="res_nine9" style="display: none;">
+            <p>Diámetro (d): <span class="highlight" id="d_nine9"></span></p>
+            <p>Velocidad (S): <span class="highlight" id="s_nine9"></span></p>
+            <p>F (Puntear): <span class="highlight" id="f_spot_nine9"></span></p>
+            <p>F (Chaflán): <span class="highlight" id="f_chamf_nine9"></span></p>
+        </div>
+    </div>
+
+    <!-- PESTAÑA 2: FRESADO -->
+    <div id="calcFresado" class="tab-content">
+        <h2>Fresa General</h2>
+        <label>RPM (S):</label>
+        <input type="number" id="rpm_fresa" value="3000">
+        <label>Nº Labios (Z):</label>
+        <input type="number" id="z_fresa" value="4">
+        <label>Avance/Diente (fz):</label>
+        <input type="number" id="fz_fresa" value="0.05" step="0.01">
+        <button class="btn-calcular" onclick="calcularFresado()">Calcular Avance</button>
+        <div class="results" id="res_fresa" style="display: none;">
+            <p>Avance (F): <span class="highlight" id="f_total_fresa"></span></p>
+        </div>
+    </div>
+
+    <!-- PESTAÑA 3: ROSCAS -->
+    <div id="calcRosca" class="tab-content">
+        <h2>Consulta de Roscas</h2>
+        <label>Métrica:</label>
+        <select id="select_rosca" onchange="actualizarRosca()">
+            <option value="">Selecciona...</option>
+            <option value="3|0.5">M3 x 0.5</option>
+            <option value="4|0.7">M4 x 0.7</option>
+            <option value="5|0.8">M5 x 0.8</option>
+            <option value="6|1">M6 x 1.0</option>
+            <option value="8|1.25">M8 x 1.25</option>
+            <option value="10|1.5">M10 x 1.5</option>
+            <option value="12|1.75">M12 x 1.75</option>
+            <option value="16|2">M16 x 2.0</option>
+        </select>
+        <div class="results" id="res_rosca" style="display: none;">
+            <p>Paso: <span class="highlight" id="r_paso"></span></p>
+            <p>Broca (Corte): <span class="highlight" id="r_corte"></span></p>
+            <p>Broca (Laminación): <span class="highlight" id="r_laminacion"></span></p>
+        </div>
+        <p class="note">Corte: Broca = Diám - Paso. <br> Laminación: Broca = Diám - (Paso/2).</p>
+    </div>
+
+    <!-- PESTAÑA 4: BROCA INTERNA -->
+    <div id="calcBrocaInt" class="tab-content">
+        <h2>Broca Ref. Interna</h2>
+        <h4>Datos para brocas MDI (Ej. HOLEX)</h4>
+        
+        <label>Diámetro de la broca (mm):</label>
+        <input type="number" id="diam_broca" value="5.5" step="0.1">
+
+        <label>Material a mecanizar:</label>
+        <select id="mat_broca">
+            <option value="250">Aluminio, plásticos (250 m/min)</option>
+            <option value="200">Aluminio viruta corta (200 m/min)</option>
+            <option value="160">Aluminio > 10% Si (160 m/min)</option>
+            <option value="125">Acero < 500 N/mm² (125 m/min)</option>
+            <option value="115">Acero < 750 N/mm² (115 m/min)</option>
+            <option value="95">Acero < 900 N/mm² (95 m/min)</option>
+            <option value="90">Acero < 1100 N/mm² (90 m/min)</option>
+            <option value="65">Acero < 1400 N/mm² (65 m/min)</option>
+            <option value="35">INOX < 900 N/mm² (35 m/min)</option>
+            <option value="30">INOX > 900 N/mm² (30 m/min)</option>
+            <option value="100">Fundición GG (100 m/min)</option>
+            <option value="65">Fundición GGG (65 m/min)</option>
+        </select>
+
+        <button class="btn-calcular" onclick="calcularBrocaInt()">Calcular Parámetros</button>
+
+        <div class="results" id="res_broca" style="display: none;">
+            <p>Revoluciones (S): <span class="highlight" id="s_broca"></span></p>
+            <p>Avance rev. (fn): <span class="highlight" id="fn_broca"></span></p>
+            <p>Avance trabajo (F): <span class="highlight" id="f_broca"></span></p>
+        </div>
+        <p class="note">Parámetros basados en velocidad de corte (Vc) de catálogo para herramientas MDI. El avance fn se calcula proporcionalmente al diámetro.</p>
+    </div>
 </div>
 
 <script>
-    function calcular() {
+    // Navegación de pestañas
+    function abrirHerramienta(evento, idHerramienta) {
+        let contenidos = document.getElementsByClassName("tab-content");
+        for (let i = 0; i < contenidos.length; i++) contenidos[i].style.display = "none";
+        let pestanas = document.getElementsByClassName("pestana");
+        for (let i = 0; i < pestanas.length; i++) pestanas[i].classList.remove("active");
+        document.getElementById(idHerramienta).style.display = "block";
+        evento.currentTarget.classList.add("active");
+    }
+
+    // Cálculos Nine9
+    function calcularNine9() {
         let t = parseFloat(document.getElementById("depth").value);
-        let mat = document.getElementById("material").value;
+        let mat = document.getElementById("material_nine9").value;
         const RPM_MAX = 8000;
-
-        if (isNaN(t) || t <= 0) {
-            alert("Mete una profundidad válida.");
-            return;
-        }
-
+        if (!t || t <= 0) return;
         let d = t * 2;
         let vc, f_spot_max, f_spot_min, f_chamf_max, f_chamf_min;
-
-        // Base de datos con rangos máximos y mínimos del catálogo
-        switch(mat) {
-            case "carbon_low":   vc=180; f_spot_max=0.10; f_spot_min=0.05; f_chamf_max=0.24; f_chamf_min=0.10; break; 
-            case "carbon_high":  vc=140; f_spot_max=0.08; f_spot_min=0.04; f_chamf_max=0.20; f_chamf_min=0.08; break; 
-            case "inox":         vc=90;  f_spot_max=0.06; f_spot_min=0.03; f_chamf_max=0.20; f_chamf_min=0.08; break; 
-            case "cast_iron":    vc=180; f_spot_max=0.10; f_spot_min=0.05; f_chamf_max=0.25; f_chamf_min=0.10; break; 
-            case "alu":          vc=250; f_spot_max=0.10; f_spot_min=0.05; f_chamf_max=0.25; f_chamf_min=0.10; break; 
-            case "titanium":     vc=55;  f_spot_max=0.08; f_spot_min=0.03; f_chamf_max=0.08; f_chamf_min=0.03; break; 
-            case "hardened":     vc=45;  f_spot_max=0.08; f_spot_min=0.03; f_chamf_max=0.08; f_chamf_min=0.03; break; 
-        }
-
-        // Interpolación: Calcula qué porcentaje de la herramienta estás usando (asumiendo max 20mm de mango)
-        // Si d es pequeño (ej. 2mm), el ratio es 0 (usa el avance máximo). Si d es grande (ej. 18mm), el ratio es 1 (usa avance mínimo)
+        if (mat === "carbon_low") { vc=180; f_spot_max=0.10; f_spot_min=0.05; f_chamf_max=0.24; f_chamf_min=0.10; }
+        else if (mat === "carbon_high") { vc=140; f_spot_max=0.08; f_spot_min=0.04; f_chamf_max=0.20; f_chamf_min=0.08; }
+        else { vc=250; f_spot_max=0.10; f_spot_min=0.05; f_chamf_max=0.25; f_chamf_min=0.10; }
         let ratio = Math.max(0, Math.min(1, (d - 2) / 16)); 
+        let f_spot = f_spot_max - ratio * (f_spot_max - f_spot_min);
+        let f_chamf = f_chamf_max - ratio * (f_chamf_max - f_chamf_min);
+        let s_teo = Math.round((vc * 1000) / (Math.PI * d));
+        let s_real = Math.min(s_teo, RPM_MAX);
+        document.getElementById("d_nine9").innerText = d.toFixed(1) + " mm";
+        document.getElementById("s_nine9").innerText = s_real + " RPM";
+        document.getElementById("f_spot_nine9").innerText = "F " + Math.round(s_real * f_spot);
+        document.getElementById("f_chamf_nine9").innerText = "F " + Math.round(s_real * f_chamf);
+        document.getElementById("res_nine9").style.display = "block";
+    }
+
+    // Cálculos Fresado
+    function calcularFresado() {
+        let rpm = parseFloat(document.getElementById("rpm_fresa").value);
+        let z = parseFloat(document.getElementById("z_fresa").value);
+        let fz = parseFloat(document.getElementById("fz_fresa").value);
+        if (!rpm || !z || !fz) return;
+        document.getElementById("f_total_fresa").innerText = "F " + Math.round(rpm * z * fz);
+        document.getElementById("res_fresa").style.display = "block";
+    }
+
+    // Consulta de Roscas
+    function actualizarRosca() {
+        let val = document.getElementById("select_rosca").value;
+        if (!val) return document.getElementById("res_rosca").style.display = "none";
+        let [diam, paso] = val.split("|").map(Number);
+        document.getElementById("r_paso").innerText = paso + " mm";
+        document.getElementById("r_corte").innerText = "Ø " + (diam - paso).toFixed(2);
+        document.getElementById("r_laminacion").innerText = "Ø " + (diam - (paso/2)).toFixed(2);
+        document.getElementById("res_rosca").style.display = "block";
+    }
+
+    // Cálculos Broca Taladrina Interna
+    function calcularBrocaInt() {
+        let diam = parseFloat(document.getElementById("diam_broca").value);
+        let vc = parseFloat(document.getElementById("mat_broca").value);
+
+        if (!diam || diam <= 0) return alert("Introduce un diámetro válido.");
+
+        // Cálculo de RPM
+        let rpm = Math.round((vc * 1000) / (Math.PI * diam));
+
+        // Factor de avance por revolución base (0.025 mm/rev por cada mm de diámetro)
+        let factorAvance = 0.025; 
         
-        let f_spot_actual = f_spot_max - ratio * (f_spot_max - f_spot_min);
-        let f_chamf_actual = f_chamf_max - ratio * (f_chamf_max - f_chamf_min);
+        // Corrección de avance según material (más bajo en inox, más alto en aluminio)
+        if (vc <= 35) factorAvance = 0.018; // Inox
+        else if (vc >= 160) factorAvance = 0.035; // Aluminio y plásticos
 
-        // RPM con límite
-        let s_teorico = Math.round((vc * 1000) / (Math.PI * d));
-        let s_real = Math.min(s_teorico, RPM_MAX);
+        let fn = diam * factorAvance;
+        let f_total = Math.round(rpm * fn);
 
-        // Avances calculados con el 'f' dinámico adaptado a la profundidad
-        let avance_puntear = Math.round(s_real * f_spot_actual);
-        let avance_chaflan = Math.round(s_real * f_chamf_actual);
-
-        let texto_rpm = s_real + " RPM";
-        if (s_teorico > RPM_MAX) {
-            texto_rpm = "<span class='limit-warning'>" + s_real + " RPM (Tope)</span>";
-        }
-
-        document.getElementById("res_d").innerText = d.toFixed(1) + " mm";
-        document.getElementById("res_s").innerHTML = texto_rpm;
-        document.getElementById("res_f_spot").innerText = "F " + avance_puntear;
-        document.getElementById("res_f_chamf").innerText = "F " + avance_chaflan;
-        
-        document.getElementById("resultados").style.display = "block";
+        document.getElementById("s_broca").innerText = rpm + " RPM";
+        document.getElementById("fn_broca").innerText = fn.toFixed(2) + " mm/rev";
+        document.getElementById("f_broca").innerText = "F " + f_total + " mm/min";
+        document.getElementById("res_broca").style.display = "block";
     }
 </script>
-
 </body>
 </html>
