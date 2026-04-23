@@ -28,6 +28,7 @@
         .limit-warning { color: #d32f2f; font-weight: bold; font-size: 14px; }
         .note { font-size: 12px; color: #777; margin-top: 15px; font-style: italic; }
         .badge { background-color: #28a745; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+        .badge-warn { background-color: #ff9800; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -38,6 +39,7 @@
         <button class="pestana active" onclick="abrirHerramienta(event, 'calcNine9')">Nine9</button>
         <button class="pestana" onclick="abrirHerramienta(event, 'calcFresado')">Fresa</button>
         <button class="pestana" onclick="abrirHerramienta(event, 'calcBrocaInt')">Brocas INT</button>
+        <button class="pestana" onclick="abrirHerramienta(event, 'calcBrocaExt')">Brocas EXT</button>
         <button class="pestana" onclick="abrirHerramienta(event, 'calcBrocaPlacas')">Broca Placas</button>
         <button class="pestana" onclick="abrirHerramienta(event, 'calcRosca')">Roscas</button>
     </div>
@@ -82,10 +84,8 @@
     <div id="calcBrocaInt" class="tab-content">
         <h2>Brocas INT</h2>
         <h4>Refrigeración Interna (Tope 9000)</h4>
-        
         <label>Diámetro de la broca (mm):</label>
         <input type="number" id="diam_broca" value="5.0" step="0.1">
-
         <label>Material a mecanizar:</label>
         <select id="mat_broca">
             <option value="acero">Acero</option>
@@ -93,9 +93,7 @@
             <option value="inox">Inoxidable</option>
             <option value="alu">Aluminio</option>
         </select>
-
         <button class="btn-calcular" onclick="calcularBrocaInt()">Calcular Parámetros</button>
-
         <div class="results" id="res_broca" style="display: none;">
             <p>Revoluciones (S): <span class="highlight" id="s_broca"></span></p>
             <p>Avance rev. (fn): <span class="highlight" id="fn_broca"></span></p>
@@ -103,14 +101,36 @@
         </div>
     </div>
 
-    <!-- PESTAÑA 4: BROCA PLACAS -->
+    <!-- PESTAÑA 4: BROCA EXTERNA (NUEVA) -->
+    <div id="calcBrocaExt" class="tab-content">
+        <h2>Brocas EXT</h2>
+        <h4>Sin refrigeración interna (G83)</h4>
+        <label>Diámetro de la broca (mm):</label>
+        <input type="number" id="diam_broca_ext" value="5.0" step="0.1">
+        <label>Material a mecanizar:</label>
+        <select id="mat_broca_ext">
+            <option value="acero">Acero</option>
+            <option value="acero_duro">Acero Duro / Aleado</option>
+            <option value="inox">Inoxidable</option>
+            <option value="alu">Aluminio</option>
+        </select>
+        <button class="btn-calcular" onclick="calcularBrocaExt()">Calcular Parámetros</button>
+        <div class="results" id="res_broca_ext" style="display: none;">
+            <p>Ciclo sugerido: <span class="badge-warn">G83 (Picoteo)</span></p>
+            <p>Revoluciones (S): <span class="highlight" id="s_broca_ext"></span></p>
+            <p>Avance rev. (fn): <span class="highlight" id="fn_broca_ext"></span></p>
+            <p>Avance trabajo (F): <span class="highlight" id="f_broca_ext"></span></p>
+            <p>Pasada Picoteo (Q): <span class="highlight" id="q_broca_ext"></span></p>
+        </div>
+        <p class="note">Parámetros deducidos de tablas HOLEX Pro Steel (sin int.) ajustados al margen de seguridad del taller.</p>
+    </div>
+
+    <!-- PESTAÑA 5: BROCA PLACAS -->
     <div id="calcBrocaPlacas" class="tab-content">
         <h2>Broca Placas</h2>
         <h4>U-Drill / Taladrado Directo</h4>
-        
         <label>Diámetro de la broca (mm):</label>
         <input type="number" id="diam_placas" value="25" step="1">
-
         <label>Material a mecanizar:</label>
         <select id="mat_placas">
             <option value="acero">Acero</option>
@@ -118,9 +138,7 @@
             <option value="inox">Inoxidable</option>
             <option value="alu">Aluminio</option>
         </select>
-
         <button class="btn-calcular" onclick="calcularBrocaPlacas()">Calcular Parámetros</button>
-
         <div class="results" id="res_placas" style="display: none;">
             <p>Ciclo: <span class="badge">G81 (Sin picoteo)</span></p>
             <p>Revoluciones (S): <span class="highlight" id="s_placas"></span></p>
@@ -130,7 +148,7 @@
         <p class="note">Valores obtenidos de tabla de referencia del taller.</p>
     </div>
 
-    <!-- PESTAÑA 5: ROSCAS -->
+    <!-- PESTAÑA 6: ROSCAS -->
     <div id="calcRosca" class="tab-content">
         <h2>Consulta de Roscas</h2>
         <label>Métrica:</label>
@@ -156,7 +174,7 @@
 </div>
 
 <script>
-    // Función general para redondear a múltiplos (ej. 50 para RPM, 10 para F)
+    // Función general para redondear a múltiplos
     function redondear(valor, multiplo) {
         return Math.round(valor / multiplo) * multiplo;
     }
@@ -190,10 +208,10 @@
         let f_chamf = f_chamf_max - ratio * (f_chamf_max - f_chamf_min);
         
         let s_teo = (vc * 1000) / (Math.PI * d);
-        let s_real = redondear(Math.min(s_teo, RPM_MAX), 50); // Redondeo RPM a 50
+        let s_real = redondear(Math.min(s_teo, RPM_MAX), 50);
         
-        let f_spot_val = redondear(s_real * f_spot, 10); // Redondeo F a 10
-        let f_chamf_val = redondear(s_real * f_chamf, 10); // Redondeo F a 10
+        let f_spot_val = redondear(s_real * f_spot, 10);
+        let f_chamf_val = redondear(s_real * f_chamf, 10);
         
         let texto_rpm = s_teo > RPM_MAX ? "<span class='limit-warning'>" + s_real + " (Tope)</span>" : s_real + " RPM";
 
@@ -211,7 +229,7 @@
         let fz = parseFloat(document.getElementById("fz_fresa").value);
         if (!rpm || !z || !fz) return;
         
-        let f_total = redondear(rpm * z * fz, 10); // Redondeo F a 10
+        let f_total = redondear(rpm * z * fz, 10);
         
         document.getElementById("f_total_fresa").innerText = "F " + f_total;
         document.getElementById("res_fresa").style.display = "block";
@@ -236,9 +254,9 @@
         if (mat === "alu") fn += 0.01;
 
         let rpm_teo = (vc * 1000) / (Math.PI * diam);
-        let rpm = redondear(Math.min(rpm_teo, MAX_RPM), 50); // Redondeo RPM a 50
+        let rpm = redondear(Math.min(rpm_teo, MAX_RPM), 50);
         
-        let f_total = redondear(rpm * fn, 10); // Redondeo F a 10
+        let f_total = redondear(rpm * fn, 10);
 
         let texto_rpm = rpm_teo > MAX_RPM ? "<span class='limit-warning'>" + rpm + " (Tope)</span>" : rpm + " RPM";
 
@@ -246,6 +264,46 @@
         document.getElementById("fn_broca").innerText = fn.toFixed(3) + " mm/rev";
         document.getElementById("f_broca").innerText = "F " + f_total + " mm/min";
         document.getElementById("res_broca").style.display = "block";
+    }
+
+    // NUEVO: Cálculos Brocas EXT (Sin Refrigeración Interna)
+    function calcularBrocaExt() {
+        let diam = parseFloat(document.getElementById("diam_broca_ext").value);
+        let mat = document.getElementById("mat_broca_ext").value;
+
+        if (!diam || diam <= 0) return alert("Introduce un diámetro válido.");
+
+        let vc;
+        const MAX_RPM = 8000; // Tope ligeramente menor por seguridad térmica
+
+        // Vc deducidas del catálogo pero ajustadas a seguridad
+        if (mat === "acero") vc = 45;
+        else if (mat === "acero_duro") vc = 30;
+        else if (mat === "inox") vc = 25;
+        else if (mat === "alu") vc = 150;
+
+        // Fórmula extrapolada del catálogo HOLEX para acero estándar
+        let fn = 0.055 + (diam * 0.018); 
+        
+        // Correcciones por dureza
+        if (mat === "acero_duro" || mat === "inox") fn *= 0.8;
+        if (mat === "alu") fn *= 1.2;
+
+        let rpm_teo = (vc * 1000) / (Math.PI * diam);
+        let rpm = redondear(Math.min(rpm_teo, MAX_RPM), 50);
+        
+        let f_total = redondear(rpm * fn, 10);
+
+        let texto_rpm = rpm_teo > MAX_RPM ? "<span class='limit-warning'>" + rpm + " (Tope)</span>" : rpm + " RPM";
+
+        // Cálculo conservador para la profundidad del picoteo (Q)
+        let q_picoteo = (diam * 0.5).toFixed(1);
+
+        document.getElementById("s_broca_ext").innerHTML = texto_rpm;
+        document.getElementById("fn_broca_ext").innerText = fn.toFixed(3) + " mm/rev";
+        document.getElementById("f_broca_ext").innerText = "F " + f_total + " mm/min";
+        document.getElementById("q_broca_ext").innerText = "Q " + q_picoteo + " mm";
+        document.getElementById("res_broca_ext").style.display = "block";
     }
 
     // Cálculos Broca Placas
@@ -262,8 +320,8 @@
         else if (mat === "inox") { vc = 100; fn = 0.08; }
         else if (mat === "alu") { vc = 135; fn = 0.10; }
 
-        let rpm = redondear((vc * 1000) / (Math.PI * diam), 50); // Redondeo RPM a 50
-        let f_total = redondear(rpm * fn, 10); // Redondeo F a 10
+        let rpm = redondear((vc * 1000) / (Math.PI * diam), 50);
+        let f_total = redondear(rpm * fn, 10);
 
         document.getElementById("s_placas").innerText = rpm + " RPM";
         document.getElementById("fn_placas").innerText = fn.toFixed(2) + " mm/rev";
