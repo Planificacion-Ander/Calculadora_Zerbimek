@@ -62,7 +62,7 @@
             margin-top: 4px;
         }
         
-        /* --- MENÚ (Ahora en cuadrícula 4x2 perfecta) --- */
+        /* --- MENÚ --- */
         .menu { display: grid; grid-template-columns: repeat(4, 1fr); background-color: #222; }
         .menu button { background-color: inherit; color: #ccc; border: none; padding: 12px 2px; cursor: pointer; font-size: 12px; font-weight: bold; transition: 0.3s; border-bottom: 3px solid #222; }
         .menu button:hover { color: #fff; }
@@ -99,7 +99,7 @@
 
 <div class="app-container">
     
-    <!-- CABECERA DE MARCA CON LOGO VECTORIAL CENTRADO -->
+    <!-- CABECERA DE MARCA -->
     <div class="header-zerbimek">
         <div class="header-logo">
             <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="55" height="55">
@@ -114,7 +114,7 @@
         </div>
     </div>
 
-    <!-- MENÚ 8 BOTONES -->
+    <!-- MENÚ -->
     <div class="menu">
         <button class="pestana active" onclick="abrirHerramienta(event, 'calcNine9')">Punteador NC</button>
         <button class="pestana" onclick="abrirHerramienta(event, 'calcFresado')">Fresa</button>
@@ -233,13 +233,13 @@
             <p>Pasada (Q): <span class="highlight" id="q_broca_ext"></span></p>
             <p>Avance rev. (fn): <span class="highlight" id="fn_broca_ext"></span></p>
         </div>
-        <p class="note">Parámetros conservadores calculados para garantizar la evacuación de viruta.</p>
+        <p class="note">Parámetros conservadores calculados para garantizar la evacuación de viruta y evitar sobrecalentamientos.</p>
     </div>
 
     <!-- PESTAÑA 6: BROCAS HSS -->
     <div id="calcBrocaHSS" class="tab-content">
         <h2>Brocas HSS</h2>
-        <h4>Sin revestimiento (G83)</h4>
+        <h4>Sin revestimiento (G82)</h4>
         <label>Diámetro de la broca (mm):</label>
         <input type="number" id="diam_broca_hss" value="10.0" step="0.1">
         <label>Material a mecanizar:</label>
@@ -251,7 +251,7 @@
         </select>
         <button class="btn-calcular" onclick="calcularBrocaHSS()">Calcular Parámetros</button>
         <div class="results" id="res_broca_hss" style="display: none;">
-            <p>Ciclo sugerido: <span class="badge-warn">G83 (Picoteo)</span></p>
+            <p>Ciclo sugerido: <span class="badge-warn">G82</span></p>
             <p>Revoluciones (S): <span class="highlight" id="s_broca_hss"></span></p>
             <p>Avance trabajo (F): <span class="highlight" id="f_broca_hss"></span></p>
             <p>Pasada (Q): <span class="highlight" id="q_broca_hss"></span></p>
@@ -450,7 +450,7 @@
         document.getElementById("res_broca").style.display = "block";
     }
 
-    // Cálculos Brocas EXT
+    // Cálculos Brocas EXT (Ajustadas para ser MUY conservadoras)
     function calcularBrocaExt() {
         let diam = parseFloat(document.getElementById("diam_broca_ext").value);
         let mat = document.getElementById("mat_broca_ext").value;
@@ -460,12 +460,14 @@
         let vc;
         const MAX_RPM = 8000;
 
-        if (mat === "acero") vc = 35;
-        else if (mat === "acero_duro") vc = 25;
-        else if (mat === "inox") vc = 25;
-        else if (mat === "alu") vc = 120;
+        // Vc muy conservadoras para brocas de metal duro sin taladrina interna
+        if (mat === "acero") vc = 25; 
+        else if (mat === "acero_duro") vc = 15; 
+        else if (mat === "inox") vc = 15; 
+        else if (mat === "alu") vc = 80; 
 
-        let fn = 0.060 + (diam * 0.004); 
+        // Avance ligeramente suavizado
+        let fn = 0.040 + (diam * 0.003); 
         
         if (mat === "alu") fn += 0.01;
         if (mat === "inox" || mat === "acero_duro") fn -= 0.01;
@@ -477,7 +479,14 @@
 
         let texto_rpm = rpm_teo > MAX_RPM ? "<span class='limit-warning'>" + rpm + " (Tope)</span>" : rpm + " RPM";
 
-        let q_picoteo = Math.round(diam * 0.5);
+        // Lógica de picoteo (Q) conservadora para evitar emboces, sobre todo en aluminio
+        let multiplicador_q;
+        if (mat === "alu") multiplicador_q = 0.4; // Picoteo más corto en aluminio por ser pegajoso
+        else if (mat === "acero") multiplicador_q = 0.5;
+        else multiplicador_q = 0.3; // Inox y duros muy corto para no partir
+
+        let q_picoteo = Math.round(diam * multiplicador_q);
+        if (q_picoteo < 1) q_picoteo = 1;
 
         document.getElementById("s_broca_ext").innerHTML = texto_rpm;
         document.getElementById("f_broca_ext").innerText = "F " + f_total + " mm/min";
@@ -494,20 +503,24 @@
         if (!diam || diam <= 0) return alert("Introduce un diámetro válido.");
 
         let vc;
-        const MAX_RPM = 5000; // Tope más bajo para HSS
+        const MAX_RPM = 5000;
 
-        // Vc más bajas que las de metal duro, conservadoras respecto al catálogo
         if (mat === "acero") vc = 25;
         else if (mat === "acero_duro") vc = 8;
         else if (mat === "inox") vc = 8;
         else if (mat === "alu") vc = 45;
 
-        // Fórmula base deducida del catálogo Hoffmann (Aprox. D * 0.01)
-        let fn = diam * 0.01; 
+        // Tramos de avance basados en catálogo para que la F fluctúe de manera realista
+        let fn;
+        if (diam <= 3) fn = 0.03;
+        else if (diam <= 5) fn = 0.05;
+        else if (diam <= 7) fn = 0.07;
+        else if (diam <= 10) fn = 0.10;
+        else if (diam <= 14) fn = 0.12;
+        else fn = 0.15;
         
-        // Ajustes finos por material
-        if (mat === "alu") fn += 0.02;
-        if (mat === "inox" || mat === "acero_duro") fn -= (diam * 0.002);
+        if (mat === "alu") fn *= 1.3;
+        if (mat === "inox" || mat === "acero_duro") fn *= 0.6;
 
         let rpm_teo = (vc * 1000) / (Math.PI * diam);
         let rpm = redondear(Math.min(rpm_teo, MAX_RPM), 50);
@@ -517,7 +530,7 @@
         let texto_rpm = rpm_teo > MAX_RPM ? "<span class='limit-warning'>" + rpm + " (Tope)</span>" : rpm + " RPM";
 
         let q_picoteo = Math.round(diam * 0.5);
-        if (q_picoteo < 1) q_picoteo = 1; // Mínimo 1mm para evitar picoteos ridículos
+        if (q_picoteo < 1) q_picoteo = 1;
 
         document.getElementById("s_broca_hss").innerHTML = texto_rpm;
         document.getElementById("f_broca_hss").innerText = "F " + f_total + " mm/min";
