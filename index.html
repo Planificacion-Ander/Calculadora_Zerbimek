@@ -339,7 +339,7 @@
             <p>Avance (F = S × Paso): <span class="highlight" id="r_f_rosca"></span></p>
             <p class="note" id="r_tipo_macho" style="margin-bottom: 0; color: #444; font-weight: bold; font-size: 14px;"></p>
         </div>
-        <p class="note" style="margin-top: 15px;">Ajustado para ~350 RPM en M6 Acero.</p>
+        <p class="note" style="margin-top: 15px;">Condiciones ajustadas con redondeo inteligente para S y F exactos.</p>
     </div>
 
 </div>
@@ -559,7 +559,7 @@
         document.getElementById("res_placas").style.display = "block";
     }
 
-    // --- ROSCAS ---
+    // --- ROSCAS CON REDONDEO INTELIGENTE Y VC DE TALLER ---
     function mostrarDesplegableRosca() {
         let tipo = document.getElementById("tipo_rosca").value;
         document.getElementById("select_rosca_m").style.display = (tipo === 'M') ? "block" : "none";
@@ -631,8 +631,42 @@
         }
 
         let rpm_teo = (vc * 1000) / (Math.PI * d.d_calc);
-        // REDONDEO A 50 RPM PARA NÚMEROS LIMPIOS EN EL CONTROL
-        let rpm = redondear(rpm_teo, 50); 
+        let base_rpm = Math.round(rpm_teo / 10) * 10; 
+        let rpm = base_rpm;
+        
+        // Redondeo inteligente: Buscar una S que dé una F limpia (entera y preferiblemente terminada en 0)
+        if (d.paso % 0.01 === 0) { // Solo para métricas
+            let found_perfect = false;
+            let found_integer = false;
+            let backup_rpm = base_rpm;
+
+            for (let offset = 0; offset <= 50; offset += 10) {
+                let test_up = base_rpm + offset;
+                let test_down = base_rpm - offset;
+                
+                // Prioridad 1: F termina en 0
+                if (!found_perfect && (test_up * d.paso) % 10 === 0) {
+                    rpm = test_up;
+                    found_perfect = true;
+                }
+                if (!found_perfect && test_down > 0 && (test_down * d.paso) % 10 === 0) {
+                    rpm = test_down;
+                    found_perfect = true;
+                }
+
+                // Prioridad 2: F es un número entero
+                if (!found_integer && (test_up * d.paso) % 1 === 0) {
+                    backup_rpm = test_up;
+                    found_integer = true;
+                }
+                if (!found_integer && test_down > 0 && (test_down * d.paso) % 1 === 0) {
+                    backup_rpm = test_down;
+                    found_integer = true;
+                }
+            }
+            if (!found_perfect && found_integer) rpm = backup_rpm;
+        }
+
         let f_total = Math.round(rpm * d.paso); 
         
         let paso_str = d.hilos ? `${d.paso} mm (${d.hilos})` : `${d.paso} mm`;
