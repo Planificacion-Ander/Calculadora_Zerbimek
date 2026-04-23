@@ -62,12 +62,11 @@
             margin-top: 4px;
         }
         
-        /* --- MENÚ --- */
-        .menu { display: grid; grid-template-columns: repeat(3, 1fr); background-color: #222; }
-        .menu button { background-color: inherit; color: #ccc; border: none; padding: 12px 2px; cursor: pointer; font-size: 13px; font-weight: bold; transition: 0.3s; border-bottom: 3px solid #222; }
+        /* --- MENÚ (Ahora en cuadrícula 4x2 perfecta) --- */
+        .menu { display: grid; grid-template-columns: repeat(4, 1fr); background-color: #222; }
+        .menu button { background-color: inherit; color: #ccc; border: none; padding: 12px 2px; cursor: pointer; font-size: 12px; font-weight: bold; transition: 0.3s; border-bottom: 3px solid #222; }
         .menu button:hover { color: #fff; }
         .menu button.active { background-color: #333; border-bottom: 3px solid #E3000F; color: #E3000F; }
-        .menu button.full-width { grid-column: span 3; }
         
         /* --- CONTENIDO --- */
         .tab-content { display: none; padding: 25px 20px; animation: fadeEffect 0.4s; }
@@ -88,7 +87,6 @@
         .results p { margin: 10px 0; font-size: 15px; display: flex; justify-content: space-between; border-bottom: 1px dashed #ddd; padding-bottom: 6px; }
         .results p:last-child { border-bottom: none; padding-bottom: 0; }
         
-        /* Cambiado a negro/gris oscuro para que no sea tan llamativo */
         .highlight { font-weight: bold; color: #333; font-size: 16px;}
         .limit-warning { color: #d32f2f; font-weight: bold; font-size: 14px; }
         .note { font-size: 12px; color: #888; margin-top: 15px; font-style: italic; text-align: center;}
@@ -101,7 +99,7 @@
 
 <div class="app-container">
     
-    <!-- CABECERA DE MARCA CON LOGO VECTORIAL -->
+    <!-- CABECERA DE MARCA CON LOGO VECTORIAL CENTRADO -->
     <div class="header-zerbimek">
         <div class="header-logo">
             <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="55" height="55">
@@ -116,20 +114,21 @@
         </div>
     </div>
 
-    <!-- MENÚ -->
+    <!-- MENÚ 8 BOTONES -->
     <div class="menu">
-        <button class="pestana active" onclick="abrirHerramienta(event, 'calcNine9')">Punteado</button>
+        <button class="pestana active" onclick="abrirHerramienta(event, 'calcNine9')">Punteador NC</button>
         <button class="pestana" onclick="abrirHerramienta(event, 'calcFresado')">Fresa</button>
         <button class="pestana" onclick="abrirHerramienta(event, 'calcTungaloy')">Platos Tungaloy</button>
         <button class="pestana" onclick="abrirHerramienta(event, 'calcBrocaInt')">Brocas INT</button>
         <button class="pestana" onclick="abrirHerramienta(event, 'calcBrocaExt')">Brocas EXT</button>
+        <button class="pestana" onclick="abrirHerramienta(event, 'calcBrocaHSS')">Brocas HSS</button>
         <button class="pestana" onclick="abrirHerramienta(event, 'calcBrocaPlacas')">Broca Placas</button>
-        <button class="pestana full-width" onclick="abrirHerramienta(event, 'calcRosca')">Roscas</button>
+        <button class="pestana" onclick="abrirHerramienta(event, 'calcRosca')">Roscas</button>
     </div>
 
-    <!-- PESTAÑA 1: NINE9 (AHORA PUNTEADO) -->
+    <!-- PESTAÑA 1: PUNTEADOR NC -->
     <div id="calcNine9" class="tab-content" style="display: block;">
-        <h2>Punteado / Chaflán</h2>
+        <h2>Punteador NC / Chaflán</h2>
         <label>Profundidad Z (mm):</label>
         <input type="number" id="depth" value="1.0" step="0.1">
         <label>Material:</label>
@@ -141,7 +140,7 @@
         </select>
         <button class="btn-calcular" onclick="calcularNine9()">Calcular Parámetros</button>
         <div class="results" id="res_nine9" style="display: none;">
-            <p>Diámetro (d): <span class="highlight" id="d_nine9"></span></p>
+            <p>Diámetro sugerido (d): <span class="highlight" id="d_nine9"></span></p>
             <p>Velocidad (S): <span class="highlight" id="s_nine9"></span></p>
             <p>F (Puntear): <span class="highlight" id="f_spot_nine9"></span></p>
             <p>F (Chaflán): <span class="highlight" id="f_chamf_nine9"></span></p>
@@ -163,7 +162,7 @@
         </div>
     </div>
 
-    <!-- PESTAÑA 3: PLATOS TUNGALOY (VALORES EXACTOS) -->
+    <!-- PESTAÑA 3: PLATOS TUNGALOY -->
     <div id="calcTungaloy" class="tab-content">
         <h2>Platos Tungaloy</h2>
         <h4>Condiciones Turbo Tungaloy</h4>
@@ -237,7 +236,31 @@
         <p class="note">Parámetros conservadores calculados para garantizar la evacuación de viruta.</p>
     </div>
 
-    <!-- PESTAÑA 6: BROCA PLACAS -->
+    <!-- PESTAÑA 6: BROCAS HSS -->
+    <div id="calcBrocaHSS" class="tab-content">
+        <h2>Brocas HSS</h2>
+        <h4>Sin revestimiento (G83)</h4>
+        <label>Diámetro de la broca (mm):</label>
+        <input type="number" id="diam_broca_hss" value="10.0" step="0.1">
+        <label>Material a mecanizar:</label>
+        <select id="mat_broca_hss">
+            <option value="acero">Acero</option>
+            <option value="acero_duro">Acero Duro / Aleado</option>
+            <option value="inox">Inoxidable</option>
+            <option value="alu">Aluminio</option>
+        </select>
+        <button class="btn-calcular" onclick="calcularBrocaHSS()">Calcular Parámetros</button>
+        <div class="results" id="res_broca_hss" style="display: none;">
+            <p>Ciclo sugerido: <span class="badge-warn">G83 (Picoteo)</span></p>
+            <p>Revoluciones (S): <span class="highlight" id="s_broca_hss"></span></p>
+            <p>Avance trabajo (F): <span class="highlight" id="f_broca_hss"></span></p>
+            <p>Pasada (Q): <span class="highlight" id="q_broca_hss"></span></p>
+            <p>Avance rev. (fn): <span class="highlight" id="fn_broca_hss"></span></p>
+        </div>
+        <p class="note">Valores HSS conservadores ajustados desde catálogo Hoffmann.</p>
+    </div>
+
+    <!-- PESTAÑA 7: BROCA PLACAS -->
     <div id="calcBrocaPlacas" class="tab-content">
         <h2>Broca Placas</h2>
         <h4>Refrigeración Interna (G81)</h4>
@@ -259,7 +282,7 @@
         </div>
     </div>
 
-    <!-- PESTAÑA 7: ROSCAS -->
+    <!-- PESTAÑA 8: ROSCAS -->
     <div id="calcRosca" class="tab-content">
         <h2>Consulta de Roscas</h2>
         <label>Métrica:</label>
@@ -298,7 +321,7 @@
         evento.currentTarget.classList.add("active");
     }
 
-    // Cálculos Punteado (Nine9)
+    // Cálculos Punteador NC
     function calcularNine9() {
         let t = parseFloat(document.getElementById("depth").value);
         let mat = document.getElementById("material_nine9").value;
@@ -344,7 +367,7 @@
         document.getElementById("res_fresa").style.display = "block";
     }
 
-    // Cálculos Platos Tungaloy (Simplificado a valor exacto)
+    // Cálculos Platos Tungaloy
     function calcularTungaloy() {
         let diam = document.getElementById("diam_tungaloy").value;
         let mat = document.getElementById("mat_tungaloy").value;
@@ -461,6 +484,46 @@
         document.getElementById("q_broca_ext").innerText = "Q " + q_picoteo + " mm";
         document.getElementById("fn_broca_ext").innerText = fn.toFixed(3) + " mm/rev";
         document.getElementById("res_broca_ext").style.display = "block";
+    }
+
+    // Cálculos Brocas HSS
+    function calcularBrocaHSS() {
+        let diam = parseFloat(document.getElementById("diam_broca_hss").value);
+        let mat = document.getElementById("mat_broca_hss").value;
+
+        if (!diam || diam <= 0) return alert("Introduce un diámetro válido.");
+
+        let vc;
+        const MAX_RPM = 5000; // Tope más bajo para HSS
+
+        // Vc más bajas que las de metal duro, conservadoras respecto al catálogo
+        if (mat === "acero") vc = 25;
+        else if (mat === "acero_duro") vc = 8;
+        else if (mat === "inox") vc = 8;
+        else if (mat === "alu") vc = 45;
+
+        // Fórmula base deducida del catálogo Hoffmann (Aprox. D * 0.01)
+        let fn = diam * 0.01; 
+        
+        // Ajustes finos por material
+        if (mat === "alu") fn += 0.02;
+        if (mat === "inox" || mat === "acero_duro") fn -= (diam * 0.002);
+
+        let rpm_teo = (vc * 1000) / (Math.PI * diam);
+        let rpm = redondear(Math.min(rpm_teo, MAX_RPM), 50);
+        
+        let f_total = redondear(rpm * fn, 10);
+
+        let texto_rpm = rpm_teo > MAX_RPM ? "<span class='limit-warning'>" + rpm + " (Tope)</span>" : rpm + " RPM";
+
+        let q_picoteo = Math.round(diam * 0.5);
+        if (q_picoteo < 1) q_picoteo = 1; // Mínimo 1mm para evitar picoteos ridículos
+
+        document.getElementById("s_broca_hss").innerHTML = texto_rpm;
+        document.getElementById("f_broca_hss").innerText = "F " + f_total + " mm/min";
+        document.getElementById("q_broca_hss").innerText = "Q " + q_picoteo + " mm";
+        document.getElementById("fn_broca_hss").innerText = fn.toFixed(3) + " mm/rev";
+        document.getElementById("res_broca_hss").style.display = "block";
     }
 
     // Cálculos Broca Placas
