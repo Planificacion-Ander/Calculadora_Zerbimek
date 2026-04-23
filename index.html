@@ -8,7 +8,6 @@
         body { font-family: 'Segoe UI', sans-serif; background-color: #e9ecef; color: #333; margin: 0; padding: 10px; display: flex; justify-content: center; }
         .app-container { background-color: #fff; border-radius: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); max-width: 450px; width: 100%; overflow: hidden; }
         
-        /* Ajuste del menú para pestañas */
         .menu { display: flex; background-color: #333; overflow-x: auto; white-space: nowrap; scrollbar-width: none; }
         .menu::-webkit-scrollbar { display: none; }
         .menu button { flex: 1; min-width: 85px; background-color: inherit; color: white; border: none; padding: 15px 5px; cursor: pointer; font-size: 13px; font-weight: bold; transition: 0.3s; border-bottom: 3px solid transparent; }
@@ -34,7 +33,6 @@
 <body>
 
 <div class="app-container">
-    <!-- MENÚ SUPERIOR -->
     <div class="menu">
         <button class="pestana active" onclick="abrirHerramienta(event, 'calcNine9')">Nine9</button>
         <button class="pestana" onclick="abrirHerramienta(event, 'calcFresado')">Fresa</button>
@@ -101,7 +99,7 @@
         </div>
     </div>
 
-    <!-- PESTAÑA 4: BROCA EXTERNA (NUEVA) -->
+    <!-- PESTAÑA 4: BROCA EXTERNA (CORREGIDA) -->
     <div id="calcBrocaExt" class="tab-content">
         <h2>Brocas EXT</h2>
         <h4>Sin refrigeración interna (G83)</h4>
@@ -122,7 +120,7 @@
             <p>Avance trabajo (F): <span class="highlight" id="f_broca_ext"></span></p>
             <p>Pasada Picoteo (Q): <span class="highlight" id="q_broca_ext"></span></p>
         </div>
-        <p class="note">Parámetros deducidos de tablas HOLEX Pro Steel (sin int.) ajustados al margen de seguridad del taller.</p>
+        <p class="note">Parámetros conservadores calculados para garantizar la evacuación de viruta y evitar calentamiento.</p>
     </div>
 
     <!-- PESTAÑA 5: BROCA PLACAS -->
@@ -145,7 +143,6 @@
             <p>Avance rev. (fn): <span class="highlight" id="fn_placas"></span></p>
             <p>Avance trabajo (F): <span class="highlight" id="f_placas"></span></p>
         </div>
-        <p class="note">Valores obtenidos de tabla de referencia del taller.</p>
     </div>
 
     <!-- PESTAÑA 6: ROSCAS -->
@@ -174,12 +171,10 @@
 </div>
 
 <script>
-    // Función general para redondear a múltiplos
     function redondear(valor, multiplo) {
         return Math.round(valor / multiplo) * multiplo;
     }
 
-    // Navegación de pestañas
     function abrirHerramienta(evento, idHerramienta) {
         let contenidos = document.getElementsByClassName("tab-content");
         for (let i = 0; i < contenidos.length; i++) contenidos[i].style.display = "none";
@@ -266,7 +261,7 @@
         document.getElementById("res_broca").style.display = "block";
     }
 
-    // NUEVO: Cálculos Brocas EXT (Sin Refrigeración Interna)
+    // Cálculos Brocas EXT (Corregida basándose en las Brocas INT)
     function calcularBrocaExt() {
         let diam = parseFloat(document.getElementById("diam_broca_ext").value);
         let mat = document.getElementById("mat_broca_ext").value;
@@ -274,20 +269,20 @@
         if (!diam || diam <= 0) return alert("Introduce un diámetro válido.");
 
         let vc;
-        const MAX_RPM = 8000; // Tope ligeramente menor por seguridad térmica
+        const MAX_RPM = 8000;
 
-        // Vc deducidas del catálogo pero ajustadas a seguridad
-        if (mat === "acero") vc = 45;
-        else if (mat === "acero_duro") vc = 30;
+        // Vc más bajas que las de INT
+        if (mat === "acero") vc = 35;
+        else if (mat === "acero_duro") vc = 25;
         else if (mat === "inox") vc = 25;
-        else if (mat === "alu") vc = 150;
+        else if (mat === "alu") vc = 120;
 
-        // Fórmula extrapolada del catálogo HOLEX para acero estándar
-        let fn = 0.055 + (diam * 0.018); 
+        // Fórmula de avance más suave que la de INT
+        let fn = 0.060 + (diam * 0.004); 
         
-        // Correcciones por dureza
-        if (mat === "acero_duro" || mat === "inox") fn *= 0.8;
-        if (mat === "alu") fn *= 1.2;
+        // Ajustes finos de avance
+        if (mat === "alu") fn += 0.01;
+        if (mat === "inox" || mat === "acero_duro") fn -= 0.01;
 
         let rpm_teo = (vc * 1000) / (Math.PI * diam);
         let rpm = redondear(Math.min(rpm_teo, MAX_RPM), 50);
@@ -296,7 +291,6 @@
 
         let texto_rpm = rpm_teo > MAX_RPM ? "<span class='limit-warning'>" + rpm + " (Tope)</span>" : rpm + " RPM";
 
-        // Cálculo conservador para la profundidad del picoteo (Q)
         let q_picoteo = (diam * 0.5).toFixed(1);
 
         document.getElementById("s_broca_ext").innerHTML = texto_rpm;
