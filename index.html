@@ -7,7 +7,7 @@
     <style>
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background-color: #e9ecef; /* Fondo gris claro industrial */
+            background-color: #e9ecef; 
             color: #333; 
             margin: 0; 
             padding: 10px; 
@@ -22,60 +22,63 @@
             max-width: 500px; 
             width: 100%; 
             overflow: hidden; 
-            border-top: 5px solid #E3000F; /* Detalle rojo Zerbimek superior */
+            border-top: 5px solid #E3000F; 
         }
 
-        /* --- NUEVA CABECERA ZERBIMEK --- */
+        /* --- CABECERA CON LOGO RECREADO EN CSS --- */
         .header-zerbimek {
-            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 20px 10px 15px 10px;
             background-color: #ffffff;
+            gap: 15px; /* Separación entre logo y texto */
         }
-        .header-zerbimek h1 {
-            margin: 0;
-            color: #E3000F; /* Rojo Zerbimek */
-            font-size: 32px;
+        
+        /* El círculo rojo con la Z */
+        .logo-z {
+            background-color: #E3000F;
+            color: white;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%; /* Lo hace redondo */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 42px;
             font-weight: 900;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
+            font-style: italic; /* Z inclinada */
+            font-family: 'Arial Black', Impact, sans-serif; /* Fuente gruesa */
+            line-height: 1;
+            padding-right: 4px; /* Ajuste óptico para centrar la cursiva */
         }
-        .header-zerbimek span {
+
+        .header-text {
+            text-align: left;
+        }
+        .header-text h1 {
+            margin: 0;
+            color: #E3000F;
+            font-size: 28px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            line-height: 1;
+        }
+        .header-text span {
             display: block;
-            font-size: 12px;
+            font-size: 11px;
             color: #777;
             text-transform: uppercase;
-            letter-spacing: 3px;
-            margin-top: 2px;
+            letter-spacing: 2px;
+            margin-top: 4px;
         }
         
         /* --- MENÚ --- */
-        .menu { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            background-color: #222; /* Gris más oscuro para contraste */
-        }
-        
-        .menu button { 
-            background-color: inherit; 
-            color: #ccc; 
-            border: none; 
-            padding: 12px 5px; 
-            cursor: pointer; 
-            font-size: 13px; 
-            font-weight: bold; 
-            transition: 0.3s; 
-            border-bottom: 3px solid #222; 
-        }
-        
-        .menu button:hover {
-            color: #fff;
-        }
-
-        .menu button.active { 
-            background-color: #333; 
-            border-bottom: 3px solid #E3000F; /* Rojo Zerbimek */
-            color: #E3000F; 
-        }
+        .menu { display: grid; grid-template-columns: repeat(3, 1fr); background-color: #222; }
+        .menu button { background-color: inherit; color: #ccc; border: none; padding: 12px 5px; cursor: pointer; font-size: 13px; font-weight: bold; transition: 0.3s; border-bottom: 3px solid #222; }
+        .menu button:hover { color: #fff; }
+        .menu button.active { background-color: #333; border-bottom: 3px solid #E3000F; color: #E3000F; }
         
         /* --- CONTENIDO --- */
         .tab-content { display: none; padding: 25px 20px; animation: fadeEffect 0.4s; }
@@ -85,47 +88,14 @@
         h4 { text-align: center; color: #666; margin-top: 0; font-weight: normal; font-size: 0.9rem; margin-bottom: 20px;}
         label { font-weight: bold; margin-top: 15px; display: block; color: #444; }
         
-        input, select { 
-            width: 100%; 
-            padding: 12px; 
-            margin-top: 5px; 
-            border: 1px solid #ccc; 
-            border-radius: 6px; 
-            box-sizing: border-box; 
-            font-size: 16px; 
-            background-color: #fcfcfc;
-        }
-        input:focus, select:focus {
-            outline: none;
-            border-color: #E3000F;
-        }
+        input, select { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 16px; background-color: #fcfcfc;}
+        input:focus, select:focus { outline: none; border-color: #E3000F; }
 
         /* --- BOTONES Y RESULTADOS --- */
-        .btn-calcular { 
-            background-color: #E3000F; /* Rojo Zerbimek */
-            color: white; 
-            border: none; 
-            cursor: pointer; 
-            font-weight: bold; 
-            margin-top: 25px; 
-            font-size: 16px; 
-            padding: 15px; 
-            width: 100%; 
-            border-radius: 6px; 
-            transition: 0.2s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+        .btn-calcular { background-color: #E3000F; color: white; border: none; cursor: pointer; font-weight: bold; margin-top: 25px; font-size: 16px; padding: 15px; width: 100%; border-radius: 6px; transition: 0.2s; text-transform: uppercase; letter-spacing: 1px;}
         .btn-calcular:active { transform: scale(0.98); background-color: #B3000C; }
         
-        .results { 
-            margin-top: 25px; 
-            padding: 15px; 
-            background-color: #f8f9fa; 
-            border-radius: 6px; 
-            border-left: 6px solid #E3000F; /* Rojo Zerbimek */
-            box-shadow: inset 0 0 5px rgba(0,0,0,0.02);
-        }
+        .results { margin-top: 25px; padding: 15px; background-color: #f8f9fa; border-radius: 6px; border-left: 6px solid #E3000F; box-shadow: inset 0 0 5px rgba(0,0,0,0.02);}
         .results p { margin: 10px 0; font-size: 15px; display: flex; justify-content: space-between; border-bottom: 1px dashed #ddd; padding-bottom: 6px; }
         .results p:last-child { border-bottom: none; padding-bottom: 0; }
         
@@ -143,8 +113,11 @@
     
     <!-- CABECERA DE MARCA -->
     <div class="header-zerbimek">
-        <h1>ZERBIMEK</h1>
-        <span>Calculadora CNC</span>
+        <div class="logo-z">Z</div>
+        <div class="header-text">
+            <h1>ZERBIMEK</h1>
+            <span>Calculadora CNC</span>
+        </div>
     </div>
 
     <div class="menu">
