@@ -248,7 +248,7 @@
 
     <div id="calcBrocaHSS" class="tab-content">
         <h2>Brocas HSS</h2>
-        <h4>Garant / Holex (G82)</h4>
+        <h4>Sin revestimiento (G82)</h4>
         <label>Diámetro de la broca (mm):</label>
         <input type="number" id="diam_broca_hss" value="10.0" step="0.1">
         <label>Material a mecanizar:</label>
@@ -367,7 +367,6 @@
         evento.currentTarget.classList.add("active");
     }
 
-    // --- CÁLCULOS ESCARIADORES (Limpio y con frenos) ---
     function calcularEscariador() {
         let d = parseFloat(document.getElementById("diam_esc").value);
         let mat = document.getElementById("mat_esc").value;
@@ -387,7 +386,7 @@
             else if (d <= 5) fn_base = 0.12;
             else if (d <= 10) fn_base = 0.18;
             else fn_base = 0.20;
-            
+
         } else { // MDI
             if (mat === "acero") vc = 15;
             else if (mat === "acero_duro") vc = 8;
@@ -400,29 +399,25 @@
             else fn_base = 0.14;
         }
 
-        // Freno de seguridad para diámetros minúsculos
         if (d <= 4) {
             vc = vc * 0.7;
         }
 
-        // Ajuste de avance según material
         let fn = fn_base;
-        if (mat === "alu") fn *= 1.2;
-        if (mat === "acero_duro" || mat === "inox") fn *= 0.8;
+        if (mat === "alu") fn = fn_base * 1.2;
+        if (mat === "acero_duro" || mat === "inox") fn = fn_base * 0.8;
 
         let rpm_teo = (vc * 1000) / (Math.PI * d);
         let rpm_max = (mat === "alu") ? 1800 : 1200; 
 
         let rpm = redondear(Math.min(rpm_teo, rpm_max), 10); 
         
-        let f_total = redondear(rpm * fn, 5);
+        let f_total = Math.round(rpm * fn);
         if (f_total < 5) f_total = 5; 
 
-        // Cálculo broca previa
         let broca_previa = d <= 10 ? d - 0.2 : d - 0.3;
 
         document.getElementById("esc_broca").innerHTML = "<span class='badge-info'>Ø " + broca_previa.toFixed(1).replace(".",",") + " mm</span>";
-        
         document.getElementById("esc_rpm").innerHTML = rpm_teo > rpm_max ? "<span class='limit-warning'>" + rpm + " (Tope)</span>" : rpm + " RPM";
         document.getElementById("esc_f").innerText = "F " + f_total + " mm/min";
         document.getElementById("esc_fn").innerText = fn.toFixed(2) + " mm/rev";
@@ -430,7 +425,6 @@
         document.getElementById("res_escariador").style.display = "block";
     }
 
-    // Cálculos Punteador NC
     function calcularNine9() {
         let t = parseFloat(document.getElementById("depth").value);
         let mat = document.getElementById("material_nine9").value;
@@ -451,8 +445,8 @@
         let s_teo = (vc * 1000) / (Math.PI * d);
         let s_real = redondear(Math.min(s_teo, RPM_MAX), 50);
 
-        let f_spot_val = redondear(s_real * f_spot, 10);
-        let f_chamf_val = redondear(s_real * f_chamf, 10);
+        let f_spot_val = Math.round(s_real * f_spot);
+        let f_chamf_val = Math.round(s_real * f_chamf);
 
         let texto_rpm = s_teo > RPM_MAX ? "<span class='limit-warning'>" + s_real + " (Tope)</span>" : s_real + " RPM";
 
@@ -463,20 +457,18 @@
         document.getElementById("res_nine9").style.display = "block";
     }
 
-    // Cálculos Fresado
     function calcularFresado() {
         let rpm = parseFloat(document.getElementById("rpm_fresa").value);
         let z = parseFloat(document.getElementById("z_fresa").value);
         let fz = parseFloat(document.getElementById("fz_fresa").value);
         if (!rpm || !z || !fz) return;
 
-        let f_total = redondear(rpm * z * fz, 10);
+        let f_total = Math.round(rpm * z * fz);
 
         document.getElementById("f_total_fresa").innerText = "F " + f_total;
         document.getElementById("res_fresa").style.display = "block";
     }
 
-    // Cálculos Platos Tungaloy
     function calcularTungaloy() {
         let diam = document.getElementById("diam_tungaloy").value;
         let mat = document.getElementById("mat_tungaloy").value;
@@ -492,7 +484,7 @@
         let d = datos[diam][mat];
         let rpm_teo = (d.vc * 1000) / (Math.PI * parseInt(diam));
         let rpm = redondear(rpm_teo, 50);
-        let f_val = redondear(rpm * d.fn, 10);
+        let f_val = Math.round(rpm * d.fn);
         let fn_str = d.fn.toFixed(2).replace(/\./g, ",");
 
         document.getElementById("s_tungaloy").innerText = rpm + " RPM";
@@ -502,7 +494,6 @@
         document.getElementById("res_tungaloy").style.display = "block";
     }
 
-    // Cálculos Brocas INT
     function calcularBrocaInt() {
         let diam = parseFloat(document.getElementById("diam_broca").value);
         let mat = document.getElementById("mat_broca").value;
@@ -522,7 +513,7 @@
 
         let rpm_teo = (vc * 1000) / (Math.PI * diam);
         let rpm = redondear(Math.min(rpm_teo, MAX_RPM), 50);
-        let f_total = redondear(rpm * fn, 10);
+        let f_total = Math.round(rpm * fn);
 
         document.getElementById("s_broca").innerHTML = rpm_teo > MAX_RPM ? "<span class='limit-warning'>" + rpm + " (Tope)</span>" : rpm + " RPM";
         document.getElementById("f_broca").innerText = "F " + f_total + " mm/min";
@@ -530,7 +521,6 @@
         document.getElementById("res_broca").style.display = "block";
     }
 
-    // Cálculos Brocas EXT
     function calcularBrocaExt() {
         let diam = parseFloat(document.getElementById("diam_broca_ext").value);
         let mat = document.getElementById("mat_broca_ext").value;
@@ -551,7 +541,7 @@
 
         let rpm_teo = (vc * 1000) / (Math.PI * diam);
         let rpm = redondear(Math.min(rpm_teo, MAX_RPM), 50);
-        let f_total = redondear(rpm * fn, 10);
+        let f_total = Math.round(rpm * fn);
 
         let multiplicador_q;
         if (mat === "acero") multiplicador_q = 0.6; 
@@ -568,7 +558,6 @@
         document.getElementById("res_broca_ext").style.display = "block";
     }
 
-    // --- CÁLCULOS BROCAS HSS (CON REDONDEO DE Q Y VC COHERENTE) ---
     function calcularBrocaHSS() {
         let diam = parseFloat(document.getElementById("diam_broca_hss").value);
         let mat = document.getElementById("mat_broca_hss").value;
@@ -577,37 +566,34 @@
 
         const MAX_RPM = 5000;
 
-        // Vc: Inox y Acero Duro subidos a valores más reales respecto al acero
-        let vc = (mat === "acero") ? 20 : (mat === "alu" ? 35 : (mat === "acero_duro" ? 14 : 12));
+        // Vc equilibrada para que la Inox no quede tan lenta que frote sin cortar
+        let vc = (mat === "acero") ? 22 : (mat === "alu" ? 40 : (mat === "acero_duro" ? 14 : 12));
 
         let fn;
-        if (diam <= 3) fn = 0.03;
-        else if (diam <= 5) fn = 0.05;
-        else if (diam <= 7) fn = 0.07;
-        else if (diam <= 10) fn = 0.10;
-        else if (diam <= 14) fn = 0.12;
-        else fn = 0.15;
+        if (diam <= 3) fn = 0.04;
+        else if (diam <= 5) fn = 0.06;
+        else if (diam <= 7) fn = 0.08;
+        else if (diam <= 10) fn = 0.11;
+        else if (diam <= 14) fn = 0.14;
+        else fn = 0.18;
 
         if (mat === "alu") fn *= 1.3;
-        if (mat === "inox" || mat === "acero_duro") fn *= 0.7; // Penalización suavizada al 0.7
+        if (mat === "inox" || mat === "acero_duro") fn *= 0.85; // Menor penalización para un buen chip load
 
         let rpm_teo = (vc * 1000) / (Math.PI * diam);
-        let rpm = redondear(Math.min(rpm_teo, MAX_RPM), 50);
-        let f_total = redondear(rpm * fn, 10);
+        let rpm = redondear(Math.min(rpm_teo, MAX_RPM), 10); // Redondeo más fino
+        let f_total = Math.round(rpm * fn);
 
-        // --- LÓGICA DE PASADA (Q) REDONDEADA Y ESCALONADA ---
-        let q_val = diam * 0.4; // Pasada base del 40% del diámetro
+        let q_val = diam * 0.4; 
         
-        if (mat === "alu") q_val *= 1.4; // Aluminio admite mayor pasada
-        else if (mat === "acero_duro" || mat === "inox") q_val *= 0.8; // Materiales duros menos pasada
+        if (mat === "alu") q_val *= 1.4; 
+        else if (mat === "acero_duro" || mat === "inox") q_val *= 0.8; 
 
-        // Topes máximos absolutos de seguridad para brocas grandes
         let q_max = (mat === "alu") ? 8.0 : ((mat === "acero") ? 4.5 : 3.5);
         if (q_val > q_max) q_val = q_max;
 
-        // Redondeo matemático a 0.5 más cercano (ej. 3.2 -> 3.0 / 3.4 -> 3.5 / 3.8 -> 4.0)
         q_val = Math.round(q_val * 2) / 2;
-        if (q_val < 0.5) q_val = 0.5; // Pasada mínima de seguridad
+        if (q_val < 0.5) q_val = 0.5;
 
         document.getElementById("s_broca_hss").innerHTML = rpm_teo > MAX_RPM ? "<span class='limit-warning'>" + rpm + " (Tope)</span>" : rpm + " RPM";
         document.getElementById("f_broca_hss").innerText = "F " + f_total + " mm/min";
@@ -616,7 +602,6 @@
         document.getElementById("res_broca_hss").style.display = "block";
     }
 
-    // Cálculos Broca Placas
     function calcularBrocaPlacas() {
         let diam = parseFloat(document.getElementById("diam_placas").value);
         let mat = document.getElementById("mat_placas").value;
@@ -631,7 +616,7 @@
         else if (mat === "alu") { vc = 135; fn = 0.10; }
 
         let rpm = redondear((vc * 1000) / (Math.PI * diam), 50);
-        let f_total = redondear(rpm * fn, 10);
+        let f_total = Math.round(rpm * fn);
 
         document.getElementById("s_placas").innerText = rpm + " RPM";
         document.getElementById("f_placas").innerText = "F " + f_total + " mm/min";
@@ -639,7 +624,6 @@
         document.getElementById("res_placas").style.display = "block";
     }
 
-    // --- ROSCAS CON REDONDEO INTELIGENTE Y DIÁMETROS DE TALLER ---
     function mostrarDesplegableRosca() {
         let tipo = document.getElementById("tipo_rosca").value;
         document.getElementById("select_rosca_m").style.display = (tipo === 'M') ? "block" : "none";
@@ -714,35 +698,14 @@
         let base_rpm = Math.round(rpm_teo / 10) * 10; 
         let rpm = base_rpm;
 
-        // Redondeo inteligente
-        if (d.paso % 0.01 === 0) { 
-            let found_perfect = false;
-            let found_integer = false;
-            let backup_rpm = base_rpm;
-
-            for (let offset = 0; offset <= 50; offset += 10) {
-                let test_up = base_rpm + offset;
-                let test_down = base_rpm - offset;
-
-                if (!found_perfect && (test_up * d.paso) % 10 === 0) {
-                    rpm = test_up;
-                    found_perfect = true;
-                }
-                if (!found_perfect && test_down > 0 && (test_down * d.paso) % 10 === 0) {
-                    rpm = test_down;
-                    found_perfect = true;
-                }
-
-                if (!found_integer && (test_up * d.paso) % 1 === 0) {
-                    backup_rpm = test_up;
-                    found_integer = true;
-                }
-                if (!found_integer && test_down > 0 && (test_down * d.paso) % 1 === 0) {
-                    backup_rpm = test_down;
-                    found_integer = true;
-                }
-            }
-            if (!found_perfect && found_integer) rpm = backup_rpm;
+        for (let offset = 0; offset <= 50; offset += 10) {
+            let t_up = base_rpm + offset;
+            let test_up = t_up * d.paso;
+            if (Math.abs(test_up - Math.round(test_up)) < 0.001 && Math.round(test_up) % 10 === 0) { rpm = t_up; break; }
+            
+            let t_down = base_rpm - offset;
+            let test_down = t_down * d.paso;
+            if (t_down > 0 && Math.abs(test_down - Math.round(test_down)) < 0.001 && Math.round(test_down) % 10 === 0) { rpm = t_down; break; }
         }
 
         let f_total = Math.round(rpm * d.paso); 
