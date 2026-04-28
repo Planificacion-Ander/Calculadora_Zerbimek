@@ -10,8 +10,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#E3000F">
 
-    <link rel="icon" sizes="192x192" href="icono.jpg">
-    <link rel="apple-touch-icon" href="icono.jpg">
+    <link rel="icon" sizes="192x192" href="icono.png">
+    <link rel="apple-touch-icon" href="icono.png">
+    <link rel="manifest" href="manifest.json">
 
     <style>
         body { 
@@ -633,6 +634,7 @@
         let base_rpm = Math.round(rpm_teo / 10) * 10; 
         let rpm = base_rpm;
         
+        // Redondeo inteligente
         if (d.paso % 0.01 === 0) { 
             let found_perfect = false;
             let found_integer = false;
