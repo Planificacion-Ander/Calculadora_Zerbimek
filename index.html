@@ -117,8 +117,8 @@
         
         <label>Material de la herramienta:</label>
         <select id="tipo_esc">
-            <option value="mdi" selected>MDI (Metal Duro)</option>
-            <option value="hsse">HSS-E (Acero Rápido)</option>
+            <option value="hss" selected>HSS (Acero Rápido)</option>
+            <option value="mdi">MDI (Metal Duro)</option>
         </select>
 
         <label>Diámetro del Escariador (mm):</label>
@@ -126,12 +126,10 @@
         
         <label>Material a mecanizar:</label>
         <select id="mat_esc">
+            <option value="acero">Acero</option>
+            <option value="acero_duro">Acero Duro / Aleado</option>
+            <option value="inox">Inoxidable</option>
             <option value="alu">Aluminio</option>
-            <option value="acero_500">Acero blando (< 500 N)</option>
-            <option value="acero_750" selected>Acero medio (< 750 N)</option>
-            <option value="acero_900">Acero duro (< 900 N)</option>
-            <option value="inox">Inoxidable (< 900 N)</option>
-            <option value="cuzn">Latón / Bronce (CuZn)</option>
         </select>
         
         <button class="btn-calcular" onclick="calcularEscariador()">Calcular Parámetros</button>
@@ -141,7 +139,7 @@
             <p>Revoluciones (S): <span class="highlight" id="esc_rpm"></span></p>
             <p>Avance trabajo (F): <span class="highlight" id="esc_f"></span></p>
             <p>Avance rev. (fn): <span class="highlight" id="esc_fn"></span></p>
-            <p class="note" style="margin-top: 10px; margin-bottom: 0;">Valores con margen de seguridad (Conservador).</p>
+            <p class="note" style="margin-top: 10px; margin-bottom: 0;">Freno de seguridad aplicado para diámetros pequeños.</p>
         </div>
     </div>
 
@@ -368,7 +366,7 @@
         evento.currentTarget.classList.add("active");
     }
 
-    // --- CÁLCULOS ESCARIADORES (Lógica Conservadora) ---
+    // --- CÁLCULOS ESCARIADORES (Simplificado y con frenos de seguridad) ---
     function calcularEscariador() {
         let d = parseFloat(document.getElementById("diam_esc").value);
         let mat = document.getElementById("mat_esc").value;
@@ -378,52 +376,58 @@
 
         let vc, fn_base;
 
-        if (tipo === "hsse") {
-            // Valores HSS-E (Aprox -20% de catálogo para seguridad)
-            if (mat === "alu") vc = 15;
-            else if (mat === "acero_500") vc = 12;
-            else if (mat === "acero_750") vc = 8;
-            else if (mat === "acero_900") vc = 5;
+        if (tipo === "hss") {
+            if (mat === "acero") vc = 10;
+            else if (mat === "acero_duro") vc = 5;
             else if (mat === "inox") vc = 4;
-            else if (mat === "cuzn") vc = 10;
+            else if (mat === "alu") vc = 15;
 
-            // Avances conservadores
-            if (d <= 3) fn_base = 0.10;
-            else if (d <= 5) fn_base = 0.15;
-            else if (d <= 10) fn_base = 0.20;
+            if (d <= 3) fn_base = 0.08;
+            else if (d <= 5) fn_base = 0.12;
+            else if (d <= 10) fn_base = 0.18;
             else fn_base = 0.20;
             
-        } else {
-            // Valores MDI (Aprox -20% a -25% de catálogo para seguridad)
-            if (mat === "alu") vc = 25;
-            else if (mat === "acero_500") vc = 15;
-            else if (mat === "acero_750") vc = 10;
-            else if (mat === "acero_900") vc = 8;
-            else if (mat === "inox") vc = 8;
-            else if (mat === "cuzn") vc = 15;
+        } else { // MDI
+            if (mat === "acero") vc = 15;
+            else if (mat === "acero_duro") vc = 8;
+            else if (mat === "inox") vc = 6;
+            else if (mat === "alu") vc = 25;
 
-            // Avances conservadores MDI
             if (d <= 4) fn_base = 0.08;
             else if (d <= 6) fn_base = 0.10;
             else if (d <= 10) fn_base = 0.14;
             else fn_base = 0.14;
         }
 
-        // Ajuste de fn según dureza del material 
+        // SEGURIDAD 1: Frenar un 30% la velocidad de corte si el diámetro es pequeño (<= 4mm)
+        if (d <= 4) {
+            vc = vc * 0.7;
+        }
+
+        // Ajuste de avance según material
         let fn = fn_base;
-        if (mat === "alu" || mat === "cuzn") fn = fn_base * 1.2;
-        if (mat === "acero_900" || mat === "inox") fn = fn_base * 0.8;
+        if (mat === "alu") fn = fn_base * 1.2;
+        if (mat === "acero_duro" || mat === "inox") fn = fn_base * 0.8;
 
         let rpm_teo = (vc * 1000) / (Math.PI * d);
-        let rpm = redondear(rpm_teo, 10); 
+        
+        // SEGURIDAD 2: Tope máximo de revoluciones para no embalar el escariador
+        let rpm_max = (mat === "alu") ? 1800 : 1200; 
+
+        // Cogemos el valor más pequeño entre el teórico y el máximo
+        let rpm = redondear(Math.min(rpm_teo, rpm_max), 10); 
+        
         let f_total = redondear(rpm * fn, 5);
-        if (f_total < 5) f_total = 5; // Seguridad para avances minúsculos
+        if (f_total < 5) f_total = 5; 
 
         // Cálculo broca previa
         let broca_previa = d <= 10 ? d - 0.2 : d - 0.3;
 
         document.getElementById("esc_broca").innerHTML = "<span class='badge-info'>Ø " + broca_previa.toFixed(1).replace(".",",") + " mm</span>";
-        document.getElementById("esc_rpm").innerText = rpm + " RPM";
+        
+        // Si ha saltado el límite máximo, le ponemos el cartelito rojo de advertencia
+        document.getElementById("esc_rpm").innerHTML = rpm_teo > rpm_max ? "<span class='limit-warning'>" + rpm + " (Tope)</span>" : rpm + " RPM";
+        
         document.getElementById("esc_f").innerText = "F " + f_total + " mm/min";
         document.getElementById("esc_fn").innerText = fn.toFixed(2) + " mm/rev";
         
