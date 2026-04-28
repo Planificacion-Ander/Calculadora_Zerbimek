@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zerbimek CNC</title>
+    
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#E3000F">
+
+    <link rel="icon" sizes="192x192" href="icono.jpg">
+    <link rel="apple-touch-icon" href="icono.jpg">
+
     <style>
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
@@ -99,7 +108,6 @@
 
 <div class="app-container">
     
-    <!-- CABECERA -->
     <div class="header-zerbimek">
         <div class="header-logo">
             <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="55" height="55">
@@ -114,7 +122,6 @@
         </div>
     </div>
 
-    <!-- MENÚ -->
     <div class="menu">
         <button class="pestana active" onclick="abrirHerramienta(event, 'calcNine9')">Punteador NC</button>
         <button class="pestana" onclick="abrirHerramienta(event, 'calcFresado')">Fresa</button>
@@ -126,7 +133,6 @@
         <button class="pestana" onclick="abrirHerramienta(event, 'calcRosca')">Roscas</button>
     </div>
 
-    <!-- PESTAÑA 1: PUNTEADOR NC -->
     <div id="calcNine9" class="tab-content" style="display: block;">
         <h2>Punteador NC / Chaflán</h2>
         <label>Profundidad Z (mm):</label>
@@ -147,7 +153,6 @@
         </div>
     </div>
 
-    <!-- PESTAÑA 2: FRESADO -->
     <div id="calcFresado" class="tab-content">
         <h2>Fresa General</h2>
         <label>RPM (S):</label>
@@ -162,7 +167,6 @@
         </div>
     </div>
 
-    <!-- PESTAÑA 3: PLATOS TUNGALOY -->
     <div id="calcTungaloy" class="tab-content">
         <h2>Platos Tungaloy</h2>
         <h4>Condiciones Turbo Tungaloy</h4>
@@ -190,7 +194,6 @@
         </div>
     </div>
 
-    <!-- PESTAÑA 4: BROCA INTERNA -->
     <div id="calcBrocaInt" class="tab-content">
         <h2>Brocas INT</h2>
         <h4>Refrigeración Interna (G81 o G82)</h4>
@@ -211,7 +214,6 @@
         </div>
     </div>
 
-    <!-- PESTAÑA 5: BROCA EXTERNA -->
     <div id="calcBrocaExt" class="tab-content">
         <h2>Brocas EXT</h2>
         <h4>Sin refrigeración interna (G82)</h4>
@@ -234,7 +236,6 @@
         </div>
     </div>
 
-    <!-- PESTAÑA 6: BROCAS HSS -->
     <div id="calcBrocaHSS" class="tab-content">
         <h2>Brocas HSS</h2>
         <h4>Sin revestimiento (G82)</h4>
@@ -257,7 +258,6 @@
         </div>
     </div>
 
-    <!-- PESTAÑA 7: BROCA PLACAS -->
     <div id="calcBrocaPlacas" class="tab-content">
         <h2>Broca Placas</h2>
         <h4>Refrigeración Interna (G81)</h4>
@@ -279,7 +279,6 @@
         </div>
     </div>
 
-    <!-- PESTAÑA 8: ROSCAS -->
     <div id="calcRosca" class="tab-content">
         <h2>Roscado</h2>
         <h4>Broca Previa y Condiciones (G84)</h4>
