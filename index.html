@@ -35,7 +35,6 @@
             border-top: 5px solid #E3000F; 
         }
 
-        /* --- CABECERA CON LOGO VECTORIAL --- */
         .header-zerbimek {
             display: flex;
             align-items: center;
@@ -45,40 +44,18 @@
             gap: 15px;
         }
         
-        .header-logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        .header-logo { display: flex; align-items: center; justify-content: center; }
 
-        .header-text {
-            text-align: left;
-        }
-        .header-text h1 {
-            margin: 0;
-            color: #E3000F;
-            font-size: 28px;
-            font-weight: 900;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            line-height: 1;
-        }
-        .header-text span {
-            display: block;
-            font-size: 11px;
-            color: #777;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-top: 4px;
-        }
+        .header-text { text-align: left; }
+        .header-text h1 { margin: 0; color: #E3000F; font-size: 28px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; line-height: 1; }
+        .header-text span { display: block; font-size: 11px; color: #777; text-transform: uppercase; letter-spacing: 2px; margin-top: 4px; }
         
-        /* --- MENÚ ACTUALIZADO (Letras más gruesas y legibles) --- */
-        .menu { display: grid; grid-template-columns: repeat(4, 1fr); background-color: #222; }
+        /* Menú ajustado a 3 columnas para que los 9 botones queden simétricos (3x3) */
+        .menu { display: grid; grid-template-columns: repeat(3, 1fr); background-color: #222; }
         .menu button { background-color: inherit; color: #e6e6e6; border: none; padding: 14px 2px; cursor: pointer; font-size: 13.5px; font-weight: 900; transition: 0.3s; border-bottom: 3px solid #222; letter-spacing: 0.5px; }
         .menu button:hover { color: #fff; }
         .menu button.active { background-color: #333; border-bottom: 3px solid #E3000F; color: #E3000F; }
         
-        /* --- CONTENIDO --- */
         .tab-content { display: none; padding: 25px 20px; animation: fadeEffect 0.4s; }
         @keyframes fadeEffect { from {opacity: 0;} to {opacity: 1;} }
         
@@ -89,7 +66,6 @@
         input, select { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 16px; background-color: #fcfcfc;}
         input:focus, select:focus { outline: none; border-color: #E3000F; }
 
-        /* --- BOTONES Y RESULTADOS --- */
         .btn-calcular { background-color: #E3000F; color: white; border: none; cursor: pointer; font-weight: bold; margin-top: 25px; font-size: 16px; padding: 15px; width: 100%; border-radius: 6px; transition: 0.2s; text-transform: uppercase; letter-spacing: 1px;}
         .btn-calcular:active { transform: scale(0.98); background-color: #B3000C; }
         
@@ -103,6 +79,7 @@
         
         .badge { background-color: #444; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
         .badge-warn { background-color: #E3000F; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+        .badge-info { background-color: #1a73e8; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -126,12 +103,40 @@
     <div class="menu">
         <button class="pestana active" onclick="abrirHerramienta(event, 'calcNine9')">Punteador NC</button>
         <button class="pestana" onclick="abrirHerramienta(event, 'calcFresado')">Fresa</button>
-        <button class="pestana" onclick="abrirHerramienta(event, 'calcTungaloy')">Platos Tungaloy</button>
+        <button class="pestana" onclick="abrirHerramienta(event, 'calcTungaloy')">Tungaloy</button>
         <button class="pestana" onclick="abrirHerramienta(event, 'calcBrocaInt')">Brocas INT</button>
         <button class="pestana" onclick="abrirHerramienta(event, 'calcBrocaExt')">Brocas EXT</button>
         <button class="pestana" onclick="abrirHerramienta(event, 'calcBrocaHSS')">Brocas HSS</button>
         <button class="pestana" onclick="abrirHerramienta(event, 'calcBrocaPlacas')">Broca Placas</button>
         <button class="pestana" onclick="abrirHerramienta(event, 'calcRosca')">Roscas</button>
+        <button class="pestana" onclick="abrirHerramienta(event, 'calcEscariador')">Escariador</button>
+    </div>
+
+    <div id="calcEscariador" class="tab-content" style="display: none;">
+        <h2>Escariadores H7</h2>
+        <h4>Broca previa y condiciones</h4>
+        <label>Diámetro del Escariador (mm):</label>
+        <input type="number" id="diam_esc" value="8.0" step="0.1">
+        
+        <label>Material a mecanizar:</label>
+        <select id="mat_esc">
+            <option value="alu">Aluminio</option>
+            <option value="acero_500">Acero blando (< 500 N)</option>
+            <option value="acero_750" selected>Acero medio (< 750 N)</option>
+            <option value="acero_900">Acero duro (< 900 N)</option>
+            <option value="inox">Inoxidable (< 900 N)</option>
+            <option value="cuzn">Latón / Bronce (CuZn)</option>
+        </select>
+        
+        <button class="btn-calcular" onclick="calcularEscariador()">Calcular Parámetros</button>
+        
+        <div class="results" id="res_escariador" style="display: none;">
+            <p>Taladro Previo: <span class="highlight" id="esc_broca"></span></p>
+            <p>Revoluciones (S): <span class="highlight" id="esc_rpm"></span></p>
+            <p>Avance trabajo (F): <span class="highlight" id="esc_f"></span></p>
+            <p>Avance rev. (fn): <span class="highlight" id="esc_fn"></span></p>
+            <p class="note" style="margin-top: 10px; margin-bottom: 0;">Valores estándar catálogo Garant HSS-E.</p>
+        </div>
     </div>
 
     <div id="calcNine9" class="tab-content" style="display: block;">
@@ -339,7 +344,6 @@
             <p>Avance (F = S × Paso): <span class="highlight" id="r_f_rosca"></span></p>
             <p class="note" id="r_tipo_macho" style="margin-bottom: 0; color: #444; font-weight: bold; font-size: 14px;"></p>
         </div>
-        <p class="note" style="margin-top: 15px;">Condiciones ajustadas con redondeo inteligente para S y F exactos.</p>
     </div>
 
 </div>
@@ -356,6 +360,49 @@
         for (let i = 0; i < pestanas.length; i++) pestanas[i].classList.remove("active");
         document.getElementById(idHerramienta).style.display = "block";
         evento.currentTarget.classList.add("active");
+    }
+
+    // --- CÁLCULOS ESCARIADORES ---
+    function calcularEscariador() {
+        let d = parseFloat(document.getElementById("diam_esc").value);
+        let mat = document.getElementById("mat_esc").value;
+
+        if (!d || d <= 0) return alert("Introduce un diámetro válido.");
+
+        let vc;
+        // Valores Vc sacados de la hoja de datos
+        if (mat === "alu") vc = 20;
+        else if (mat === "acero_500") vc = 15;
+        else if (mat === "acero_750") vc = 10;
+        else if (mat === "acero_900") vc = 7;
+        else if (mat === "inox") vc = 5;
+        else if (mat === "cuzn") vc = 13;
+
+        // fn Base extraído de las hojas de datos (Ø5=0.2, Ø8 y Ø12=0.25)
+        let fn_base;
+        if (d <= 3) fn_base = 0.12;
+        else if (d <= 5) fn_base = 0.20;
+        else if (d <= 12) fn_base = 0.25;
+        else fn_base = 0.30;
+
+        // Ajuste de fn según dureza del material (heurística común en taller)
+        let fn = fn_base;
+        if (mat === "alu" || mat === "cuzn") fn = fn_base * 1.2;
+        if (mat === "acero_900" || mat === "inox") fn = fn_base * 0.8;
+
+        let rpm_teo = (vc * 1000) / (Math.PI * d);
+        let rpm = redondear(rpm_teo, 10); 
+        let f_total = redondear(rpm * fn, 5);
+
+        // Cálculo broca previa
+        let broca_previa = d <= 10 ? d - 0.2 : d - 0.3;
+
+        document.getElementById("esc_broca").innerHTML = "<span class='badge-info'>Ø " + broca_previa.toFixed(1).replace(".",",") + " mm</span>";
+        document.getElementById("esc_rpm").innerText = rpm + " RPM";
+        document.getElementById("esc_f").innerText = "F " + f_total + " mm/min";
+        document.getElementById("esc_fn").innerText = fn.toFixed(2) + " mm/rev";
+        
+        document.getElementById("res_escariador").style.display = "block";
     }
 
     // Cálculos Punteador NC
