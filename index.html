@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zerbimek CNC</title>
-    
+
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -49,8 +49,8 @@
         .header-text { text-align: left; }
         .header-text h1 { margin: 0; color: #E3000F; font-size: 28px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; line-height: 1; }
         .header-text span { display: block; font-size: 11px; color: #777; text-transform: uppercase; letter-spacing: 2px; margin-top: 4px; }
-        
-        /* MENÚ 3x2 PERFECTAMENTE SIMÉTRICO */
+
+        /* MENÚ DE 6 BOTONES: CUADRÍCULA 3x2 PERFECTA */
         .menu { display: grid; grid-template-columns: repeat(3, 1fr); background-color: #222; }
         .menu button { background-color: inherit; color: #e6e6e6; border: none; padding: 14px 2px; cursor: pointer; font-size: 13.5px; font-weight: 900; transition: 0.3s; border-bottom: 3px solid #222; letter-spacing: 0.5px; text-transform: uppercase; }
         .menu button:hover { color: #fff; }
@@ -76,7 +76,7 @@
         .highlight { font-weight: bold; color: #333; font-size: 16px;}
         .limit-warning { color: #d32f2f; font-weight: bold; font-size: 14px; }
         .note { font-size: 12px; color: #888; margin-top: 15px; font-style: italic; text-align: center;}
-        
+
         .badge { background-color: #444; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
         .badge-warn { background-color: #E3000F; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
         .badge-info { background-color: #1a73e8; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
@@ -101,10 +101,10 @@
     </div>
 
     <div class="menu">
-        <button class="pestana active" onclick="abrirHerramienta(event, 'calcNine9')">Punteador NC</button>
+        <button class="pestana active" onclick="abrirHerramienta(event, 'calcNine9')">Punteador</button>
         <button class="pestana" onclick="abrirHerramienta(event, 'calcBrocas')">Taladrado</button>
-        <button class="pestana" onclick="abrirHerramienta(event, 'calcRosca')">Roscas</button>
-        <button class="pestana" onclick="abrirHerramienta(event, 'calcFresado')">Fresa</button>
+        <button class="pestana" onclick="abrirHerramienta(event, 'calcRosca')">Roscado</button>
+        <button class="pestana" onclick="abrirHerramienta(event, 'calcFresado')">Fresado</button>
         <button class="pestana" onclick="abrirHerramienta(event, 'calcTungaloy')">Tungaloy</button>
         <button class="pestana" onclick="abrirHerramienta(event, 'calcEscariador')">Escariador</button>
     </div>
@@ -167,7 +167,7 @@
     <div id="calcRosca" class="tab-content">
         <h2>Roscado</h2>
         <h4>Broca Previa y Condiciones (G84)</h4>
-        
+
         <label>Tipo de Rosca:</label>
         <select id="tipo_rosca" onchange="mostrarDesplegableRosca()">
             <option value="M" selected>Métrica Normal (M)</option>
@@ -231,10 +231,8 @@
         <h4>Condiciones Turbo Tungaloy</h4>
         <label>Diámetro del plato (mm):</label>
         <select id="diam_tungaloy">
-            <option value="50">50</option>
-            <option value="25">25</option>
-            <option value="20">20</option>
-            <option value="16">16</option>
+            <option value="50">50</option><option value="25">25</option>
+            <option value="20">20</option><option value="16">16</option>
             <option value="12">12</option>
         </select>
         <label>Material a mecanizar:</label>
@@ -281,7 +279,7 @@
             <p>Revoluciones (S): <span class="highlight" id="esc_rpm"></span></p>
             <p>Avance trabajo (F): <span class="highlight" id="esc_f"></span></p>
             <p>Avance rev. (fn): <span class="highlight" id="esc_fn"></span></p>
-            <p class="note" style="margin-top: 10px; margin-bottom: 0;">Freno automático de RPM para diámetros pequeños.</p>
+            <p class="note" style="margin-top: 10px; margin-bottom: 0;">Freno de seguridad aplicado para diámetros pequeños.</p>
         </div>
     </div>
 
@@ -301,7 +299,7 @@
         evento.currentTarget.classList.add("active");
     }
 
-    // --- FUNCIONES UNIFICADAS DE TALADRADO ---
+    // --- LÓGICA TALADRADO UNIFICADO ---
     function actualizarInfoBroca() {
         let tipo = document.getElementById("tipo_broca").value;
         let sub = document.getElementById("brocas_subtitulo");
@@ -318,19 +316,20 @@
         let tipo = document.getElementById("tipo_broca").value;
         let d = parseFloat(document.getElementById("diam_broca_uni").value);
         let mat = document.getElementById("mat_broca_uni").value;
+
         if (!d || d <= 0) return alert("Introduce un diámetro válido.");
 
         let vc, fn, q_val = null, rpm_max = 9000, ciclo = "", nota = "";
 
         if (tipo === "int") {
-            vc = (mat === "acero") ? 50 : (mat === "acero_duro" || mat === "inox" ? 35 : 180);
+            vc = (mat === "acero") ? 50 : (mat === "alu" ? 150 : 35);
             fn = 0.085 + (d * 0.005);
             if (mat === "alu") fn += 0.01;
             rpm_max = 9000;
             ciclo = "G81";
         } 
         else if (tipo === "ext") {
-            vc = (mat === "acero") ? 35 : (mat === "acero_duro" || mat === "inox" ? 30 : 80);
+            vc = (mat === "acero") ? 35 : (mat === "alu" ? 80 : 30);
             fn = 0.060 + (d * 0.005);
             if (mat === "alu") fn += 0.02;
             if (mat === "inox" || mat === "acero_duro") fn -= 0.01;
@@ -341,16 +340,17 @@
             ciclo = "G82";
         }
         else if (tipo === "hss") {
-            vc = (mat === "acero") ? 20 : (mat === "alu" ? 35 : (mat === "acero_duro" ? 14 : 12));
-            if (d <= 3) fn = 0.03;
-            else if (d <= 5) fn = 0.05;
-            else if (d <= 7) fn = 0.07;
-            else if (d <= 10) fn = 0.10;
-            else if (d <= 14) fn = 0.12;
-            else fn = 0.15;
+            vc = (mat === "acero") ? 22 : (mat === "alu" ? 40 : (mat === "acero_duro" ? 14 : 12));
+            
+            if (d <= 3) fn = 0.04;
+            else if (d <= 5) fn = 0.06;
+            else if (d <= 7) fn = 0.08;
+            else if (d <= 10) fn = 0.11;
+            else if (d <= 14) fn = 0.14;
+            else fn = 0.18;
             
             if (mat === "alu") fn *= 1.3;
-            if (mat === "inox" || mat === "acero_duro") fn *= 0.7; 
+            if (mat === "inox" || mat === "acero_duro") fn *= 0.85; 
 
             rpm_max = 5000;
             
@@ -365,7 +365,7 @@
             if (q_val < 0.5) q_val = 0.5;
             
             ciclo = "G82";
-            nota = "Q ajustada por seguridad en diámetros grandes.";
+            nota = "Q ajustada y redondeada según material y diámetro.";
         }
         else if (tipo === "placas") {
             if (mat === "acero") { vc = 120; fn = 0.08; }
@@ -377,8 +377,8 @@
         }
 
         let rpm_teo = (vc * 1000) / (Math.PI * d);
-        let rpm = redondear(Math.min(rpm_teo, rpm_max), 50);
-        let f_total = redondear(rpm * fn, 10);
+        let rpm = (tipo === "hss") ? redondear(Math.min(rpm_teo, rpm_max), 10) : redondear(Math.min(rpm_teo, rpm_max), 50);
+        let f_total = Math.round(rpm * fn);
 
         document.getElementById("b_ciclo").innerText = ciclo;
         document.getElementById("b_s").innerHTML = rpm_teo > rpm_max ? "<span class='limit-warning'>" + rpm + " (Tope)</span>" : rpm + " RPM";
@@ -402,7 +402,171 @@
         document.getElementById("res_brocas_uni").style.display = "block";
     }
 
-    // --- CÁLCULOS RESTANTES ---
+    // --- LÓGICA ROSCAS ---
+    function mostrarDesplegableRosca() {
+        let tipo = document.getElementById("tipo_rosca").value;
+        document.getElementById("select_rosca_m").style.display = (tipo === 'M') ? "block" : "none";
+        document.getElementById("select_rosca_mf").style.display = (tipo === 'MF') ? "block" : "none";
+        document.getElementById("select_rosca_g").style.display = (tipo === 'G') ? "block" : "none";
+
+        document.getElementById("select_rosca_m").value = "";
+        document.getElementById("select_rosca_mf").value = "";
+        document.getElementById("select_rosca_g").value = "";
+        document.getElementById("res_rosca").style.display = "none";
+    }
+
+    function actualizarRosca() {
+        let tipo = document.getElementById("tipo_rosca").value;
+        let val = "";
+
+        if (tipo === 'M') val = document.getElementById("select_rosca_m").value;
+        else if (tipo === 'MF') val = document.getElementById("select_rosca_mf").value;
+        else if (tipo === 'G') val = document.getElementById("select_rosca_g").value;
+
+        if (!val) {
+            document.getElementById("res_rosca").style.display = "none";
+            return;
+        }
+
+        let mat = document.getElementById("mat_rosca").value;
+
+        const roscas_data = {
+            "M3": { paso: 0.5, d_calc: 3, broca_corte: 2.5, broca_lam: 2.8 },
+            "M4": { paso: 0.7, d_calc: 4, broca_corte: 3.3, broca_lam: 3.7 },
+            "M5": { paso: 0.8, d_calc: 5, broca_corte: 4.2, broca_lam: 4.65 },
+            "M6": { paso: 1.0, d_calc: 6, broca_corte: 5.0, broca_lam: 5.55 },
+            "M8": { paso: 1.25, d_calc: 8, broca_corte: 6.8, broca_lam: 7.45 },
+            "M10": { paso: 1.5, d_calc: 10, broca_corte: 8.5, broca_lam: 9.4 },
+            "M12": { paso: 1.75, d_calc: 12, broca_corte: 10.2, broca_lam: 11.2 },
+            "M16": { paso: 2.0, d_calc: 16, broca_corte: 14.0 },
+            "M20": { paso: 2.5, d_calc: 20, broca_corte: 17.5 },
+            "M24": { paso: 3.0, d_calc: 24, broca_corte: 21.0 },
+
+            "M6x0.75": { paso: 0.75, d_calc: 6, broca_corte: 5.2 },
+            "M8x1": { paso: 1.0, d_calc: 8, broca_corte: 7.0 },
+            "M10x1": { paso: 1.0, d_calc: 10, broca_corte: 9.0 },
+            "M10x1.25": { paso: 1.25, d_calc: 10, broca_corte: 8.8 },
+            "M12x1": { paso: 1.0, d_calc: 12, broca_corte: 11.0 },
+            "M12x1.25": { paso: 1.25, d_calc: 12, broca_corte: 10.8 },
+            "M12x1.5": { paso: 1.5, d_calc: 12, broca_corte: 10.5 },
+            "M16x1.5": { paso: 1.5, d_calc: 16, broca_corte: 14.5 },
+
+            "G1/8": { paso: 0.907, hilos: "28 Gg/1\"", d_calc: 9.73, broca_corte: 8.8 },
+            "G1/4": { paso: 1.337, hilos: "19 Gg/1\"", d_calc: 13.16, broca_corte: 11.8 },
+            "G3/8": { paso: 1.337, hilos: "19 Gg/1\"", d_calc: 16.66, broca_corte: 15.25 },
+            "G1/2": { paso: 1.814, hilos: "14 Gg/1\"", d_calc: 20.96, broca_corte: 19.0 }
+        };
+
+        let d = roscas_data[val];
+        let usa_lam = (tipo === 'M' && d.d_calc <= 12);
+
+        let vc;
+        if (usa_lam) {
+            if (mat === "acero") vc = 6.6; 
+            else if (mat === "acero_duro") vc = 4; 
+            else if (mat === "inox") vc = 4; 
+            else if (mat === "alu") vc = 10; 
+        } else {
+            if (mat === "acero") vc = 5.6;
+            else if (mat === "acero_duro") vc = 3; 
+            else if (mat === "inox") vc = 3;
+            else if (mat === "alu") vc = 8;
+        }
+
+        let rpm_teo = (vc * 1000) / (Math.PI * d.d_calc);
+        let base_rpm = Math.round(rpm_teo / 10) * 10; 
+        let rpm = base_rpm;
+
+        for (let offset = 0; offset <= 50; offset += 10) {
+            let t_up = base_rpm + offset;
+            let test_up = t_up * d.paso;
+            if (Math.abs(test_up - Math.round(test_up)) < 0.001 && Math.round(test_up) % 10 === 0) { rpm = t_up; break; }
+            
+            let t_down = base_rpm - offset;
+            let test_down = t_down * d.paso;
+            if (t_down > 0 && Math.abs(test_down - Math.round(test_down)) < 0.001 && Math.round(test_down) % 10 === 0) { rpm = t_down; break; }
+        }
+
+        let f_total = Math.round(rpm * d.paso); 
+
+        let paso_str = d.hilos ? `${d.paso} mm (${d.hilos})` : `${d.paso} mm`;
+        document.getElementById("r_paso").innerText = paso_str;
+
+        let tipo_macho = usa_lam ? "Laminación" : "Corte";
+        document.getElementById("r_tipo_macho").innerHTML = `Ciclo: <span class='badge'>G84 Rígido</span> | Macho: <b>${tipo_macho}</b>`;
+
+        if (usa_lam) {
+            document.getElementById("r_broca").innerText = "Ø " + d.broca_lam.toString().replace(".",",") + " mm";
+        } else {
+            document.getElementById("r_broca").innerText = "Ø " + d.broca_corte.toString().replace(".",",") + " mm";
+        }
+
+        document.getElementById("r_rpm_rosca").innerText = rpm + " RPM";
+        document.getElementById("r_f_rosca").innerText = "F " + f_total + " mm/min";
+
+        document.getElementById("res_rosca").style.display = "block";
+    }
+
+    // --- LÓGICA ESCARIADORES ---
+    function calcularEscariador() {
+        let d = parseFloat(document.getElementById("diam_esc").value);
+        let mat = document.getElementById("mat_esc").value;
+        let tipo = document.getElementById("tipo_esc").value;
+
+        if (!d || d <= 0) return alert("Introduce un diámetro válido.");
+
+        let vc, fn_base;
+
+        if (tipo === "hss") {
+            if (mat === "acero") vc = 10;
+            else if (mat === "acero_duro") vc = 5;
+            else if (mat === "inox") vc = 4;
+            else if (mat === "alu") vc = 15;
+
+            if (d <= 3) fn_base = 0.08;
+            else if (d <= 5) fn_base = 0.12;
+            else if (d <= 10) fn_base = 0.18;
+            else fn_base = 0.20;
+
+        } else { 
+            if (mat === "acero") vc = 15;
+            else if (mat === "acero_duro") vc = 8;
+            else if (mat === "inox") vc = 6;
+            else if (mat === "alu") vc = 25;
+
+            if (d <= 4) fn_base = 0.08;
+            else if (d <= 6) fn_base = 0.10;
+            else if (d <= 10) fn_base = 0.14;
+            else fn_base = 0.14;
+        }
+
+        if (d <= 4) {
+            vc = vc * 0.7;
+        }
+
+        let fn = fn_base;
+        if (mat === "alu") fn *= 1.2;
+        if (mat === "acero_duro" || mat === "inox") fn *= 0.8;
+
+        let rpm_teo = (vc * 1000) / (Math.PI * d);
+        let rpm_max = (mat === "alu") ? 1800 : 1200; 
+
+        let rpm = redondear(Math.min(rpm_teo, rpm_max), 10); 
+        
+        let f_total = Math.round(rpm * fn);
+        if (f_total < 5) f_total = 5; 
+
+        let broca_previa = d <= 10 ? d - 0.2 : d - 0.3;
+
+        document.getElementById("esc_broca").innerHTML = "<span class='badge-info'>Ø " + broca_previa.toFixed(1).replace(".",",") + " mm</span>";
+        document.getElementById("esc_rpm").innerHTML = rpm_teo > rpm_max ? "<span class='limit-warning'>" + rpm + " (Tope)</span>" : rpm + " RPM";
+        document.getElementById("esc_f").innerText = "F " + f_total + " mm/min";
+        document.getElementById("esc_fn").innerText = fn.toFixed(2) + " mm/rev";
+
+        document.getElementById("res_escariador").style.display = "block";
+    }
+
+    // --- PUNTEADOR NC ---
     function calcularNine9() {
         let t = parseFloat(document.getElementById("depth").value);
         let mat = document.getElementById("material_nine9").value;
@@ -423,28 +587,32 @@
         let s_teo = (vc * 1000) / (Math.PI * d);
         let s_real = redondear(Math.min(s_teo, RPM_MAX), 50);
 
-        let f_spot_val = redondear(s_real * f_spot, 10);
-        let f_chamf_val = redondear(s_real * f_chamf, 10);
+        let f_spot_val = Math.round(s_real * f_spot);
+        let f_chamf_val = Math.round(s_real * f_chamf);
+
+        let texto_rpm = s_teo > RPM_MAX ? "<span class='limit-warning'>" + s_real + " (Tope)</span>" : s_real + " RPM";
 
         document.getElementById("d_nine9").innerText = d.toFixed(1) + " mm";
-        document.getElementById("s_nine9").innerHTML = s_teo > RPM_MAX ? "<span class='limit-warning'>" + s_real + " (Tope)</span>" : s_real + " RPM";
+        document.getElementById("s_nine9").innerHTML = texto_rpm;
         document.getElementById("f_spot_nine9").innerText = "F " + f_spot_val;
         document.getElementById("f_chamf_nine9").innerText = "F " + f_chamf_val;
         document.getElementById("res_nine9").style.display = "block";
     }
 
+    // --- FRESA GENERAL ---
     function calcularFresado() {
         let rpm = parseFloat(document.getElementById("rpm_fresa").value);
         let z = parseFloat(document.getElementById("z_fresa").value);
         let fz = parseFloat(document.getElementById("fz_fresa").value);
         if (!rpm || !z || !fz) return;
 
-        let f_total = redondear(rpm * z * fz, 10);
+        let f_total = Math.round(rpm * z * fz);
 
         document.getElementById("f_total_fresa").innerText = "F " + f_total;
         document.getElementById("res_fresa").style.display = "block";
     }
 
+    // --- PLATOS TUNGALOY ---
     function calcularTungaloy() {
         let diam = document.getElementById("diam_tungaloy").value;
         let mat = document.getElementById("mat_tungaloy").value;
@@ -460,107 +628,14 @@
         let d = datos[diam][mat];
         let rpm_teo = (d.vc * 1000) / (Math.PI * parseInt(diam));
         let rpm = redondear(rpm_teo, 50);
-        let f_val = redondear(rpm * d.fn, 10);
-        
+        let f_val = Math.round(rpm * d.fn);
+        let fn_str = d.fn.toFixed(2).replace(/\./g, ",");
+
         document.getElementById("s_tungaloy").innerText = rpm + " RPM";
         document.getElementById("f_tungaloy").innerText = "F " + f_val + " mm/min";
         document.getElementById("ap_tungaloy").innerText = d.ap + " mm";
-        document.getElementById("fn_tungaloy").innerText = d.fn.toFixed(2).replace(/\./g, ",") + " mm/rev";
+        document.getElementById("fn_tungaloy").innerText = fn_str + " mm/rev";
         document.getElementById("res_tungaloy").style.display = "block";
-    }
-
-    function mostrarDesplegableRosca() {
-        let tipo = document.getElementById("tipo_rosca").value;
-        document.getElementById("select_rosca_m").style.display = (tipo === 'M') ? "block" : "none";
-        document.getElementById("select_rosca_mf").style.display = (tipo === 'MF') ? "block" : "none";
-        document.getElementById("select_rosca_g").style.display = (tipo === 'G') ? "block" : "none";
-        document.getElementById("res_rosca").style.display = "none";
-    }
-
-    function actualizarRosca() {
-        let tipo = document.getElementById("tipo_rosca").value;
-        let val = (tipo === 'M') ? document.getElementById("select_rosca_m").value : (tipo === 'MF' ? document.getElementById("select_rosca_mf").value : document.getElementById("select_rosca_g").value);
-        if (!val) return;
-        let mat = document.getElementById("mat_rosca").value;
-
-        const data = {
-            "M3": { paso: 0.5, d_calc: 3, broca_corte: 2.5, broca_lam: 2.8 }, "M4": { paso: 0.7, d_calc: 4, broca_corte: 3.3, broca_lam: 3.7 },
-            "M5": { paso: 0.8, d_calc: 5, broca_corte: 4.2, broca_lam: 4.65 }, "M6": { paso: 1.0, d_calc: 6, broca_corte: 5.0, broca_lam: 5.55 },
-            "M8": { paso: 1.25, d_calc: 8, broca_corte: 6.8, broca_lam: 7.45 }, "M10": { paso: 1.5, d_calc: 10, broca_corte: 8.5, broca_lam: 9.4 },
-            "M12": { paso: 1.75, d_calc: 12, broca_corte: 10.2, broca_lam: 11.2 }, "M16": { paso: 2.0, d_calc: 16, broca_corte: 14.0 },
-            "M20": { paso: 2.5, d_calc: 20, broca_corte: 17.5 }, "M24": { paso: 3.0, d_calc: 24, broca_corte: 21.0 },
-            "M6x0.75": { paso: 0.75, d_calc: 6, broca_corte: 5.2 }, "M8x1": { paso: 1.0, d_calc: 8, broca_corte: 7.0 },
-            "M10x1": { paso: 1.0, d_calc: 10, broca_corte: 9.0 }, "M10x1.25": { paso: 1.25, d_calc: 10, broca_corte: 8.8 },
-            "M12x1": { paso: 1.0, d_calc: 12, broca_corte: 11.0 }, "M12x1.25": { paso: 1.25, d_calc: 12, broca_corte: 10.8 },
-            "M12x1.5": { paso: 1.5, d_calc: 12, broca_corte: 10.5 }, "M16x1.5": { paso: 1.5, d_calc: 16, broca_corte: 14.5 },
-            "G1/8": { paso: 0.907, hilos: "28 Gg/1\"", d_calc: 9.73, broca_corte: 8.8 }, "G1/4": { paso: 1.337, hilos: "19 Gg/1\"", d_calc: 13.16, broca_corte: 11.8 },
-            "G3/8": { paso: 1.337, hilos: "19 Gg/1\"", d_calc: 16.66, broca_corte: 15.25 }, "G1/2": { paso: 1.814, hilos: "14 Gg/1\"", d_calc: 20.96, broca_corte: 19.0 }
-        };
-
-        let d = data[val];
-        let usa_lam = (tipo === 'M' && d.d_calc <= 12);
-        let vc = usa_lam ? ((mat === "acero") ? 6.6 : (mat === "alu" ? 10 : 4)) : ((mat === "acero") ? 5.6 : (mat === "alu" ? 8 : 3));
-
-        let rpm_teo = (vc * 1000) / (Math.PI * d.d_calc);
-        let base_rpm = Math.round(rpm_teo / 10) * 10; 
-        let rpm = base_rpm;
-
-        for (let offset = 0; offset <= 50; offset += 10) {
-            let t_up = base_rpm + offset;
-            if (Math.abs((t_up * d.paso) - Math.round(t_up * d.paso)) < 0.001 && Math.round(t_up * d.paso) % 10 === 0) { rpm = t_up; break; }
-            let t_down = base_rpm - offset;
-            if (t_down > 0 && Math.abs((t_down * d.paso) - Math.round(t_down * d.paso)) < 0.001 && Math.round(t_down * d.paso) % 10 === 0) { rpm = t_down; break; }
-        }
-
-        document.getElementById("r_paso").innerText = d.hilos ? `${d.paso} mm (${d.hilos})` : `${d.paso} mm`;
-        document.getElementById("r_broca").innerText = "Ø " + (usa_lam ? d.broca_lam : d.broca_corte).toString().replace(".",",") + " mm";
-        document.getElementById("r_rpm_rosca").innerText = rpm + " RPM";
-        document.getElementById("r_f_rosca").innerText = "F " + Math.round(rpm * d.paso) + " mm/min";
-        document.getElementById("r_tipo_macho").innerHTML = `Ciclo: <span class='badge'>G84 Rígido</span> | Macho: <b>${usa_lam ? "Laminación" : "Corte"}</b>`;
-        document.getElementById("res_rosca").style.display = "block";
-    }
-
-    function calcularEscariador() {
-        let d = parseFloat(document.getElementById("diam_esc").value);
-        let mat = document.getElementById("mat_esc").value;
-        let tipo = document.getElementById("tipo_esc").value;
-
-        if (!d || d <= 0) return alert("Introduce un diámetro válido.");
-
-        let vc, fn_base;
-
-        if (tipo === "hss") {
-            if (mat === "acero") vc = 10;
-            else if (mat === "acero_duro") vc = 5;
-            else if (mat === "inox") vc = 4;
-            else if (mat === "alu") vc = 15;
-            fn_base = (d <= 3) ? 0.08 : (d <= 5 ? 0.12 : (d <= 10 ? 0.18 : 0.20));
-        } else {
-            if (mat === "acero") vc = 15;
-            else if (mat === "acero_duro") vc = 8;
-            else if (mat === "inox") vc = 6;
-            else if (mat === "alu") vc = 25;
-            fn_base = (d <= 4) ? 0.08 : (d <= 6 ? 0.10 : 0.14);
-        }
-
-        if (d <= 4) vc *= 0.7;
-
-        let fn = fn_base;
-        if (mat === "alu") fn *= 1.2;
-        if (mat === "acero_duro" || mat === "inox") fn *= 0.8;
-
-        let rpm_teo = (vc * 1000) / (Math.PI * d);
-        let rpm_max = (mat === "alu") ? 1800 : 1200; 
-
-        let rpm = redondear(Math.min(rpm_teo, rpm_max), 10); 
-        let f_total = redondear(rpm * fn, 5);
-        if (f_total < 5) f_total = 5; 
-
-        document.getElementById("esc_broca").innerHTML = "<span class='badge-info'>Ø " + (d <= 10 ? d - 0.2 : d - 0.3).toFixed(1).replace(".",",") + " mm</span>";
-        document.getElementById("esc_rpm").innerHTML = rpm_teo > rpm_max ? "<span class='limit-warning'>" + rpm + " (Tope)</span>" : rpm + " RPM";
-        document.getElementById("esc_f").innerText = "F " + f_total + " mm/min";
-        document.getElementById("esc_fn").innerText = fn.toFixed(2) + " mm/rev";
-        document.getElementById("res_escariador").style.display = "block";
     }
 </script>
 </body>
