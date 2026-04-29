@@ -50,7 +50,7 @@
         .header-text h1 { margin: 0; color: #E3000F; font-size: 28px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; line-height: 1; }
         .header-text span { display: block; font-size: 11px; color: #777; text-transform: uppercase; letter-spacing: 2px; margin-top: 4px; }
 
-        /* MENÚ 3x2 (6 BOTONES) */
+        /* MENÚ 3x2 PERFECTO */
         .menu { display: grid; grid-template-columns: repeat(3, 1fr); background-color: #222; }
         .menu button { background-color: inherit; color: #e6e6e6; border: none; padding: 14px 2px; cursor: pointer; font-size: 13.5px; font-weight: 900; transition: 0.3s; border-bottom: 3px solid #222; letter-spacing: 0.5px; text-transform: uppercase; }
         .menu button:hover { color: #fff; }
@@ -112,15 +112,15 @@
     <div id="calcNine9" class="tab-content" style="display: block;">
         <h2>Punteador NC / Chaflán</h2>
         <label>Profundidad Z (mm):</label>
-        <input type="number" id="depth" value="1.0" step="0.1">
+        <input type="number" id="depth" value="1.0" step="0.1" class="auto-select" onkeypress="handleEnter(event, 'btn_nine9')">
         <label>Material a mecanizar:</label>
-        <select id="material_nine9">
+        <select id="material_nine9" onkeypress="handleEnter(event, 'btn_nine9')">
             <option value="acero">Acero</option>
             <option value="acero_duro">Acero Duro / Aleado</option>
             <option value="inox">Inoxidable</option>
             <option value="alu">Aluminio</option>
         </select>
-        <button class="btn-calcular" onclick="calcularNine9()">Calcular Parámetros</button>
+        <button id="btn_nine9" class="btn-calcular" onclick="calcularNine9()">Calcular Parámetros</button>
         <div class="results" id="res_nine9" style="display: none;">
             <p>Diámetro sugerido (d): <span class="highlight" id="d_nine9"></span></p>
             <p>Velocidad (S): <span class="highlight" id="s_nine9"></span></p>
@@ -142,17 +142,17 @@
         </select>
 
         <label>Diámetro de la broca (mm):</label>
-        <input type="number" id="diam_broca_uni" value="10.0" step="0.1">
+        <input type="number" id="diam_broca_uni" value="10.0" step="0.1" class="auto-select" onkeypress="handleEnter(event, 'btn_brocas')">
 
         <label>Material a mecanizar:</label>
-        <select id="mat_broca_uni">
+        <select id="mat_broca_uni" onkeypress="handleEnter(event, 'btn_brocas')">
             <option value="acero">Acero</option>
             <option value="acero_duro">Acero Duro / Aleado</option>
             <option value="inox">Inoxidable</option>
             <option value="alu">Aluminio</option>
         </select>
 
-        <button class="btn-calcular" onclick="calcularBrocas()">Calcular Parámetros</button>
+        <button id="btn_brocas" class="btn-calcular" onclick="calcularBrocas()">Calcular Parámetros</button>
 
         <div class="results" id="res_brocas_uni" style="display: none;">
             <p>Ciclo sugerido: <span class="badge-warn" id="b_ciclo">G81 o G82</span></p>
@@ -176,34 +176,34 @@
         </select>
 
         <label>Medida:</label>
-        <select id="select_rosca_m" onchange="actualizarRosca()">
+        <select id="select_rosca_m" onchange="actualizarRosca()" onkeypress="handleEnter(event, 'btn_rosca')">
             <option value="">Selecciona...</option>
             <option value="M3">M3</option><option value="M4">M4</option><option value="M5">M5</option>
             <option value="M6">M6</option><option value="M8">M8</option><option value="M10">M10</option>
             <option value="M12">M12</option><option value="M16">M16</option><option value="M20">M20</option>
             <option value="M24">M24</option>
         </select>
-        <select id="select_rosca_mf" onchange="actualizarRosca()" style="display: none;">
+        <select id="select_rosca_mf" onchange="actualizarRosca()" onkeypress="handleEnter(event, 'btn_rosca')" style="display: none;">
             <option value="">Selecciona...</option>
             <option value="M6x0.75">M6 x 0.75</option><option value="M8x1">M8 x 1</option><option value="M10x1">M10 x 1</option>
             <option value="M10x1.25">M10 x 1.25</option><option value="M12x1">M12 x 1</option><option value="M12x1.25">M12 x 1.25</option>
             <option value="M12x1.5">M12 x 1.5</option><option value="M16x1.5">M16 x 1.5</option>
         </select>
-        <select id="select_rosca_g" onchange="actualizarRosca()" style="display: none;">
+        <select id="select_rosca_g" onchange="actualizarRosca()" onkeypress="handleEnter(event, 'btn_rosca')" style="display: none;">
             <option value="">Selecciona...</option>
             <option value="G1/8">G 1/8"</option><option value="G1/4">G 1/4"</option>
             <option value="G3/8">G 3/8"</option><option value="G1/2">G 1/2"</option>
         </select>
 
         <label>Material a mecanizar:</label>
-        <select id="mat_rosca" onchange="actualizarRosca()">
+        <select id="mat_rosca" onchange="actualizarRosca()" onkeypress="handleEnter(event, 'btn_rosca')">
             <option value="acero">Acero</option>
             <option value="acero_duro">Acero Duro / Aleado</option>
             <option value="inox">Inoxidable</option>
             <option value="alu">Aluminio</option>
         </select>
 
-        <div class="results" id="res_rosca" style="display: none; margin-top: 15px;">
+        <button id="btn_rosca" class="btn-calcular" style="display: none;"></button> <div class="results" id="res_rosca" style="display: none; margin-top: 15px;">
             <p>Paso / Hilos: <span class="highlight" id="r_paso"></span></p>
             <p>Broca Previa: <span class="highlight" id="r_broca"></span></p>
             <p>Revoluciones (S): <span class="highlight" id="r_rpm_rosca"></span></p>
@@ -215,12 +215,12 @@
     <div id="calcFresado" class="tab-content">
         <h2>Fresa General</h2>
         <label>RPM (S):</label>
-        <input type="number" id="rpm_fresa" value="3000" step="50">
+        <input type="number" id="rpm_fresa" value="3000" step="50" class="auto-select" onkeypress="handleEnter(event, 'btn_fresa')">
         <label>Nº Labios (Z):</label>
-        <input type="number" id="z_fresa" value="4">
+        <input type="number" id="z_fresa" value="4" class="auto-select" onkeypress="handleEnter(event, 'btn_fresa')">
         <label>Avance/Diente (fz):</label>
-        <input type="number" id="fz_fresa" value="0.05" step="0.01">
-        <button class="btn-calcular" onclick="calcularFresado()">Calcular Avance</button>
+        <input type="number" id="fz_fresa" value="0.05" step="0.01" class="auto-select" onkeypress="handleEnter(event, 'btn_fresa')">
+        <button id="btn_fresa" class="btn-calcular" onclick="calcularFresado()">Calcular Avance</button>
         <div class="results" id="res_fresa" style="display: none;">
             <p>Avance trabajo (F): <span class="highlight" id="f_total_fresa"></span></p>
         </div>
@@ -230,19 +230,21 @@
         <h2>Platos Tungaloy</h2>
         <h4>Condiciones Turbo Tungaloy</h4>
         <label>Diámetro del plato (mm):</label>
-        <select id="diam_tungaloy">
-            <option value="50">50</option><option value="25">25</option>
-            <option value="20">20</option><option value="16">16</option>
+        <select id="diam_tungaloy" onkeypress="handleEnter(event, 'btn_tungaloy')">
+            <option value="50">50</option>
+            <option value="25">25</option>
+            <option value="20">20</option>
+            <option value="16">16</option>
             <option value="12">12</option>
         </select>
         <label>Material a mecanizar:</label>
-        <select id="mat_tungaloy">
+        <select id="mat_tungaloy" onkeypress="handleEnter(event, 'btn_tungaloy')">
             <option value="acero_blando">Acero Blando</option>
             <option value="acero_duro">Acero Duro</option>
             <option value="inox">Inox</option>
             <option value="inox_duro">Inox Duro</option>
         </select>
-        <button class="btn-calcular" onclick="calcularTungaloy()">Calcular Parámetros</button>
+        <button id="btn_tungaloy" class="btn-calcular" onclick="calcularTungaloy()">Calcular Parámetros</button>
         <div class="results" id="res_tungaloy" style="display: none;">
             <p>Revoluciones (S): <span class="highlight" id="s_tungaloy"></span></p>
             <p>Avance trabajo (F): <span class="highlight" id="f_tungaloy"></span></p>
@@ -262,17 +264,17 @@
         </select>
 
         <label>Diámetro del Escariador (mm):</label>
-        <input type="number" id="diam_esc" value="8.0" step="0.1">
+        <input type="number" id="diam_esc" value="8.0" step="0.1" class="auto-select" onkeypress="handleEnter(event, 'btn_esc')">
         
         <label>Material a mecanizar:</label>
-        <select id="mat_esc">
+        <select id="mat_esc" onkeypress="handleEnter(event, 'btn_esc')">
             <option value="acero">Acero</option>
             <option value="acero_duro">Acero Duro / Aleado</option>
             <option value="inox">Inoxidable</option>
             <option value="alu">Aluminio</option>
         </select>
         
-        <button class="btn-calcular" onclick="calcularEscariador()">Calcular Parámetros</button>
+        <button id="btn_esc" class="btn-calcular" onclick="calcularEscariador()">Calcular Parámetros</button>
         
         <div class="results" id="res_escariador" style="display: none;">
             <p>Ciclo sugerido: <span class="badge-warn">G85</span></p>
@@ -287,6 +289,71 @@
 </div>
 
 <script>
+    // --- 1. CONFIGURACIÓN PWA Y OFFLINE ---
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js').then((reg) => {
+                console.log('Zerbimek Offline Listo!', reg.scope);
+            }).catch((err) => {
+                console.log('Error PWA: ', err);
+            });
+        });
+    }
+
+    // --- 2. MEJORAS DE UX (Auto-selección y Enter) ---
+    // Seleccionar todo el texto al hacer clic en un input
+    document.querySelectorAll('.auto-select').forEach(input => {
+        input.addEventListener('focus', function() {
+            this.select();
+        });
+    });
+
+    // Ejecutar botón al pulsar Enter
+    function handleEnter(e, buttonId) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            document.getElementById(buttonId).click();
+        }
+    }
+
+    // --- 3. DICCIONARIOS DE DATOS (Optimizados fuera de las funciones) ---
+    const roscas_data = {
+        "M3": { paso: 0.5, d_calc: 3, broca_corte: 2.5, broca_lam: 2.8 },
+        "M4": { paso: 0.7, d_calc: 4, broca_corte: 3.3, broca_lam: 3.7 },
+        "M5": { paso: 0.8, d_calc: 5, broca_corte: 4.2, broca_lam: 4.65 },
+        "M6": { paso: 1.0, d_calc: 6, broca_corte: 5.0, broca_lam: 5.55 },
+        "M8": { paso: 1.25, d_calc: 8, broca_corte: 6.8, broca_lam: 7.45 },
+        "M10": { paso: 1.5, d_calc: 10, broca_corte: 8.5, broca_lam: 9.4 },
+        "M12": { paso: 1.75, d_calc: 12, broca_corte: 10.2, broca_lam: 11.2 },
+        "M16": { paso: 2.0, d_calc: 16, broca_corte: 14.0 },
+        "M20": { paso: 2.5, d_calc: 20, broca_corte: 17.5 },
+        "M24": { paso: 3.0, d_calc: 24, broca_corte: 21.0 },
+
+        "M6x0.75": { paso: 0.75, d_calc: 6, broca_corte: 5.2 },
+        "M8x1": { paso: 1.0, d_calc: 8, broca_corte: 7.0 },
+        "M10x1": { paso: 1.0, d_calc: 10, broca_corte: 9.0 },
+        "M10x1.25": { paso: 1.25, d_calc: 10, broca_corte: 8.8 },
+        "M12x1": { paso: 1.0, d_calc: 12, broca_corte: 11.0 },
+        "M12x1.25": { paso: 1.25, d_calc: 12, broca_corte: 10.8 },
+        "M12x1.5": { paso: 1.5, d_calc: 12, broca_corte: 10.5 },
+        "M16x1.5": { paso: 1.5, d_calc: 16, broca_corte: 14.5 },
+
+        "G1/8": { paso: 0.907, hilos: "28 Gg/1\"", d_calc: 9.73, broca_corte: 8.8 },
+        "G1/4": { paso: 1.337, hilos: "19 Gg/1\"", d_calc: 13.16, broca_corte: 11.8 },
+        "G3/8": { paso: 1.337, hilos: "19 Gg/1\"", d_calc: 16.66, broca_corte: 15.25 },
+        "G1/2": { paso: 1.814, hilos: "14 Gg/1\"", d_calc: 20.96, broca_corte: 19.0 }
+    };
+
+    const tungaloy_data = {
+        "50": { "acero_blando": { vc: 180, fn: 6.0, ap: "0,5" }, "acero_duro": { vc: 140, fn: 6.0, ap: "0,5" }, "inox": { vc: 120, fn: 6.0, ap: "0,5" }, "inox_duro": { vc: 100, fn: 6.0, ap: "0,5" } },
+        "25": { "acero_blando": { vc: 180, fn: 2.7, ap: "0,5" }, "acero_duro": { vc: 140, fn: 2.7, ap: "0,5" }, "inox": { vc: 120, fn: 2.7, ap: "0,5" }, "inox_duro": { vc: 100, fn: 2.7, ap: "0,5" } },
+        "20": { "acero_blando": { vc: 180, fn: 1.8, ap: "0,5" }, "acero_duro": { vc: 140, fn: 1.8, ap: "0,5" }, "inox": { vc: 120, fn: 1.8, ap: "0,5" }, "inox_duro": { vc: 100, fn: 1.8, ap: "0,5" } },
+        "16": { "acero_blando": { vc: 180, fn: 1.0, ap: "0,5" }, "acero_duro": { vc: 140, fn: 1.0, ap: "0,5" }, "inox": { vc: 120, fn: 1.0, ap: "0,5" }, "inox_duro": { vc: 100, fn: 1.0, ap: "0,5" } },
+        "12": { "acero_blando": { vc: 200, fn: 0.5, ap: "0,3" }, "acero_duro": { vc: 150, fn: 0.4, ap: "0,2" }, "inox": { vc: 120, fn: 0.4, ap: "0,2" }, "inox_duro": { vc: 100, fn: 0.3, ap: "0,2" } }
+    };
+
+
+    // --- 4. FUNCIONES DE CÁLCULO ---
     function redondear(valor, multiplo) {
         return Math.round(valor / multiplo) * multiplo;
     }
@@ -327,7 +394,7 @@
             fn = 0.085 + (d * 0.005);
             if (mat === "alu") fn += 0.01;
             rpm_max = 9000;
-            ciclo = "G81 o G82"; // Ajustado según petición
+            ciclo = "G81 o G82"; 
         } 
         else if (tipo === "ext") {
             vc = (mat === "acero") ? 35 : (mat === "alu" ? 80 : 30);
@@ -430,34 +497,6 @@
         }
 
         let mat = document.getElementById("mat_rosca").value;
-
-        const roscas_data = {
-            "M3": { paso: 0.5, d_calc: 3, broca_corte: 2.5, broca_lam: 2.8 },
-            "M4": { paso: 0.7, d_calc: 4, broca_corte: 3.3, broca_lam: 3.7 },
-            "M5": { paso: 0.8, d_calc: 5, broca_corte: 4.2, broca_lam: 4.65 },
-            "M6": { paso: 1.0, d_calc: 6, broca_corte: 5.0, broca_lam: 5.55 },
-            "M8": { paso: 1.25, d_calc: 8, broca_corte: 6.8, broca_lam: 7.45 },
-            "M10": { paso: 1.5, d_calc: 10, broca_corte: 8.5, broca_lam: 9.4 },
-            "M12": { paso: 1.75, d_calc: 12, broca_corte: 10.2, broca_lam: 11.2 },
-            "M16": { paso: 2.0, d_calc: 16, broca_corte: 14.0 },
-            "M20": { paso: 2.5, d_calc: 20, broca_corte: 17.5 },
-            "M24": { paso: 3.0, d_calc: 24, broca_corte: 21.0 },
-
-            "M6x0.75": { paso: 0.75, d_calc: 6, broca_corte: 5.2 },
-            "M8x1": { paso: 1.0, d_calc: 8, broca_corte: 7.0 },
-            "M10x1": { paso: 1.0, d_calc: 10, broca_corte: 9.0 },
-            "M10x1.25": { paso: 1.25, d_calc: 10, broca_corte: 8.8 },
-            "M12x1": { paso: 1.0, d_calc: 12, broca_corte: 11.0 },
-            "M12x1.25": { paso: 1.25, d_calc: 12, broca_corte: 10.8 },
-            "M12x1.5": { paso: 1.5, d_calc: 12, broca_corte: 10.5 },
-            "M16x1.5": { paso: 1.5, d_calc: 16, broca_corte: 14.5 },
-
-            "G1/8": { paso: 0.907, hilos: "28 Gg/1\"", d_calc: 9.73, broca_corte: 8.8 },
-            "G1/4": { paso: 1.337, hilos: "19 Gg/1\"", d_calc: 13.16, broca_corte: 11.8 },
-            "G3/8": { paso: 1.337, hilos: "19 Gg/1\"", d_calc: 16.66, broca_corte: 15.25 },
-            "G1/2": { paso: 1.814, hilos: "14 Gg/1\"", d_calc: 20.96, broca_corte: 19.0 }
-        };
-
         let d = roscas_data[val];
         let usa_lam = (tipo === 'M' && d.d_calc <= 12);
 
@@ -571,14 +610,14 @@
     function calcularNine9() {
         let t = parseFloat(document.getElementById("depth").value);
         let mat = document.getElementById("material_nine9").value;
-        const RPM_MAX = 9000; // Ajustado tope a 9000 RPM
+        const RPM_MAX = 9000; 
         if (!t || t <= 0) return;
         let d = t * 2;
         let vc, f_spot_max, f_spot_min, f_chamf_max, f_chamf_min;
 
         if (mat === "acero") { vc=180; f_spot_max=0.10; f_spot_min=0.05; f_chamf_max=0.24; f_chamf_min=0.10; }
         else if (mat === "acero_duro") { vc=140; f_spot_max=0.08; f_spot_min=0.04; f_chamf_max=0.20; f_chamf_min=0.08; }
-        else if (mat === "inox") { vc=90; f_spot_max=0.07; f_spot_min=0.03; f_chamf_max=0.15; f_chamf_min=0.06; }
+        else if (mat === "inox") { vc=90; f_spot_max=0.07; f_spot_min=0.03; f_chamf_max=0.15; f_chamf_min=0.06; } // Inox bajado a 90 por seguridad
         else if (mat === "alu") { vc=250; f_spot_max=0.10; f_spot_min=0.05; f_chamf_max=0.25; f_chamf_min=0.10; }
 
         let ratio = Math.max(0, Math.min(1, (d - 2) / 16)); 
@@ -618,15 +657,7 @@
         let diam = document.getElementById("diam_tungaloy").value;
         let mat = document.getElementById("mat_tungaloy").value;
 
-        const datos = {
-            "50": { "acero_blando": { vc: 180, fn: 6.0, ap: "0,5" }, "acero_duro": { vc: 140, fn: 6.0, ap: "0,5" }, "inox": { vc: 120, fn: 6.0, ap: "0,5" }, "inox_duro": { vc: 100, fn: 6.0, ap: "0,5" } },
-            "25": { "acero_blando": { vc: 180, fn: 2.7, ap: "0,5" }, "acero_duro": { vc: 140, fn: 2.7, ap: "0,5" }, "inox": { vc: 120, fn: 2.7, ap: "0,5" }, "inox_duro": { vc: 100, fn: 2.7, ap: "0,5" } },
-            "20": { "acero_blando": { vc: 180, fn: 1.8, ap: "0,5" }, "acero_duro": { vc: 140, fn: 1.8, ap: "0,5" }, "inox": { vc: 120, fn: 1.8, ap: "0,5" }, "inox_duro": { vc: 100, fn: 1.8, ap: "0,5" } },
-            "16": { "acero_blando": { vc: 180, fn: 1.0, ap: "0,5" }, "acero_duro": { vc: 140, fn: 1.0, ap: "0,5" }, "inox": { vc: 120, fn: 1.0, ap: "0,5" }, "inox_duro": { vc: 100, fn: 1.0, ap: "0,5" } },
-            "12": { "acero_blando": { vc: 200, fn: 0.5, ap: "0,3" }, "acero_duro": { vc: 150, fn: 0.4, ap: "0,2" }, "inox": { vc: 120, fn: 0.4, ap: "0,2" }, "inox_duro": { vc: 100, fn: 0.3, ap: "0,2" } }
-        };
-
-        let d = datos[diam][mat];
+        let d = tungaloy_data[diam][mat];
         let rpm_teo = (d.vc * 1000) / (Math.PI * parseInt(diam));
         let rpm = redondear(rpm_teo, 50);
         let f_val = Math.round(rpm * d.fn);
