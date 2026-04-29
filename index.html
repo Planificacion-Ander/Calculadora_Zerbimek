@@ -585,6 +585,7 @@
 
         let vc;
         
+        // --- CÁLCULO SEGURO (60%-75% del valor de catálogo) ---
         if (usa_lam) {
             if (mat === "acero") vc = 6.6; 
             else if (mat === "acero_duro") vc = 4; 
@@ -693,14 +694,16 @@
             let mat = document.getElementById("mat_coco").value;
             if(!d) return alert("Introduce un diámetro.");
 
+            // Parámetros ultra-precisos basados en catálogo HSS-Co8 Garant 192605 (d11 referencia)
             let vc, fz_base;
-            if(mat === "acero") { vc = 35; fz_base = 0.045; }
-            else if(mat === "acero_duro") { vc = 18; fz_base = 0.025; }
-            else if(mat === "inox") { vc = 15; fz_base = 0.020; }
-            else if(mat === "alu") { vc = 80; fz_base = 0.080; } // Vc rebajada por seguridad, fz alto para romper viruta
+            if(mat === "acero") { vc = 35; fz_base = 0.012; } // 63% de Vc=55, avance seguro sobre los 0.014 teóricos
+            else if(mat === "acero_duro") { vc = 18; fz_base = 0.010; }
+            else if(mat === "inox") { vc = 12; fz_base = 0.008; } // 70% de Vc=17
+            else if(mat === "alu") { vc = 80; fz_base = 0.015; } // 66% de Vc=120
 
-            let fz = fz_base * (d / 10);
-            if(fz < 0.01) fz = 0.01;
+            // Escalar el avance según el diámetro de la fresa (referencia d11)
+            let fz = fz_base * (d / 11);
+            if(fz < 0.005) fz = 0.005;
             
             let z = (mat === "alu") ? 3 : 4; 
 
@@ -709,7 +712,7 @@
 
             document.getElementById("s_fresa_avz").innerText = rpm + " RPM";
             document.getElementById("f_fresa_avz").innerText = "F " + f + " mm/min";
-            document.getElementById("nota_fresa_avz").innerHTML = "<span class='title'>Herramienta</span>Cálculos para Fresa de Cocodrilo <b>HSS-Co8</b>.";
+            document.getElementById("nota_fresa_avz").innerHTML = "<span class='title'>Herramienta</span>Cálculos ajustados para Fresa Desbaste <b>HSS-Co8</b>.";
 
             document.getElementById("res_fresa_avanzada").style.display = "block";
         }
@@ -719,14 +722,14 @@
             let corte = document.getElementById("tipo_corte_ran").value;
             if(!d) return alert("Faltan datos de la fresa.");
 
-            let z = 6; // Fijo por seguridad
+            let z = 6; 
 
-            // Parámetros actualizados según catálogo HSS Co5
+            // Parámetros actualizados según catálogo HSS Co5 Garant (referencia d10.5)
             let vc, fz_base;
-            if(mat === "acero") { vc = 20; fz_base = 0.030; } 
+            if(mat === "acero") { vc = 20; fz_base = 0.030; } // 66% de fz=0.045
             else if(mat === "acero_duro") { vc = 12; fz_base = 0.020; }
             else if(mat === "inox") { vc = 10; fz_base = 0.015; }
-            else if(mat === "alu") { vc = 55; fz_base = 0.045; } 
+            else if(mat === "alu") { vc = 55; fz_base = 0.045; } // Alu rápido y avance generoso
 
             if (corte === "completa") {
                 vc *= 0.8; 
@@ -740,7 +743,7 @@
 
             document.getElementById("s_fresa_avz").innerText = rpm + " RPM";
             document.getElementById("f_fresa_avz").innerText = "F " + f + " mm/min";
-            document.getElementById("nota_fresa_avz").innerHTML = "<span class='title'>Herramienta</span>Cálculos para Fresa para Ranuras T <b>HSS Co5</b>." + nota_extra;
+            document.getElementById("nota_fresa_avz").innerHTML = "<span class='title'>Herramienta</span>Cálculos ajustados para Fresa Ranuras T <b>HSS Co5</b>." + nota_extra;
 
             document.getElementById("res_fresa_avanzada").style.display = "block";
         }
