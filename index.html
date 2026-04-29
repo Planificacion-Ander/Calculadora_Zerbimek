@@ -193,6 +193,8 @@
             <option value="">Selecciona...</option>
             <option value="G1/8">G 1/8"</option><option value="G1/4">G 1/4"</option>
             <option value="G3/8">G 3/8"</option><option value="G1/2">G 1/2"</option>
+            <option value="G5/8">G 5/8"</option><option value="G3/4">G 3/4"</option>
+            <option value="G1">G 1"</option>
         </select>
 
         <label>Material a mecanizar:</label>
@@ -211,7 +213,7 @@
             <p>Revoluciones (S): <span class="highlight" id="r_rpm_rosca"></span></p>
             <p>Avance (F = S × Paso): <span class="highlight" id="r_f_rosca"></span></p>
             <p class="note" id="r_tipo_macho" style="margin-bottom: 0; color: #444; font-weight: bold; font-size: 14px;"></p>
-            <p class="note" id="r_marca_nota" style="margin-top: 8px; margin-bottom: 0; font-size: 11px;"></p>
+            <p class="note" id="r_marca_nota" style="margin-top: 8px; margin-bottom: 0; font-size: 11px; color: #555;"></p>
         </div>
     </div>
 
@@ -342,7 +344,10 @@
         "G1/8": { paso: 0.907, hilos: "28 Gg/1\"", d_calc: 9.73, broca_corte: 8.8 },
         "G1/4": { paso: 1.337, hilos: "19 Gg/1\"", d_calc: 13.16, broca_corte: 11.8 },
         "G3/8": { paso: 1.337, hilos: "19 Gg/1\"", d_calc: 16.66, broca_corte: 15.25 },
-        "G1/2": { paso: 1.814, hilos: "14 Gg/1\"", d_calc: 20.96, broca_corte: 19.0 }
+        "G1/2": { paso: 1.814, hilos: "14 Gg/1\"", d_calc: 20.96, broca_corte: 19.0 },
+        "G5/8": { paso: 1.814, hilos: "14 Gg/1\"", d_calc: 22.91, broca_corte: 21.0 },
+        "G3/4": { paso: 1.814, hilos: "14 Gg/1\"", d_calc: 26.44, broca_corte: 24.5 },
+        "G1": { paso: 2.309, hilos: "11 Gg/1\"", d_calc: 33.25, broca_corte: 30.25 }
     };
 
     const tungaloy_data = {
@@ -546,30 +551,24 @@
         let paso_str = d.hilos ? `${d.paso} mm (${d.hilos})` : `${d.paso} mm`;
         document.getElementById("r_paso").innerText = paso_str;
 
-        // --- LÓGICA DE TEXTOS Y MARCAS EXACTAS ---
-        let tipo_macho = "Corte";
-        let nota_marca = "";
-        
+        // --- LÓGICA DE TEXTOS Y RECOMENDACIONES ---
+        let tipo_macho = usa_lam ? "Laminación" : "Corte";
+        let recomendacion = "";
+
         if (usa_lam) {
-            tipo_macho = "Laminación";
-            nota_marca = "Cálculos basados en: Macho de Laminación Estándar.";
-        } else if (tipo === 'MF') {
-            tipo_macho = "Corte";
-            nota_marca = "Cálculos basados en: Gühring 4004 (TiN / Anillo Azul).";
-        } else if (tipo === 'G') {
-            if (mat === "alu") {
-                tipo_macho = "Corte";
-                nota_marca = "Cálculos basados en: Garant 133300 (Sin revestimiento para Aluminio).";
-            } else {
-                tipo_macho = "Corte";
-                nota_marca = "Cálculos basados en: Gühring 938 (Vap. / Anillo Azul).";
-            }
+            recomendacion = "Recomendación: Macho de laminación (conformado en frío).";
         } else {
-            nota_marca = "Cálculos basados en: Macho de Corte Estándar.";
+            if (mat === "alu") {
+                recomendacion = "Recomendación: Macho brillante (sin revestimiento) especial para aluminio.";
+            } else if (mat === "inox" || mat === "acero_duro") {
+                recomendacion = "Recomendación: Macho vaporizado (anillo azul/rojo) o con recubrimiento (ej. TiN).";
+            } else {
+                recomendacion = "Recomendación: Macho vaporizado o estándar de corte.";
+            }
         }
 
         document.getElementById("r_tipo_macho").innerHTML = `Ciclo: <span class='badge'>G84 Rígido</span> | Macho: <b>${tipo_macho}</b>`;
-        document.getElementById("r_marca_nota").innerText = nota_marca;
+        document.getElementById("r_marca_nota").innerText = recomendacion;
 
         if (usa_lam) {
             document.getElementById("r_broca").innerText = "Ø " + d.broca_lam.toString().replace(".",",") + " mm";
