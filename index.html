@@ -75,7 +75,20 @@
 
         .highlight { font-weight: bold; color: #333; font-size: 16px;}
         .limit-warning { color: #d32f2f; font-weight: bold; font-size: 14px; }
-        .note { font-size: 12px; color: #888; margin-top: 15px; font-style: italic; text-align: center;}
+        
+        /* NUEVA CAJA DE INFORMACIÓN (MÁS VISIBLE Y ELEGANTE) */
+        .info-box {
+            margin-top: 15px;
+            padding: 12px;
+            background-color: #e7f1ff;
+            border-left: 4px solid #0d6efd;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #084298;
+            font-weight: 600;
+            text-align: left;
+            line-height: 1.4;
+        }
 
         .badge { background-color: #444; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
         .badge-warn { background-color: #E3000F; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
@@ -160,7 +173,8 @@
             <p>Avance trabajo (F): <span class="highlight" id="b_f"></span></p>
             <p id="row_q" style="display: none;">Pasada (Q): <span class="highlight" id="b_q"></span></p>
             <p>Avance rev. (fn): <span class="highlight" id="b_fn"></span></p>
-            <p class="note" id="b_nota" style="display: none; margin-top: 10px; margin-bottom: 0;"></p>
+            
+            <div id="b_nota" class="info-box" style="display: none;"></div>
         </div>
     </div>
 
@@ -212,8 +226,9 @@
             <p>Broca Previa: <span class="highlight" id="r_broca"></span></p>
             <p>Revoluciones (S): <span class="highlight" id="r_rpm_rosca"></span></p>
             <p>Avance (F = S × Paso): <span class="highlight" id="r_f_rosca"></span></p>
-            <p class="note" id="r_tipo_macho" style="margin-bottom: 0; color: #444; font-weight: bold; font-size: 14px;"></p>
-            <p class="note" id="r_marca_nota" style="margin-top: 8px; margin-bottom: 0; font-size: 11px; color: #555;"></p>
+            <p id="r_tipo_macho" style="margin-top: 10px; margin-bottom: 0; color: #444; font-weight: bold; font-size: 14px; text-align: center; border-bottom: none;"></p>
+            
+            <div id="r_marca_nota" class="info-box" style="display: none;"></div>
         </div>
     </div>
 
@@ -287,7 +302,8 @@
             <p>Revoluciones (S): <span class="highlight" id="esc_rpm"></span></p>
             <p>Avance trabajo (F): <span class="highlight" id="esc_f"></span></p>
             <p>Avance rev. (fn): <span class="highlight" id="esc_fn"></span></p>
-            <p class="note" style="margin-top: 10px; margin-bottom: 0;">Freno de seguridad aplicado para diámetros pequeños.</p>
+            
+            <div class="info-box">💡 Freno de seguridad aplicado para diámetros pequeños.</div>
         </div>
     </div>
 
@@ -438,7 +454,7 @@
             if (q_val < 0.5) q_val = 0.5;
             
             ciclo = "G82";
-            nota = "Q ajustada y redondeada según material y diámetro.";
+            nota = "Pasada (Q) ajustada y redondeada según material y diámetro para brocas HSS.";
         }
         else if (tipo === "placas") {
             if (mat === "acero") { vc = 120; fn = 0.08; }
@@ -466,7 +482,7 @@
         }
 
         if (nota) {
-            document.getElementById("b_nota").innerText = nota;
+            document.getElementById("b_nota").innerText = "💡 " + nota;
             document.getElementById("b_nota").style.display = "block";
         } else {
             document.getElementById("b_nota").style.display = "none";
@@ -551,24 +567,26 @@
         let paso_str = d.hilos ? `${d.paso} mm (${d.hilos})` : `${d.paso} mm`;
         document.getElementById("r_paso").innerText = paso_str;
 
-        // --- LÓGICA DE TEXTOS Y RECOMENDACIONES ---
+        // --- LÓGICA DE TEXTOS Y RECOMENDACIONES LIMPIAS ---
         let tipo_macho = usa_lam ? "Laminación" : "Corte";
         let recomendacion = "";
 
         if (usa_lam) {
-            recomendacion = "Recomendación: Macho de laminación (conformado en frío).";
+            recomendacion = "Recomendamos utilizar un macho de laminación (conformado en frío) para esta medida.";
         } else {
             if (mat === "alu") {
-                recomendacion = "Recomendación: Macho brillante (sin revestimiento) especial para aluminio.";
+                recomendacion = "Recomendamos utilizar un macho brillante (sin revestimiento) diseñado para aluminio.";
             } else if (mat === "inox" || mat === "acero_duro") {
-                recomendacion = "Recomendación: Macho vaporizado (anillo azul/rojo) o con recubrimiento (ej. TiN).";
+                recomendacion = "Recomendamos utilizar un macho vaporizado (anillo azul/rojo) o con recubrimiento duro (ej. TiN).";
             } else {
-                recomendacion = "Recomendación: Macho vaporizado o estándar de corte.";
+                recomendacion = "Recomendamos utilizar un macho vaporizado o uno estándar de corte.";
             }
         }
 
         document.getElementById("r_tipo_macho").innerHTML = `Ciclo: <span class='badge'>G84 Rígido</span> | Macho: <b>${tipo_macho}</b>`;
-        document.getElementById("r_marca_nota").innerText = recomendacion;
+        
+        document.getElementById("r_marca_nota").innerText = "💡 " + recomendacion;
+        document.getElementById("r_marca_nota").style.display = "block";
 
         if (usa_lam) {
             document.getElementById("r_broca").innerText = "Ø " + d.broca_lam.toString().replace(".",",") + " mm";
