@@ -534,7 +534,7 @@
 
         let vc;
         
-        // CORRECCIÓN MATEMÁTICA: Aluminio va más rápido al usar machos brillantes
+        // --- CÁLCULO SEGURO (60%-75% del valor de catálogo) ---
         if (usa_lam) {
             if (mat === "acero") vc = 6.6; 
             else if (mat === "acero_duro") vc = 4; 
@@ -542,16 +542,16 @@
             else if (mat === "alu") vc = 10; 
         } 
         else if (tipo === 'MF') {
-            if (mat === "acero") vc = 15; 
-            else if (mat === "acero_duro") vc = 8; 
-            else if (mat === "inox") vc = 7; 
-            else if (mat === "alu") vc = 15; 
+            if (mat === "acero") vc = 12; 
+            else if (mat === "acero_duro") vc = 6; 
+            else if (mat === "inox") vc = 5; 
+            else if (mat === "alu") vc = 12; 
         }
         else if (tipo === 'G') {
             if (mat === "acero") vc = 10; 
             else if (mat === "acero_duro") vc = 5; 
             else if (mat === "inox") vc = 5; 
-            else if (mat === "alu") vc = 15; // ¡Velocidad restaurada para macho brillante en aluminio!
+            else if (mat === "alu") vc = 9; // Corregido: Margen seguro del ~70% respecto al máximo de 13 m/min del catálogo.
         }
         else {
             if (mat === "acero") vc = 5.6;
@@ -579,6 +579,7 @@
         let paso_str = d.hilos ? `${d.paso} mm (${d.hilos})` : `${d.paso} mm`;
         document.getElementById("r_paso").innerText = paso_str;
 
+        // --- LÓGICA DE TEXTOS Y RECOMENDACIONES LIMPIAS ---
         let tipo_macho = usa_lam ? "Laminación" : "Corte";
         let recomendacion = "";
 
