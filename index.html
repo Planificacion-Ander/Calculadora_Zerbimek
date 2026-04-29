@@ -137,7 +137,7 @@
         <select id="tipo_broca" onchange="actualizarInfoBroca()">
             <option value="int" selected>MD - Refrig. Interna</option>
             <option value="ext">MD - Refrig. Externa</option>
-            <option value="hss">HSS - Sin revestimiento</option>
+            <option value="hss">HSS - Acero Rapido</option>
             <option value="placas">Broca de Placas</option>
         </select>
 
@@ -374,7 +374,7 @@
         
         if (tipo === "int") sub.innerText = "MD - Refrig. Interna";
         else if (tipo === "ext") sub.innerText = "MD - Refrig. Externa";
-        else if (tipo === "hss") sub.innerText = "HSS - Sin revestimiento";
+        else if (tipo === "hss") sub.innerText = "HSS - Acero Rapido";
         else if (tipo === "placas") sub.innerText = "Herramienta de Placas Intercambiables";
         
         document.getElementById("res_brocas_uni").style.display = "none";
