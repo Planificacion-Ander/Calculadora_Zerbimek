@@ -313,8 +313,6 @@
             <p>Revoluciones (S): <span class="highlight" id="esc_rpm"></span></p>
             <p>Avance trabajo (F): <span class="highlight" id="esc_f"></span></p>
             <p>Avance rev. (fn): <span class="highlight" id="esc_fn"></span></p>
-            
-            <div class="info-box"><span class="title">Seguridad</span>Freno de avance automático aplicado para diámetros pequeños.</div>
         </div>
     </div>
 
@@ -551,7 +549,7 @@
             if (mat === "acero") vc = 10; 
             else if (mat === "acero_duro") vc = 5; 
             else if (mat === "inox") vc = 5; 
-            else if (mat === "alu") vc = 9; // Corregido: Margen seguro del ~70% respecto al máximo de 13 m/min del catálogo.
+            else if (mat === "alu") vc = 9; 
         }
         else {
             if (mat === "acero") vc = 5.6;
