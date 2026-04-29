@@ -203,7 +203,9 @@
             <option value="alu">Aluminio</option>
         </select>
 
-        <button id="btn_rosca" class="btn-calcular" style="display: none;"></button> <div class="results" id="res_rosca" style="display: none; margin-top: 15px;">
+        <button id="btn_rosca" class="btn-calcular" style="display: none;"></button>
+
+        <div class="results" id="res_rosca" style="display: none; margin-top: 15px;">
             <p>Paso / Hilos: <span class="highlight" id="r_paso"></span></p>
             <p>Broca Previa: <span class="highlight" id="r_broca"></span></p>
             <p>Revoluciones (S): <span class="highlight" id="r_rpm_rosca"></span></p>
@@ -301,14 +303,12 @@
     }
 
     // --- 2. MEJORAS DE UX (Auto-selección y Enter) ---
-    // Seleccionar todo el texto al hacer clic en un input
     document.querySelectorAll('.auto-select').forEach(input => {
         input.addEventListener('focus', function() {
             this.select();
         });
     });
 
-    // Ejecutar botón al pulsar Enter
     function handleEnter(e, buttonId) {
         if (e.key === 'Enter') {
             e.preventDefault();
@@ -316,7 +316,7 @@
         }
     }
 
-    // --- 3. DICCIONARIOS DE DATOS (Optimizados fuera de las funciones) ---
+    // --- 3. DICCIONARIOS DE DATOS ---
     const roscas_data = {
         "M3": { paso: 0.5, d_calc: 3, broca_corte: 2.5, broca_lam: 2.8 },
         "M4": { paso: 0.7, d_calc: 4, broca_corte: 3.3, broca_lam: 3.7 },
@@ -351,7 +351,6 @@
         "16": { "acero_blando": { vc: 180, fn: 1.0, ap: "0,5" }, "acero_duro": { vc: 140, fn: 1.0, ap: "0,5" }, "inox": { vc: 120, fn: 1.0, ap: "0,5" }, "inox_duro": { vc: 100, fn: 1.0, ap: "0,5" } },
         "12": { "acero_blando": { vc: 200, fn: 0.5, ap: "0,3" }, "acero_duro": { vc: 150, fn: 0.4, ap: "0,2" }, "inox": { vc: 120, fn: 0.4, ap: "0,2" }, "inox_duro": { vc: 100, fn: 0.3, ap: "0,2" } }
     };
-
 
     // --- 4. FUNCIONES DE CÁLCULO ---
     function redondear(valor, multiplo) {
