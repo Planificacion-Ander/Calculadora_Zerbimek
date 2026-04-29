@@ -269,7 +269,7 @@
 
         <div id="ui_fresa_cocodrilo" style="display:none;">
             <label>Diámetro de la Fresa (mm):</label>
-            <input type="number" id="d_coco" value="15" step="1" class="auto-select" onkeypress="handleEnter(event, 'btn_fresa')">
+            <input type="number" id="d_coco" value="11" step="1" class="auto-select" onkeypress="handleEnter(event, 'btn_fresa')">
             <label>Material a mecanizar:</label>
             <select id="mat_coco" onkeypress="handleEnter(event, 'btn_fresa')">
                 <option value="acero">Acero</option>
@@ -585,6 +585,7 @@
 
         let vc;
         
+        // --- CÁLCULO SEGURO (60%-75% del valor de catálogo) ---
         if (usa_lam) {
             if (mat === "acero") vc = 6.6; 
             else if (mat === "acero_duro") vc = 4; 
@@ -661,7 +662,7 @@
         document.getElementById("res_rosca").style.display = "block";
     }
 
-    // --- NUEVO SISTEMA DE FRESADO BLINDADO ---
+    // --- NUEVO SISTEMA DE FRESADO BLINDADO Y DINÁMICO ---
     function cambiarTipoFresa() {
         let tipo = document.getElementById("tipo_fresa_sel").value;
         document.getElementById("ui_fresa_general").style.display = (tipo === 'general') ? "block" : "none";
@@ -693,15 +694,13 @@
             let mat = document.getElementById("mat_coco").value;
             if(!d) return alert("Introduce un diámetro.");
 
-            // Parámetros ultra-precisos basados en catálogo HSS-Co8 Garant 192605 (d15 referencia)
             let vc, fz_base;
-            if(mat === "acero") { vc = 35; fz_base = 0.014; } // 66% de fz=0.021 para d=15
-            else if(mat === "acero_duro") { vc = 18; fz_base = 0.011; }
-            else if(mat === "inox") { vc = 12; fz_base = 0.009; }
-            else if(mat === "alu") { vc = 80; fz_base = 0.022; }
+            if(mat === "acero") { vc = 35; fz_base = 0.012; } 
+            else if(mat === "acero_duro") { vc = 18; fz_base = 0.010; }
+            else if(mat === "inox") { vc = 12; fz_base = 0.008; }
+            else if(mat === "alu") { vc = 80; fz_base = 0.015; }
 
-            // Escalar el avance linealmente según el diámetro de la fresa (referencia d15)
-            let fz = fz_base * (d / 15);
+            let fz = fz_base * (d / 11);
             if(fz < 0.005) fz = 0.005;
             
             let z = (mat === "alu") ? 3 : 4; 
@@ -721,28 +720,33 @@
             let corte = document.getElementById("tipo_corte_ran").value;
             if(!d) return alert("Faltan datos de la fresa.");
 
-            let z = 6; 
+            // Cálculo dinámico de labios (Z) según el diámetro (aprox. D * 0.6)
+            let z = Math.max(4, Math.round(d * 0.6)); 
 
-            // Parámetros actualizados según catálogo HSS Co5 Garant (referencia d10.5)
+            // Parámetros base seguros (66%) tomando como referencia la fresa de d=16.5 (Garant)
             let vc, fz_base;
-            if(mat === "acero") { vc = 20; fz_base = 0.030; } 
-            else if(mat === "acero_duro") { vc = 12; fz_base = 0.020; }
-            else if(mat === "inox") { vc = 10; fz_base = 0.015; }
-            else if(mat === "alu") { vc = 55; fz_base = 0.045; } 
+            if(mat === "acero") { vc = 20; fz_base = 0.040; } // 66% de 0.060
+            else if(mat === "acero_duro") { vc = 12; fz_base = 0.025; }
+            else if(mat === "inox") { vc = 10; fz_base = 0.020; }
+            else if(mat === "alu") { vc = 55; fz_base = 0.060; } 
+
+            // Escalar avance según diámetro
+            let fz = fz_base * (d / 16.5);
+            if(fz < 0.005) fz = 0.005;
 
             if (corte === "completa") {
                 vc *= 0.8; 
-                fz_base *= 0.7;
+                fz *= 0.7;
             }
 
             let rpm = Math.round((vc * 1000) / (Math.PI * d) / 10) * 10;
-            let f = Math.round(rpm * fz_base * z);
+            let f = Math.round(rpm * fz * z);
 
             let nota_extra = corte === "completa" ? "<br><i>(Reducción de seguridad aplicada por ranura ciega)</i>" : "";
 
             document.getElementById("s_fresa_avz").innerText = rpm + " RPM";
             document.getElementById("f_fresa_avz").innerText = "F " + f + " mm/min";
-            document.getElementById("nota_fresa_avz").innerHTML = "<span class='title'>Herramienta</span>Cálculos ajustados para Fresa Ranuras T <b>HSS Co5</b>." + nota_extra;
+            document.getElementById("nota_fresa_avz").innerHTML = "<span class='title'>Herramienta</span>Cálculos para Fresa Ranuras T <b>HSS Co5</b>. <br>Labios calculados (Z): <b>" + z + "</b>" + nota_extra;
 
             document.getElementById("res_fresa_avanzada").style.display = "block";
         }
