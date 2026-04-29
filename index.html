@@ -203,9 +203,7 @@
             <option value="alu">Aluminio</option>
         </select>
 
-        <button id="btn_rosca" class="btn-calcular" style="display: none;"></button>
-
-        <div class="results" id="res_rosca" style="display: none; margin-top: 15px;">
+        <button id="btn_rosca" class="btn-calcular" style="display: none;"></button> <div class="results" id="res_rosca" style="display: none; margin-top: 15px;">
             <p>Paso / Hilos: <span class="highlight" id="r_paso"></span></p>
             <p>Broca Previa: <span class="highlight" id="r_broca"></span></p>
             <p>Revoluciones (S): <span class="highlight" id="r_rpm_rosca"></span></p>
@@ -291,7 +289,7 @@
 </div>
 
 <script>
-    // --- 1. PWA ---
+    // --- 1. CONFIGURACIÓN PWA Y OFFLINE ---
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('./sw.js').then((reg) => {
@@ -302,13 +300,15 @@
         });
     }
 
-    // --- 2. UX ---
+    // --- 2. MEJORAS DE UX (Auto-selección y Enter) ---
+    // Seleccionar todo el texto al hacer clic en un input
     document.querySelectorAll('.auto-select').forEach(input => {
         input.addEventListener('focus', function() {
             this.select();
         });
     });
 
+    // Ejecutar botón al pulsar Enter
     function handleEnter(e, buttonId) {
         if (e.key === 'Enter') {
             e.preventDefault();
@@ -316,7 +316,7 @@
         }
     }
 
-    // --- 3. DICCIONARIOS ---
+    // --- 3. DICCIONARIOS DE DATOS ---
     const roscas_data = {
         "M3": { paso: 0.5, d_calc: 3, broca_corte: 2.5, broca_lam: 2.8 },
         "M4": { paso: 0.7, d_calc: 4, broca_corte: 3.3, broca_lam: 3.7 },
@@ -352,7 +352,8 @@
         "12": { "acero_blando": { vc: 200, fn: 0.5, ap: "0,3" }, "acero_duro": { vc: 150, fn: 0.4, ap: "0,2" }, "inox": { vc: 120, fn: 0.4, ap: "0,2" }, "inox_duro": { vc: 100, fn: 0.3, ap: "0,2" } }
     };
 
-    // --- 4. FUNCIONES ---
+
+    // --- 4. FUNCIONES DE CÁLCULO ---
     function redondear(valor, multiplo) {
         return Math.round(valor / multiplo) * multiplo;
     }
@@ -366,7 +367,7 @@
         evento.currentTarget.classList.add("active");
     }
 
-    // --- BROCAS ---
+    // --- LÓGICA TALADRADO UNIFICADO ---
     function actualizarInfoBroca() {
         let tipo = document.getElementById("tipo_broca").value;
         let sub = document.getElementById("brocas_subtitulo");
@@ -469,7 +470,7 @@
         document.getElementById("res_brocas_uni").style.display = "block";
     }
 
-    // --- ROSCAS ---
+    // --- LÓGICA ROSCAS ---
     function mostrarDesplegableRosca() {
         let tipo = document.getElementById("tipo_rosca").value;
         document.getElementById("select_rosca_m").style.display = (tipo === 'M') ? "block" : "none";
@@ -501,19 +502,30 @@
 
         let vc;
         
+        // --- NUEVA LÓGICA DE VELOCIDADES DE CORTE ---
         if (usa_lam) {
+            // Laminación estándar (M <= 12)
             if (mat === "acero") vc = 6.6; 
             else if (mat === "acero_duro") vc = 4; 
             else if (mat === "inox") vc = 4; 
             else if (mat === "alu") vc = 10; 
         } 
         else if (tipo === 'MF') {
+            // Machos MF: Vaporizados para ferrosos, Brillantes para aluminio
             if (mat === "acero") vc = 12; 
             else if (mat === "acero_duro") vc = 6; 
             else if (mat === "inox") vc = 5; 
             else if (mat === "alu") vc = 18; 
-        } 
+        }
+        else if (tipo === 'G') {
+            // Machos G: Sin revestimiento (Garant 133300)
+            if (mat === "acero") vc = 7; 
+            else if (mat === "acero_duro") vc = 3.5; 
+            else if (mat === "inox") vc = 3.5; 
+            else if (mat === "alu") vc = 14; 
+        }
         else {
+            // Corte Estándar
             if (mat === "acero") vc = 5.6;
             else if (mat === "acero_duro") vc = 3; 
             else if (mat === "inox") vc = 3;
@@ -524,6 +536,7 @@
         let base_rpm = Math.round(rpm_teo / 10) * 10; 
         let rpm = base_rpm;
 
+        // Redondeo fino para cuadrar el paso exacto
         for (let offset = 0; offset <= 50; offset += 10) {
             let t_up = base_rpm + offset;
             let test_up = t_up * d.paso;
@@ -539,11 +552,16 @@
         let paso_str = d.hilos ? `${d.paso} mm (${d.hilos})` : `${d.paso} mm`;
         document.getElementById("r_paso").innerText = paso_str;
 
+        // --- ETIQUETA VISUAL INTELIGENTE SEGÚN EL MATERIAL Y TIPO ---
         let tipo_macho = "Corte";
-        if (usa_lam) tipo_macho = "Laminación";
-        else if (tipo === 'MF') {
+        if (usa_lam) {
+            tipo_macho = "Laminación";
+        } else if (tipo === 'MF') {
             tipo_macho = (mat === "alu") ? "Corte (Brillante)" : "Corte (HSS-E Vap.)";
+        } else if (tipo === 'G') {
+            tipo_macho = "Corte (Sin revest.)";
         }
+
         document.getElementById("r_tipo_macho").innerHTML = `Ciclo: <span class='badge'>G84 Rígido</span> | Macho: <b>${tipo_macho}</b>`;
 
         if (usa_lam) {
@@ -558,7 +576,7 @@
         document.getElementById("res_rosca").style.display = "block";
     }
 
-    // --- ESCARIADORES ---
+    // --- LÓGICA ESCARIADORES ---
     function calcularEscariador() {
         let d = parseFloat(document.getElementById("diam_esc").value);
         let mat = document.getElementById("mat_esc").value;
@@ -579,7 +597,7 @@
             else if (d <= 10) fn_base = 0.18;
             else fn_base = 0.20;
 
-        } else { 
+        } else { // MDI
             if (mat === "acero") vc = 15;
             else if (mat === "acero_duro") vc = 8;
             else if (mat === "inox") vc = 6;
@@ -617,7 +635,7 @@
         document.getElementById("res_escariador").style.display = "block";
     }
 
-    // --- PUNTEADOR NC ---
+    // --- CÁLCULOS PUNTEADOR NC ---
     function calcularNine9() {
         let t = parseFloat(document.getElementById("depth").value);
         let mat = document.getElementById("material_nine9").value;
@@ -650,7 +668,7 @@
         document.getElementById("res_nine9").style.display = "block";
     }
 
-    // --- FRESADO ---
+    // --- CÁLCULOS FRESADO ---
     function calcularFresado() {
         let rpm = parseFloat(document.getElementById("rpm_fresa").value);
         let z = parseFloat(document.getElementById("z_fresa").value);
@@ -663,7 +681,7 @@
         document.getElementById("res_fresa").style.display = "block";
     }
 
-    // --- TUNGALOY ---
+    // --- CÁLCULOS TUNGALOY ---
     function calcularTungaloy() {
         let diam = document.getElementById("diam_tungaloy").value;
         let mat = document.getElementById("mat_tungaloy").value;
