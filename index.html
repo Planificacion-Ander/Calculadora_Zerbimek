@@ -102,7 +102,7 @@
 
     <div class="menu">
         <button class="pestana active" onclick="abrirHerramienta(event, 'calcNine9')">Punteador</button>
-        <button class="pestana" onclick="abrirHerramienta(event, 'calcBrocas')">Taladrado</button>
+        <button class="pestana" onclick="abrirHerramienta(event, 'calcBrocas')">Brocas</button>
         <button class="pestana" onclick="abrirHerramienta(event, 'calcRosca')">Roscado</button>
         <button class="pestana" onclick="abrirHerramienta(event, 'calcFresado')">Fresado</button>
         <button class="pestana" onclick="abrirHerramienta(event, 'calcTungaloy')">Tungaloy</button>
@@ -130,14 +130,14 @@
     </div>
 
     <div id="calcBrocas" class="tab-content">
-        <h2>Taladrado General</h2>
+        <h2>Brocas</h2>
         <h4 id="brocas_subtitulo">Metal Duro - Refrigeración Interna</h4>
         
         <label>Tipo de Broca:</label>
         <select id="tipo_broca" onchange="actualizarInfoBroca()">
             <option value="int" selected>MD - Refrig. Interna</option>
             <option value="ext">MD - Refrig. Externa</option>
-            <option value="hss">HSS (Garant / Holex)</option>
+            <option value="hss">HSS (Sin revestimiento)</option>
             <option value="placas">Broca de Placas</option>
         </select>
 
@@ -309,7 +309,7 @@
         
         if (tipo === "int") sub.innerText = "Metal Duro - Refrigeración Interna";
         else if (tipo === "ext") sub.innerText = "Metal Duro - Sin Refrigeración Interna";
-        else if (tipo === "hss") sub.innerText = "Garant / Holex - Sin revestimiento";
+        else if (tipo === "hss") sub.innerText = "HSS - Sin revestimiento";
         else if (tipo === "placas") sub.innerText = "Herramienta de Placas Intercambiables";
         
         document.getElementById("res_brocas_uni").style.display = "none";
@@ -510,7 +510,7 @@
         document.getElementById("res_rosca").style.display = "block";
     }
 
-    // --- LÓGICA ESCARIADORES (Con G85) ---
+    // --- LÓGICA ESCARIADORES ---
     function calcularEscariador() {
         let d = parseFloat(document.getElementById("diam_esc").value);
         let mat = document.getElementById("mat_esc").value;
