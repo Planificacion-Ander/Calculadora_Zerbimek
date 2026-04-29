@@ -256,8 +256,8 @@
         
         <select id="tipo_fresa_sel" class="main-selector" onchange="cambiarTipoFresa()">
             <option value="general">Calculadora General (S × Z × fz)</option>
-            <option value="cocodrilo">Fresa Desbaste "Cocodrilo" (HSS-Co8)</option>
-            <option value="ranuras">Fresa para Ranuras de Disco (HSS)</option>
+            <option value="cocodrilo">Fresa de Cocodrilo</option>
+            <option value="ranuras">Fresa para Ranuras T</option>
         </select>
 
         <div id="ui_fresa_general">
@@ -274,7 +274,7 @@
             <input type="number" id="d_coco" value="10" step="1" class="auto-select" onkeypress="handleEnter(event, 'btn_fresa')">
             <label>Material a mecanizar:</label>
             <select id="mat_coco" onkeypress="handleEnter(event, 'btn_fresa')">
-                <option value="acero">Acero Normal</option>
+                <option value="acero">Acero</option>
                 <option value="acero_duro">Acero Duro / Aleado</option>
                 <option value="inox">Inoxidable</option>
                 <option value="alu">Aluminio</option>
@@ -293,7 +293,7 @@
             </select>
             <label>Material a mecanizar:</label>
             <select id="mat_ran" onkeypress="handleEnter(event, 'btn_fresa')">
-                <option value="acero">Acero Normal</option>
+                <option value="acero">Acero</option>
                 <option value="acero_duro">Acero Duro / Aleado</option>
                 <option value="inox">Inoxidable</option>
                 <option value="alu">Aluminio</option>
@@ -698,12 +698,11 @@
             let mat = document.getElementById("mat_coco").value;
             if(!d) return alert("Introduce un diámetro.");
 
-            // Parámetros conservadores para HSS-Co8 TiAlN (Garant 192605)
             let vc, fz_base;
-            if(mat === "acero") { vc = 30; fz_base = 0.035; }
+            if(mat === "acero") { vc = 35; fz_base = 0.045; }
             else if(mat === "acero_duro") { vc = 18; fz_base = 0.025; }
-            else if(mat === "inox") { vc = 12; fz_base = 0.020; }
-            else if(mat === "alu") { vc = 60; fz_base = 0.045; }
+            else if(mat === "inox") { vc = 15; fz_base = 0.020; }
+            else if(mat === "alu") { vc = 120; fz_base = 0.080; } // ¡Aluminio potenciado!
 
             // Escalar el avance según el diámetro de la fresa (referencia d10)
             let fz = fz_base * (d / 10);
@@ -716,7 +715,7 @@
 
             document.getElementById("s_fresa_avz").innerText = rpm + " RPM";
             document.getElementById("f_fresa_avz").innerText = "F " + f + " mm/min";
-            document.getElementById("nota_fresa_avz").innerHTML = "<span class='title'>Herramienta</span>Cálculos para Fresa de Desbaste <b>HSS-Co8 TiAlN</b>.";
+            document.getElementById("nota_fresa_avz").innerHTML = "<span class='title'>Herramienta</span>Cálculos para Fresa de Cocodrilo <b>HSS-Co8</b>.";
 
             document.getElementById("res_fresa_general").style.display = "none";
             document.getElementById("res_fresa_avanzada").style.display = "block";
@@ -747,7 +746,7 @@
 
             document.getElementById("s_fresa_avz").innerText = rpm + " RPM";
             document.getElementById("f_fresa_avz").innerText = "F " + f + " mm/min";
-            document.getElementById("nota_fresa_avz").innerHTML = "<span class='title'>Herramienta</span>Cálculos para Fresa de Ranuras <b>HSS Brillante</b>." + nota_extra;
+            document.getElementById("nota_fresa_avz").innerHTML = "<span class='title'>Herramienta</span>Cálculos para Fresa para Ranuras T <b>HSS Brillante</b>." + nota_extra;
 
             document.getElementById("res_fresa_general").style.display = "none";
             document.getElementById("res_fresa_avanzada").style.display = "block";
@@ -846,6 +845,19 @@
         document.getElementById("f_spot_nine9").innerText = "F " + f_spot_val;
         document.getElementById("f_chamf_nine9").innerText = "F " + f_chamf_val;
         document.getElementById("res_nine9").style.display = "block";
+    }
+
+    // --- FRESADO ---
+    function calcularFresado() {
+        let rpm = parseFloat(document.getElementById("rpm_fresa").value);
+        let z = parseFloat(document.getElementById("z_fresa").value);
+        let fz = parseFloat(document.getElementById("fz_fresa").value);
+        if (!rpm || !z || !fz) return;
+
+        let f_total = Math.round(rpm * z * fz);
+
+        document.getElementById("f_total_fresa").innerText = "F " + f_total;
+        document.getElementById("res_fresa").style.display = "block";
     }
 
     // --- TUNGALOY ---
