@@ -131,13 +131,13 @@
 
     <div id="calcBrocas" class="tab-content">
         <h2>Brocas</h2>
-        <h4 id="brocas_subtitulo">Metal Duro - Refrigeración Interna</h4>
+        <h4 id="brocas_subtitulo">MD - Refrig. Interna</h4>
         
         <label>Tipo de Broca:</label>
         <select id="tipo_broca" onchange="actualizarInfoBroca()">
             <option value="int" selected>MD - Refrig. Interna</option>
             <option value="ext">MD - Refrig. Externa</option>
-            <option value="hss">HSS (Sin revestimiento)</option>
+            <option value="hss">HSS - Sin revestimiento</option>
             <option value="placas">Broca de Placas</option>
         </select>
 
@@ -155,7 +155,7 @@
         <button class="btn-calcular" onclick="calcularBrocas()">Calcular Parámetros</button>
 
         <div class="results" id="res_brocas_uni" style="display: none;">
-            <p>Ciclo sugerido: <span class="badge-warn" id="b_ciclo">G81</span></p>
+            <p>Ciclo sugerido: <span class="badge-warn" id="b_ciclo">G81 o G82</span></p>
             <p>Revoluciones (S): <span class="highlight" id="b_s"></span></p>
             <p>Avance trabajo (F): <span class="highlight" id="b_f"></span></p>
             <p id="row_q" style="display: none;">Pasada (Q): <span class="highlight" id="b_q"></span></p>
@@ -231,10 +231,8 @@
         <h4>Condiciones Turbo Tungaloy</h4>
         <label>Diámetro del plato (mm):</label>
         <select id="diam_tungaloy">
-            <option value="50">50</option>
-            <option value="25">25</option>
-            <option value="20">20</option>
-            <option value="16">16</option>
+            <option value="50">50</option><option value="25">25</option>
+            <option value="20">20</option><option value="16">16</option>
             <option value="12">12</option>
         </select>
         <label>Material a mecanizar:</label>
@@ -255,7 +253,7 @@
 
     <div id="calcEscariador" class="tab-content">
         <h2>Escariadores H7</h2>
-        <h4>Broca previa y condiciones (G85)</h4>
+        <h4>Broca Previa y Condiciones (G85)</h4>
         
         <label>Material de la herramienta:</label>
         <select id="tipo_esc">
@@ -307,8 +305,8 @@
         let tipo = document.getElementById("tipo_broca").value;
         let sub = document.getElementById("brocas_subtitulo");
         
-        if (tipo === "int") sub.innerText = "Metal Duro - Refrigeración Interna";
-        else if (tipo === "ext") sub.innerText = "Metal Duro - Sin Refrigeración Interna";
+        if (tipo === "int") sub.innerText = "MD - Refrig. Interna";
+        else if (tipo === "ext") sub.innerText = "MD - Refrig. Externa";
         else if (tipo === "hss") sub.innerText = "HSS - Sin revestimiento";
         else if (tipo === "placas") sub.innerText = "Herramienta de Placas Intercambiables";
         
@@ -329,7 +327,7 @@
             fn = 0.085 + (d * 0.005);
             if (mat === "alu") fn += 0.01;
             rpm_max = 9000;
-            ciclo = "G81";
+            ciclo = "G81 o G82"; // Ajustado según petición
         } 
         else if (tipo === "ext") {
             vc = (mat === "acero") ? 35 : (mat === "alu" ? 80 : 30);
@@ -573,7 +571,7 @@
     function calcularNine9() {
         let t = parseFloat(document.getElementById("depth").value);
         let mat = document.getElementById("material_nine9").value;
-        const RPM_MAX = 8000;
+        const RPM_MAX = 9000; // Ajustado tope a 9000 RPM
         if (!t || t <= 0) return;
         let d = t * 2;
         let vc, f_spot_max, f_spot_min, f_chamf_max, f_chamf_min;
