@@ -300,7 +300,7 @@
             </select>
         </div>
 
-        <button id="btn_fresa" class="btn-calcular" onclick="calcularFresado()">Calcular Avance</button>
+        <button id="btn_fresa" class="btn-calcular" onclick="calcularFresado()">Calcular Parámetros</button>
         
         <div class="results" id="res_fresa" style="display: none;">
             <div id="res_fresa_general">
@@ -593,6 +593,7 @@
 
         let vc;
         
+        // --- CÁLCULO SEGURO (60%-75% del valor de catálogo) ---
         if (usa_lam) {
             if (mat === "acero") vc = 6.6; 
             else if (mat === "acero_duro") vc = 4; 
@@ -637,6 +638,7 @@
         let paso_str = d.hilos ? `${d.paso} mm (${d.hilos})` : `${d.paso} mm`;
         document.getElementById("r_paso").innerText = paso_str;
 
+        // --- LÓGICA DE TEXTOS Y RECOMENDACIONES LIMPIAS ---
         let tipo_macho = usa_lam ? "Laminación" : "Corte";
         let recomendacion = "";
 
@@ -702,7 +704,7 @@
             if(mat === "acero") { vc = 35; fz_base = 0.045; }
             else if(mat === "acero_duro") { vc = 18; fz_base = 0.025; }
             else if(mat === "inox") { vc = 15; fz_base = 0.020; }
-            else if(mat === "alu") { vc = 120; fz_base = 0.080; } // ¡Aluminio potenciado!
+            else if(mat === "alu") { vc = 80; fz_base = 0.080; } // Velocidad segura y avance alto para romper viruta
 
             // Escalar el avance según el diámetro de la fresa (referencia d10)
             let fz = fz_base * (d / 10);
