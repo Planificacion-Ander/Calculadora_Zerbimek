@@ -137,7 +137,7 @@
         <select id="tipo_broca" onchange="actualizarInfoBroca()">
             <option value="int" selected>MD - Refrig. Interna</option>
             <option value="ext">MD - Refrig. Externa</option>
-            <option value="hss">HSS - Acero Rapido</option>
+            <option value="hss">HSS - Acero Rápido</option>
             <option value="placas">Broca de Placas</option>
         </select>
 
@@ -374,7 +374,7 @@
         
         if (tipo === "int") sub.innerText = "MD - Refrig. Interna";
         else if (tipo === "ext") sub.innerText = "MD - Refrig. Externa";
-        else if (tipo === "hss") sub.innerText = "HSS - Acero Rapido";
+        else if (tipo === "hss") sub.innerText = "HSS - Acero Rápido";
         else if (tipo === "placas") sub.innerText = "Herramienta de Placas Intercambiables";
         
         document.getElementById("res_brocas_uni").style.display = "none";
@@ -617,7 +617,7 @@
 
         if (mat === "acero") { vc=180; f_spot_max=0.10; f_spot_min=0.05; f_chamf_max=0.24; f_chamf_min=0.10; }
         else if (mat === "acero_duro") { vc=140; f_spot_max=0.08; f_spot_min=0.04; f_chamf_max=0.20; f_chamf_min=0.08; }
-        else if (mat === "inox") { vc=90; f_spot_max=0.07; f_spot_min=0.03; f_chamf_max=0.15; f_chamf_min=0.06; } // Inox bajado a 90 por seguridad
+        else if (mat === "inox") { vc=90; f_spot_max=0.07; f_spot_min=0.03; f_chamf_max=0.15; f_chamf_min=0.06; }
         else if (mat === "alu") { vc=250; f_spot_max=0.10; f_spot_min=0.05; f_chamf_max=0.25; f_chamf_min=0.10; }
 
         let ratio = Math.max(0, Math.min(1, (d - 2) / 16)); 
