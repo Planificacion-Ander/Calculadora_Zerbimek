@@ -104,6 +104,16 @@
         .badge { background-color: #444; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
         .badge-warn { background-color: #E3000F; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
         .badge-info { background-color: #1a73e8; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+
+        /* Estilo para los selectores principales de pestaña */
+        .main-selector {
+            border: 2px solid #222;
+            font-weight: bold;
+            color: #222;
+            background-color: #fff;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
@@ -184,7 +194,6 @@
             <p>Avance trabajo (F): <span class="highlight" id="b_f"></span></p>
             <p id="row_q" style="display: none;">Pasada (Q): <span class="highlight" id="b_q"></span></p>
             <p>Avance rev. (fn): <span class="highlight" id="b_fn"></span></p>
-            
             <div id="b_nota" class="info-box" style="display: none;"></div>
         </div>
     </div>
@@ -238,22 +247,70 @@
             <p>Revoluciones (S): <span class="highlight" id="r_rpm_rosca"></span></p>
             <p>Avance (F = S × Paso): <span class="highlight" id="r_f_rosca"></span></p>
             <p id="r_tipo_macho" style="margin-top: 10px; margin-bottom: 0; color: #444; font-weight: bold; font-size: 14px; text-align: center; border-bottom: none;"></p>
-            
             <div id="r_marca_nota" class="info-box" style="display: none;"></div>
         </div>
     </div>
 
     <div id="calcFresado" class="tab-content">
-        <h2>Fresa General</h2>
-        <label>RPM (S):</label>
-        <input type="number" id="rpm_fresa" value="3000" step="50" class="auto-select" onkeypress="handleEnter(event, 'btn_fresa')">
-        <label>Nº Labios (Z):</label>
-        <input type="number" id="z_fresa" value="4" class="auto-select" onkeypress="handleEnter(event, 'btn_fresa')">
-        <label>Avance/Diente (fz):</label>
-        <input type="number" id="fz_fresa" value="0.05" step="0.01" class="auto-select" onkeypress="handleEnter(event, 'btn_fresa')">
+        <h2>Parámetros de Fresado</h2>
+        
+        <select id="tipo_fresa_sel" class="main-selector" onchange="cambiarTipoFresa()">
+            <option value="general">Calculadora General (S × Z × fz)</option>
+            <option value="cocodrilo">Fresa Desbaste "Cocodrilo" (HSS-Co8)</option>
+            <option value="ranuras">Fresa para Ranuras de Disco (HSS)</option>
+        </select>
+
+        <div id="ui_fresa_general">
+            <label>Revoluciones S (RPM):</label>
+            <input type="number" id="rpm_fresa" value="3000" step="50" class="auto-select" onkeypress="handleEnter(event, 'btn_fresa')">
+            <label>Nº Labios (Z):</label>
+            <input type="number" id="z_fresa" value="4" class="auto-select" onkeypress="handleEnter(event, 'btn_fresa')">
+            <label>Avance por Diente (fz):</label>
+            <input type="number" id="fz_fresa" value="0.05" step="0.01" class="auto-select" onkeypress="handleEnter(event, 'btn_fresa')">
+        </div>
+
+        <div id="ui_fresa_cocodrilo" style="display:none;">
+            <label>Diámetro de la Fresa (mm):</label>
+            <input type="number" id="d_coco" value="10" step="1" class="auto-select" onkeypress="handleEnter(event, 'btn_fresa')">
+            <label>Material a mecanizar:</label>
+            <select id="mat_coco" onkeypress="handleEnter(event, 'btn_fresa')">
+                <option value="acero">Acero Normal</option>
+                <option value="acero_duro">Acero Duro / Aleado</option>
+                <option value="inox">Inoxidable</option>
+                <option value="alu">Aluminio</option>
+            </select>
+        </div>
+
+        <div id="ui_fresa_ranuras" style="display:none;">
+            <label>Diámetro Exterior Disco (mm):</label>
+            <input type="number" id="d_ran" value="10.5" step="0.5" class="auto-select" onkeypress="handleEnter(event, 'btn_fresa')">
+            <label>Número de Labios (Z):</label>
+            <input type="number" id="z_ran" value="6" step="1" class="auto-select" onkeypress="handleEnter(event, 'btn_fresa')">
+            <label>Tipo de Operación:</label>
+            <select id="tipo_corte_ran" onkeypress="handleEnter(event, 'btn_fresa')">
+                <option value="lateral">Ranurado Lateral (Abierto)</option>
+                <option value="completa">Ranurado Completo (Ciego/T)</option>
+            </select>
+            <label>Material a mecanizar:</label>
+            <select id="mat_ran" onkeypress="handleEnter(event, 'btn_fresa')">
+                <option value="acero">Acero Normal</option>
+                <option value="acero_duro">Acero Duro / Aleado</option>
+                <option value="inox">Inoxidable</option>
+                <option value="alu">Aluminio</option>
+            </select>
+        </div>
+
         <button id="btn_fresa" class="btn-calcular" onclick="calcularFresado()">Calcular Avance</button>
+        
         <div class="results" id="res_fresa" style="display: none;">
-            <p>Avance trabajo (F): <span class="highlight" id="f_total_fresa"></span></p>
+            <div id="res_fresa_general">
+                <p>Avance trabajo (F): <span class="highlight" id="f_total_fresa"></span></p>
+            </div>
+            <div id="res_fresa_avanzada" style="display:none;">
+                <p>Revoluciones (S): <span class="highlight" id="s_fresa_avz"></span></p>
+                <p>Avance trabajo (F): <span class="highlight" id="f_fresa_avz"></span></p>
+                <div id="nota_fresa_avz" class="info-box"></div>
+            </div>
         </div>
     </div>
 
@@ -536,7 +593,6 @@
 
         let vc;
         
-        // --- CÁLCULO SEGURO (60%-75% del valor de catálogo) ---
         if (usa_lam) {
             if (mat === "acero") vc = 6.6; 
             else if (mat === "acero_duro") vc = 4; 
@@ -581,7 +637,6 @@
         let paso_str = d.hilos ? `${d.paso} mm (${d.hilos})` : `${d.paso} mm`;
         document.getElementById("r_paso").innerText = paso_str;
 
-        // --- LÓGICA DE TEXTOS Y RECOMENDACIONES LIMPIAS ---
         let tipo_macho = usa_lam ? "Laminación" : "Corte";
         let recomendacion = "";
 
@@ -612,6 +667,93 @@
         document.getElementById("r_f_rosca").innerText = "F " + f_total + " mm/min";
 
         document.getElementById("res_rosca").style.display = "block";
+    }
+
+    // --- NUEVO SISTEMA DE FRESADO ---
+    function cambiarTipoFresa() {
+        let tipo = document.getElementById("tipo_fresa_sel").value;
+        document.getElementById("ui_fresa_general").style.display = (tipo === 'general') ? "block" : "none";
+        document.getElementById("ui_fresa_cocodrilo").style.display = (tipo === 'cocodrilo') ? "block" : "none";
+        document.getElementById("ui_fresa_ranuras").style.display = (tipo === 'ranuras') ? "block" : "none";
+        document.getElementById("res_fresa").style.display = "none";
+    }
+
+    function calcularFresado() {
+        let tipo = document.getElementById("tipo_fresa_sel").value;
+
+        if (tipo === "general") {
+            let rpm = parseFloat(document.getElementById("rpm_fresa").value);
+            let z = parseFloat(document.getElementById("z_fresa").value);
+            let fz = parseFloat(document.getElementById("fz_fresa").value);
+            if (!rpm || !z || !fz) return;
+            
+            let f_total = Math.round(rpm * z * fz);
+            document.getElementById("f_total_fresa").innerText = "F " + f_total + " mm/min";
+
+            document.getElementById("res_fresa_general").style.display = "block";
+            document.getElementById("res_fresa_avanzada").style.display = "none";
+        }
+        else if (tipo === "cocodrilo") {
+            let d = parseFloat(document.getElementById("d_coco").value);
+            let mat = document.getElementById("mat_coco").value;
+            if(!d) return alert("Introduce un diámetro.");
+
+            // Parámetros conservadores para HSS-Co8 TiAlN (Garant 192605)
+            let vc, fz_base;
+            if(mat === "acero") { vc = 30; fz_base = 0.035; }
+            else if(mat === "acero_duro") { vc = 18; fz_base = 0.025; }
+            else if(mat === "inox") { vc = 12; fz_base = 0.020; }
+            else if(mat === "alu") { vc = 60; fz_base = 0.045; }
+
+            // Escalar el avance según el diámetro de la fresa (referencia d10)
+            let fz = fz_base * (d / 10);
+            if(fz < 0.01) fz = 0.01;
+            
+            let z = (mat === "alu") ? 3 : 4; // Labios típicos
+
+            let rpm = Math.round((vc * 1000) / (Math.PI * d) / 10) * 10;
+            let f = Math.round(rpm * fz * z);
+
+            document.getElementById("s_fresa_avz").innerText = rpm + " RPM";
+            document.getElementById("f_fresa_avz").innerText = "F " + f + " mm/min";
+            document.getElementById("nota_fresa_avz").innerHTML = "<span class='title'>Herramienta</span>Cálculos para Fresa de Desbaste <b>HSS-Co8 TiAlN</b>.";
+
+            document.getElementById("res_fresa_general").style.display = "none";
+            document.getElementById("res_fresa_avanzada").style.display = "block";
+        }
+        else if (tipo === "ranuras") {
+            let d = parseFloat(document.getElementById("d_ran").value);
+            let z = parseInt(document.getElementById("z_ran").value);
+            let mat = document.getElementById("mat_ran").value;
+            let corte = document.getElementById("tipo_corte_ran").value;
+            if(!d || !z) return alert("Faltan datos de la fresa.");
+
+            // Parámetros conservadores para Fresa Disco HSS Sin Revest. (Garant 194010)
+            let vc, fz_base;
+            if(mat === "acero") { vc = 18; fz_base = 0.015; }
+            else if(mat === "acero_duro") { vc = 10; fz_base = 0.010; }
+            else if(mat === "inox") { vc = 7; fz_base = 0.008; }
+            else if(mat === "alu") { vc = 45; fz_base = 0.020; }
+
+            if (corte === "completa") {
+                vc *= 0.8; // Freno extra por atasco de viruta
+                fz_base *= 0.7;
+            }
+
+            let rpm = Math.round((vc * 1000) / (Math.PI * d) / 10) * 10;
+            let f = Math.round(rpm * fz_base * z);
+
+            let nota_extra = corte === "completa" ? "<br><i>(Reducción de seguridad aplicada por ranura ciega)</i>" : "";
+
+            document.getElementById("s_fresa_avz").innerText = rpm + " RPM";
+            document.getElementById("f_fresa_avz").innerText = "F " + f + " mm/min";
+            document.getElementById("nota_fresa_avz").innerHTML = "<span class='title'>Herramienta</span>Cálculos para Fresa de Ranuras <b>HSS Brillante</b>." + nota_extra;
+
+            document.getElementById("res_fresa_general").style.display = "none";
+            document.getElementById("res_fresa_avanzada").style.display = "block";
+        }
+        
+        document.getElementById("res_fresa").style.display = "block";
     }
 
     // --- ESCARIADORES ---
@@ -704,19 +846,6 @@
         document.getElementById("f_spot_nine9").innerText = "F " + f_spot_val;
         document.getElementById("f_chamf_nine9").innerText = "F " + f_chamf_val;
         document.getElementById("res_nine9").style.display = "block";
-    }
-
-    // --- FRESADO ---
-    function calcularFresado() {
-        let rpm = parseFloat(document.getElementById("rpm_fresa").value);
-        let z = parseFloat(document.getElementById("z_fresa").value);
-        let fz = parseFloat(document.getElementById("fz_fresa").value);
-        if (!rpm || !z || !fz) return;
-
-        let f_total = Math.round(rpm * z * fz);
-
-        document.getElementById("f_total_fresa").innerText = "F " + f_total;
-        document.getElementById("res_fresa").style.display = "block";
     }
 
     // --- TUNGALOY ---
