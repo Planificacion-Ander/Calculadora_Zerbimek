@@ -76,18 +76,29 @@
         .highlight { font-weight: bold; color: #333; font-size: 16px;}
         .limit-warning { color: #d32f2f; font-weight: bold; font-size: 14px; }
         
-        /* NUEVA CAJA DE INFORMACIÓN (MÁS VISIBLE Y ELEGANTE) */
+        /* CAJA DE INFORMACIÓN ELEGANTE */
         .info-box {
             margin-top: 15px;
-            padding: 12px;
-            background-color: #e7f1ff;
-            border-left: 4px solid #0d6efd;
+            padding: 12px 15px;
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-left: 4px solid #222;
             border-radius: 4px;
-            font-size: 14px;
-            color: #084298;
-            font-weight: 600;
-            text-align: left;
-            line-height: 1.4;
+            font-size: 13.5px;
+            color: #444;
+            font-weight: 500;
+            line-height: 1.5;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+        
+        .info-box span.title {
+            color: #E3000F;
+            font-weight: 900;
+            text-transform: uppercase;
+            font-size: 10.5px;
+            letter-spacing: 1px;
+            display: block;
+            margin-bottom: 4px;
         }
 
         .badge { background-color: #444; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
@@ -303,7 +314,7 @@
             <p>Avance trabajo (F): <span class="highlight" id="esc_f"></span></p>
             <p>Avance rev. (fn): <span class="highlight" id="esc_fn"></span></p>
             
-            <div class="info-box">💡 Freno de seguridad aplicado para diámetros pequeños.</div>
+            <div class="info-box"><span class="title">Seguridad</span>Freno de avance automático aplicado para diámetros pequeños.</div>
         </div>
     </div>
 
@@ -482,7 +493,7 @@
         }
 
         if (nota) {
-            document.getElementById("b_nota").innerText = "💡 " + nota;
+            document.getElementById("b_nota").innerHTML = "<span class='title'>Nota de Ajuste</span>" + nota;
             document.getElementById("b_nota").style.display = "block";
         } else {
             document.getElementById("b_nota").style.display = "none";
@@ -572,20 +583,20 @@
         let recomendacion = "";
 
         if (usa_lam) {
-            recomendacion = "Recomendamos utilizar un macho de laminación (conformado en frío) para esta medida.";
+            recomendacion = "Utilizar un macho de laminación (conformado en frío) para esta medida.";
         } else {
             if (mat === "alu") {
-                recomendacion = "Recomendamos utilizar un macho brillante (sin revestimiento) diseñado para aluminio.";
+                recomendacion = "Utilizar un macho brillante (sin revestimiento) diseñado para aluminio.";
             } else if (mat === "inox" || mat === "acero_duro") {
-                recomendacion = "Recomendamos utilizar un macho vaporizado (anillo azul/rojo) o con recubrimiento duro (ej. TiN).";
+                recomendacion = "Utilizar un macho vaporizado (anillo azul/rojo) o con recubrimiento duro (ej. TiN).";
             } else {
-                recomendacion = "Recomendamos utilizar un macho vaporizado o uno estándar de corte.";
+                recomendacion = "Utilizar un macho vaporizado o uno estándar de corte.";
             }
         }
 
         document.getElementById("r_tipo_macho").innerHTML = `Ciclo: <span class='badge'>G84 Rígido</span> | Macho: <b>${tipo_macho}</b>`;
         
-        document.getElementById("r_marca_nota").innerText = "💡 " + recomendacion;
+        document.getElementById("r_marca_nota").innerHTML = "<span class='title'>Recomendación</span>" + recomendacion;
         document.getElementById("r_marca_nota").style.display = "block";
 
         if (usa_lam) {
