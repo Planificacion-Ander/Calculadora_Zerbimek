@@ -70,29 +70,28 @@
         .header-text h1 { margin: 0; color: #E3000F; font-size: 28px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; line-height: 1; }
         .header-text span { display: block; font-size: 11px; color: #777; text-transform: uppercase; letter-spacing: 2px; margin-top: 4px; }
 
-        /* PANTALLA DE INICIO (HOME) GRID 2x2 */
+        /* PANTALLA DE INICIO (HOME) */
         #home_screen {
-            padding: 30px 20px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            align-content: center;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
             flex-grow: 1;
+            justify-content: center;
         }
 
         .home-btn {
             background-color: #fcfcfc;
             border: 2px solid #ddd;
             border-radius: 12px;
-            padding: 25px 15px;
+            padding: 25px 20px;
             text-align: center;
             cursor: pointer;
             transition: 0.2s;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            gap: 10px;
+            gap: 8px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
 
@@ -103,9 +102,9 @@
             box-shadow: 0 6px 12px rgba(227, 0, 15, 0.1);
         }
 
-        .home-btn span.icon { font-size: 35px; }
-        .home-btn span.title { font-size: 15px; font-weight: 900; color: #222; text-transform: uppercase; letter-spacing: 1px;}
-        .home-btn span.desc { font-size: 12px; color: #666; line-height: 1.3;}
+        .home-btn span.icon { font-size: 40px; }
+        .home-btn span.title { font-size: 18px; font-weight: 900; color: #222; text-transform: uppercase; letter-spacing: 1px;}
+        .home-btn span.desc { font-size: 13px; color: #666; }
 
         /* MÓDULOS DE APP */
         .app-module { display: none; flex-grow: 1; }
@@ -197,76 +196,7 @@
         <div class="home-btn" onclick="abrirModulo('trigo')">
             <span class="icon">📐</span>
             <span class="title">Trivagometría</span>
-            <span class="desc">Chaflanes y triángulos</span>
-        </div>
-        <!-- BOTÓN PCD -->
-        <div class="home-btn" onclick="abrirModulo('pcd')">
-            <span class="icon">🎯</span>
-            <span class="title">Círculos (PCD)</span>
-            <span class="desc">Coordenadas de agujeros</span>
-        </div>
-    </div>
-
-    <!-- MÓDULO 4: PCD (CÍRCULO DE AGUJEROS) -->
-    <div id="modulo_pcd" class="app-module">
-        <div class="tab-content" style="display: block;">
-            <h2>Círculo de Agujeros (PCD)</h2>
-            <h4>Coordenadas cartesianas X / Y</h4>
-            
-            <div class="shape-preview-container">
-                <svg viewBox="0 0 160 160" style="height:120px; max-width:100%;">
-                    <!-- Ejes X e Y -->
-                    <line x1="80" y1="20" x2="80" y2="120" stroke="#aaa" stroke-width="1" stroke-dasharray="4,4" />
-                    <line x1="25" y1="70" x2="135" y2="70" stroke="#aaa" stroke-width="1" stroke-dasharray="4,4" />
-                    <!-- Cruz central -->
-                    <path d="M 75 70 L 85 70 M 80 65 L 80 75" stroke="#222" stroke-width="1.5" />
-                    <!-- Círculo PCD -->
-                    <circle cx="80" cy="70" r="40" fill="none" stroke="#E3000F" stroke-width="1.5" stroke-dasharray="4,4"/>
-                    <!-- Agujeros de ejemplo -->
-                    <circle cx="80" cy="30" r="4" fill="#E3000F" /> <!-- 12h -->
-                    <circle cx="114.6" cy="50" r="4" fill="#E3000F" />
-                    <circle cx="114.6" cy="90" r="4" fill="#E3000F" />
-                    <circle cx="80" cy="110" r="4" fill="#E3000F" />
-                    <circle cx="45.4" cy="90" r="4" fill="#E3000F" />
-                    <circle cx="45.4" cy="50" r="4" fill="#E3000F" />
-                    <!-- Arco del ángulo inicial referenciado a las 12 -->
-                    <path d="M 80 45 A 25 25 0 0 1 92.5 48.3" fill="none" stroke="#222" stroke-width="1.5"/>
-                    <text x="89" y="42" font-family="sans-serif" font-size="12" font-weight="bold" fill="#222">&alpha;</text>
-                    <!-- Cota D -->
-                    <line x1="40" y1="135" x2="120" y2="135" class="svg-linea" stroke="#E3000F"/>
-                    <line x1="40" y1="130" x2="40" y2="140" class="svg-linea" stroke="#E3000F"/>
-                    <line x1="120" y1="130" x2="120" y2="140" class="svg-linea" stroke="#E3000F"/>
-                    <text x="80" y="152" class="svg-cota" fill="#E3000F" text-anchor="middle">D</text>
-                </svg>
-            </div>
-
-            <div class="dim-grid">
-                <div>
-                    <label>Centro X (mm):</label>
-                    <input type="number" id="pcd_xc" value="0" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_pcd')">
-                </div>
-                <div>
-                    <label>Centro Y (mm):</label>
-                    <input type="number" id="pcd_yc" value="0" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_pcd')">
-                </div>
-                <div>
-                    <label>Diámetro Paso [ D ]:</label>
-                    <input type="number" id="pcd_d" value="50" step="1" class="auto-select" style="border-color: #1a73e8;" onkeypress="handleEnter(event, 'btn_pcd')">
-                </div>
-                <div>
-                    <label>Nº Agujeros [ N ]:</label>
-                    <input type="number" id="pcd_n" value="6" step="1" class="auto-select" style="border-color: #1a73e8;" onkeypress="handleEnter(event, 'btn_pcd')">
-                </div>
-            </div>
-
-            <label style="margin-top: 10px;">Ángulo inicial [ &alpha; ] (0º = 12 en punto):</label>
-            <input type="number" id="pcd_ang" value="0" step="1" class="auto-select" onkeypress="handleEnter(event, 'btn_pcd')">
-
-            <button id="btn_pcd" class="btn-calcular" onclick="calcularPCD()">CALCULAR COORDENADAS</button>
-
-            <div class="results" id="res_pcd" style="display: none; padding: 10px 15px;">
-                <div id="res_pcd_list"></div>
-            </div>
+            <span class="desc">Chaflanes, triángulos y círculos PCD</span>
         </div>
     </div>
 
@@ -280,38 +210,75 @@
             <select id="t_forma" class="main-selector" style="margin-bottom: 10px;" onchange="cambiarFormaTrigo()">
                 <option value="chaflan" selected>Chaflán en Pieza</option>
                 <option value="triangulo">Triángulo Rectángulo Clásico</option>
+                <option value="pcd">Círculo de Agujeros (PCD)</option>
             </select>
 
             <div id="trigo_preview" class="shape-preview-container"></div>
 
-            <div class="info-box" style="margin-bottom: 20px; border-left-color: #1a73e8;">
+            <!-- INSTRUCCIONES CHAFLAN / TRIANGULO -->
+            <div id="instrucciones_trigo" class="info-box" style="margin-bottom: 20px; border-left-color: #1a73e8;">
                 <span class="title" style="color: #1a73e8;">Instrucciones</span>
                 Introduce <b>SOLO 2 DATOS</b> (los que sepas). La calculadora sacará automáticamente los otros dos.
             </div>
 
-            <div class="dim-grid">
-                <div>
-                    <label id="lbl_trigo_a">Longitud (Z) [ A ]:</label>
-                    <input type="number" id="t_a" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_trigo')" placeholder="mm">
+            <!-- INPUTS CHAFLAN / TRIANGULO -->
+            <div id="inputs_trigo">
+                <div class="dim-grid">
+                    <div>
+                        <label id="lbl_trigo_a">Longitud (Z) [ A ]:</label>
+                        <input type="number" id="t_a" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_trigo')" placeholder="mm">
+                    </div>
+                    <div>
+                        <label id="lbl_trigo_b">Profundidad (X) [ B ]:</label>
+                        <input type="number" id="t_b" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_trigo')" placeholder="mm">
+                    </div>
+                    <div>
+                        <label id="lbl_trigo_c">Chaflán [ C ]:</label>
+                        <input type="number" id="t_c" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_trigo')" placeholder="mm">
+                    </div>
+                    <div>
+                        <label>Ángulo [ &alpha; ]:</label>
+                        <input type="number" id="t_ang" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_trigo')" placeholder="Grados (º)">
+                    </div>
                 </div>
-                <div>
-                    <label id="lbl_trigo_b">Profundidad (X) [ B ]:</label>
-                    <input type="number" id="t_b" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_trigo')" placeholder="mm">
-                </div>
-                <div>
-                    <label id="lbl_trigo_c">Chaflán [ C ]:</label>
-                    <input type="number" id="t_c" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_trigo')" placeholder="mm">
-                </div>
-                <div>
-                    <label>Ángulo [ &alpha; ]:</label>
-                    <input type="number" id="t_ang" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_trigo')" placeholder="Grados (º)">
+
+                <div style="display: flex; gap: 10px; margin-top: 25px;">
+                    <button class="btn-calcular" style="background-color: #666; flex: 1;" onclick="limpiarTrigo()">LIMPIAR</button>
+                    <button id="btn_trigo" class="btn-calcular" style="margin-top: 0; flex: 2;" onclick="calcularTrigo()">CALCULAR</button>
                 </div>
             </div>
 
-            <div style="display: flex; gap: 10px; margin-top: 25px;">
-                <button class="btn-calcular" style="background-color: #666; flex: 1;" onclick="limpiarTrigo()">LIMPIAR</button>
-                <button id="btn_trigo" class="btn-calcular" style="margin-top: 0; flex: 2;" onclick="calcularTrigo()">CALCULAR</button>
+            <!-- INPUTS PCD -->
+            <div id="inputs_pcd" style="display: none;">
+                <div class="dim-grid">
+                    <div>
+                        <label>Centro X (mm):</label>
+                        <input type="number" id="pcd_xc" value="0" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_pcd')">
+                    </div>
+                    <div>
+                        <label>Centro Y (mm):</label>
+                        <input type="number" id="pcd_yc" value="0" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_pcd')">
+                    </div>
+                    <div>
+                        <label>Diámetro Paso [ D ]:</label>
+                        <input type="number" id="pcd_d" value="50" step="1" class="auto-select" style="border-color: #1a73e8;" onkeypress="handleEnter(event, 'btn_pcd')">
+                    </div>
+                    <div>
+                        <label>Nº Agujeros [ N ]:</label>
+                        <input type="number" id="pcd_n" value="6" step="1" class="auto-select" style="border-color: #1a73e8;" onkeypress="handleEnter(event, 'btn_pcd')">
+                    </div>
+                </div>
+
+                <label style="margin-top: 10px;">Ángulo inicial [ &alpha; ] (0º = 12 en punto):</label>
+                <input type="number" id="pcd_ang" value="0" step="1" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_pcd')">
+
+                <button id="btn_pcd" class="btn-calcular" onclick="calcularPCD()" style="margin-top: 25px;">CALCULAR COORDENADAS</button>
+
+                <div class="results" id="res_pcd" style="display: none; padding: 10px 15px;">
+                    <div id="res_pcd_list"></div>
+                </div>
             </div>
+
         </div>
     </div>
 
@@ -687,7 +654,6 @@
         document.getElementById("modulo_cnc").style.display = "none";
         document.getElementById("modulo_pesos").style.display = "none";
         document.getElementById("modulo_trigo").style.display = "none";
-        document.getElementById("modulo_pcd").style.display = "none";
 
         if (modulo === 'cnc') {
             document.getElementById("modulo_cnc").style.display = "block";
@@ -700,9 +666,6 @@
             document.getElementById("modulo_trigo").style.display = "block";
             document.getElementById("header_subtitle").innerText = "Trivagometría";
             cambiarFormaTrigo();
-        } else if (modulo === 'pcd') {
-            document.getElementById("modulo_pcd").style.display = "block";
-            document.getElementById("header_subtitle").innerText = "Círculos (PCD)";
         }
     }
 
@@ -710,8 +673,7 @@
         document.getElementById("modulo_cnc").style.display = "none";
         document.getElementById("modulo_pesos").style.display = "none";
         document.getElementById("modulo_trigo").style.display = "none";
-        document.getElementById("modulo_pcd").style.display = "none";
-        document.getElementById("home_screen").style.display = "grid";
+        document.getElementById("home_screen").style.display = "flex";
         document.getElementById("btn_volver").style.display = "none";
         document.getElementById("header_subtitle").innerText = "Centro de Herramientas";
     }
@@ -790,8 +752,8 @@
                         <text x="202.5" y="100" text-anchor="start" alignment-baseline="middle" class="svg-cota" fill="#E3000F">B</text>
 
                         <!-- Ángulo Alfa entre B y C en la esquina inferior derecha (160, 130) -->
-                        <path d="M 160 95 A 35 35 0 0 0 132.4 108.5" fill="none" stroke="#E3000F" stroke-width="1.5" />
-                        <text x="146" y="122" class="svg-cota" style="font-size: 19px;" fill="#E3000F">&alpha;</text>
+                        <path d="M 160 90 A 40 40 0 0 0 128.4 105.4" fill="none" stroke="#E3000F" stroke-width="1.5" />
+                        <text x="148" y="85" class="svg-cota" style="font-size: 19px;" fill="#E3000F">&alpha;</text>
 
                         <!-- Cota C (Hipotenusa/Chaflán) -->
                         <text x="100" y="112" class="svg-cota" fill="#E3000F">C</text>
@@ -814,11 +776,12 @@
                     <!-- Arco del ángulo inicial referenciado a las 12 -->
                     <path d="M 80 45 A 25 25 0 0 1 92.5 48.3" fill="none" stroke="#222" stroke-width="1.5"/>
                     <text x="89" y="42" font-family="sans-serif" font-size="12" font-weight="bold" fill="#222">&alpha;</text>
-                    <!-- Cota D (Separada para que no estorbe) -->
-                    <line x1="40" y1="135" x2="120" y2="135" class="svg-linea" stroke="#E3000F"/>
-                    <line x1="40" y1="130" x2="40" y2="140" class="svg-linea" stroke="#E3000F"/>
-                    <line x1="120" y1="130" x2="120" y2="140" class="svg-linea" stroke="#E3000F"/>
-                    <text x="80" y="152" class="svg-cota" fill="#E3000F" text-anchor="middle">D</text>
+                    <!-- Cota D con hueco en medio para la letra -->
+                    <line x1="40" y1="140" x2="72" y2="140" class="svg-linea" stroke="#E3000F"/>
+                    <line x1="88" y1="140" x2="120" y2="140" class="svg-linea" stroke="#E3000F"/>
+                    <line x1="40" y1="135" x2="40" y2="145" class="svg-linea" stroke="#E3000F"/>
+                    <line x1="120" y1="135" x2="120" y2="145" class="svg-linea" stroke="#E3000F"/>
+                    <text x="80" y="145" class="svg-cota" fill="#E3000F" text-anchor="middle">D</text>
                 </svg>`
     };
 
@@ -937,12 +900,12 @@
                         <text x="80" y="132" text-anchor="middle" class="svg-cota">A</text>
                     </svg>`,
         'hexagonal': `<svg viewBox="0 0 160 140" style="height:110px; max-width:100%;">
-                        <!-- Hexágono regular perfecto -->
-                        <polygon points="80,20 114.64,40 114.64,80 80,100 45.36,80 45.36,40" fill="#E3000F" />
-                        <!-- Cota A (Entrecaras) -->
-                        <line x1="45.36" y1="120" x2="114.64" y2="120" class="svg-linea"/>
-                        <line x1="45.36" y1="115" x2="45.36" y2="125" class="svg-linea"/>
-                        <line x1="114.64" y1="115" x2="114.64" y2="125" class="svg-linea"/>
+                        <!-- Hexágono matemáticamente perfecto: ancho = sqrt(3)/2 * alto -->
+                        <polygon points="80,15 118.97,37.5 118.97,82.5 80,105 41.03,82.5 41.03,37.5" fill="#E3000F" />
+                        <!-- Cota A (Entrecaras exacto de 41.03 a 118.97) -->
+                        <line x1="41.03" y1="120" x2="118.97" y2="120" class="svg-linea"/>
+                        <line x1="41.03" y1="115" x2="41.03" y2="125" class="svg-linea"/>
+                        <line x1="118.97" y1="115" x2="118.97" y2="125" class="svg-linea"/>
                         <text x="80" y="137" text-anchor="middle" class="svg-cota">A</text>
                     </svg>`,
         'placa': `<svg viewBox="0 0 160 140" style="height:110px; max-width:100%;">
