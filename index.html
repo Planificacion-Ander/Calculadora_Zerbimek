@@ -679,9 +679,9 @@
                         <line x1="180" y1="120" x2="195" y2="120" class="svg-linea" stroke="#E3000F"/>
                         <text x="202.5" y="90" text-anchor="start" alignment-baseline="middle" class="svg-cota" fill="#E3000F">B</text>
 
-                        <!-- Ángulo Alfa entre B (vertical) y C (diagonal) -->
-                        <path d="M 165 90 A 30 30 0 0 0 141.6 101.3" fill="none" stroke="#E3000F" stroke-width="1.5" />
-                        <text x="148" y="95" class="svg-cota" style="font-size: 19.5px;" fill="#E3000F">&alpha;</text>
+                        <!-- Ángulo Alfa con la horizontal, movido a la otra punta (90,60) y ampliado -->
+                        <path d="M 90 97.5 A 37.5 37.5 0 0 0 117 81" fill="none" stroke="#E3000F" stroke-width="1.5" />
+                        <text x="117" y="105" class="svg-cota" style="font-size: 19.5px;" fill="#E3000F">&alpha;</text>
 
                         <!-- Cota C (Hipotenusa/Chaflán) -->
                         <text x="112.5" y="112.5" class="svg-cota" fill="#E3000F">C</text>
@@ -790,11 +790,11 @@
                     </svg>`,
         'hexagonal': `<svg viewBox="0 0 160 140" style="height:110px; max-width:100%;">
                         <!-- Hexágono matemáticamente perfecto: ancho = sqrt(3)/2 * alto -->
-                        <polygon points="80,15 114.64,35 114.64,85 80,105 45.36,85 45.36,35" fill="#E3000F" />
-                        <!-- Cota A (Entrecaras exacto de 45.36 a 114.64) -->
-                        <line x1="45.36" y1="120" x2="114.64" y2="120" class="svg-linea"/>
-                        <line x1="45.36" y1="115" x2="45.36" y2="125" class="svg-linea"/>
-                        <line x1="114.64" y1="115" x2="114.64" y2="125" class="svg-linea"/>
+                        <polygon points="80,15 119,37.5 119,82.5 80,105 41,82.5 41,37.5" fill="#E3000F" />
+                        <!-- Cota A (Entrecaras) -->
+                        <line x1="41" y1="120" x2="119" y2="120" class="svg-linea"/>
+                        <line x1="41" y1="115" x2="41" y2="125" class="svg-linea"/>
+                        <line x1="119" y1="115" x2="119" y2="125" class="svg-linea"/>
                         <text x="80" y="137" text-anchor="middle" class="svg-cota">A</text>
                     </svg>`,
         'placa': `<svg viewBox="0 0 160 140" style="height:110px; max-width:100%;">
@@ -830,7 +830,7 @@
                         <line x1="40" y1="110" x2="40" y2="120" class="svg-linea"/>
                         <line x1="120" y1="110" x2="120" y2="120" class="svg-linea"/>
                         <text x="80" y="132" text-anchor="middle" class="svg-cota">A</text>
-                        <!-- Cota d interior -->
+                        <!-- Cota d interior (solo cruza blanco) -->
                         <line x1="52" y1="60" x2="108" y2="60" class="svg-linea"/>
                         <line x1="52" y1="55" x2="52" y2="65" class="svg-linea"/>
                         <line x1="108" y1="55" x2="108" y2="65" class="svg-linea"/>
