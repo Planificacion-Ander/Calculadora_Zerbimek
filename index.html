@@ -70,12 +70,18 @@
         .header-text h1 { margin: 0; color: #E3000F; font-size: 28px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; line-height: 1; }
         .header-text span { display: block; font-size: 11px; color: #777; text-transform: uppercase; letter-spacing: 2px; margin-top: 4px; }
 
-        /* PANTALLA DE INICIO (HOME) EN LISTA */
+        /* PANTALLA DE INICIO (HOME) */
+        /* PANTALLA DE INICIO (HOME) GRID 2x2 */
         #home_screen {
             padding: 40px 20px;
             display: flex;
             flex-direction: column;
             gap: 20px;
+            padding: 30px 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            align-content: center;
             flex-grow: 1;
             justify-content: center;
         }
@@ -84,13 +90,16 @@
             background-color: #fcfcfc;
             border: 2px solid #ddd;
             border-radius: 12px;
-            padding: 30px 20px;
+            padding: 25px 20px;
+            padding: 25px 15px;
             text-align: center;
             cursor: pointer;
             transition: 0.2s;
             display: flex;
             flex-direction: column;
             align-items: center;
+            gap: 8px;
+            justify-content: center;
             gap: 10px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
@@ -105,6 +114,9 @@
         .home-btn span.icon { font-size: 40px; }
         .home-btn span.title { font-size: 18px; font-weight: 900; color: #222; text-transform: uppercase; letter-spacing: 1px;}
         .home-btn span.desc { font-size: 13px; color: #666; }
+        .home-btn span.icon { font-size: 35px; }
+        .home-btn span.title { font-size: 15px; font-weight: 900; color: #222; text-transform: uppercase; letter-spacing: 1px;}
+        .home-btn span.desc { font-size: 12px; color: #666; line-height: 1.3;}
 
         /* MÓDULOS DE APP */
         .app-module { display: none; flex-grow: 1; }
@@ -124,7 +136,7 @@
 
         input, select { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 16px; background-color: #fcfcfc;}
         input:focus, select:focus { outline: none; border-color: #E3000F; }
-        
+
         .input-readonly { background-color: #f0f0f0; border: 1px dashed #ccc; color: #666; }
 
         .btn-calcular { background-color: #E3000F; color: white; border: none; cursor: pointer; font-weight: bold; margin-top: 25px; font-size: 16px; padding: 15px; width: 100%; border-radius: 6px; transition: 0.2s; text-transform: uppercase; letter-spacing: 1px;}
@@ -137,7 +149,7 @@
         .highlight { font-weight: bold; color: #333; font-size: 16px;}
         .limit-warning { color: #d32f2f; font-weight: bold; font-size: 14px; }
         .peso-gigante { font-size: 24px; color: #E3000F; font-weight: 900; }
-        
+
         .info-box { margin-top: 15px; padding: 12px 15px; background-color: #ffffff; border: 1px solid #e0e0e0; border-left: 4px solid #222; border-radius: 4px; font-size: 13.5px; color: #444; font-weight: 500; line-height: 1.5; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
         .info-box span.title { color: #E3000F; font-weight: 900; text-transform: uppercase; font-size: 10.5px; letter-spacing: 1px; display: block; margin-bottom: 4px; }
 
@@ -146,17 +158,17 @@
         .badge-info { background-color: #1a73e8; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
 
         .main-selector { border: 2px solid #222; font-weight: bold; color: #222; background-color: #fff; padding: 10px; margin-bottom: 20px; }
-        
+
         .dynamic-input-group { display: none; }
         .dim-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        
+
         /* Contenedor de la vista previa SVG */
         .shape-preview-container { text-align: center; margin: 15px 0; min-height: 110px; display: flex; justify-content: center; align-items: center;}
-        
+
         /* Estilos texto cotas SVG */
         .svg-cota { font-family: sans-serif; font-size: 15px; font-weight: bold; fill: #E3000F; }
         .svg-linea { stroke: #999; stroke-width: 1.5; }
-        
+
         /* Input Trigovagometria resaltado */
         .input-trigo { background-color: #fffafb; border: 1px solid #ccc; font-weight: bold; color: #222;}
         .input-trigo:focus { border-color: #E3000F; background-color: #fff;}
@@ -185,11 +197,15 @@
     <div id="home_screen">
         <div class="home-btn" onclick="abrirModulo('cnc')">
             <span class="icon">⚙️</span>
+            <span class="title">Cálculo CNC</span>
+            <span class="desc">RPM, Avances, Roscado</span>
             <span class="title">Calculadora CNC</span>
             <span class="desc">RPM, Avances, Roscado y Herramientas</span>
         </div>
         <div class="home-btn" onclick="abrirModulo('pesos')">
             <span class="icon">⚖️</span>
+            <span class="title">Pesos</span>
+            <span class="desc">Materiales y geometrías</span>
             <span class="title">Calculadora de Pesos</span>
             <span class="desc">Estimación de peso por material y geometría</span>
         </div>
@@ -205,7 +221,7 @@
         <div class="tab-content" style="display: block;">
             <h2>Trivagometría</h2>
             <h4>Geometría de taller rápida y sin fallos</h4>
-            
+
             <label>Tipo de cálculo:</label>
             <select id="t_forma" class="main-selector" style="margin-bottom: 10px;" onchange="cambiarFormaTrigo()">
                 <option value="chaflan" selected>Chaflán en Pieza</option>
@@ -286,7 +302,7 @@
     <div id="modulo_pesos" class="app-module">
         <div class="tab-content" style="display: block;">
             <h2>Calculadora de Material</h2>
-            
+
             <label>Material:</label>
             <select id="p_material" class="main-selector" style="margin-bottom: 10px;">
                 <option value="7.85">Acero (7.85)</option>
@@ -329,7 +345,7 @@
                     <label id="lbl_dim_a">Diámetro [ A ] (mm):</label>
                     <input type="number" id="p_dim_a" value="50" step="1" class="auto-select" onkeypress="handleEnter(event, 'btn_pesos')" oninput="calcularHexagonoD()">
                 </div>
-                
+
                 <div id="g_dim_b" class="dynamic-input-group">
                     <label id="lbl_dim_b">Alto [ B ] (mm):</label>
                     <input type="number" id="p_dim_b" value="20" step="1" class="auto-select" onkeypress="handleEnter(event, 'btn_pesos')">
@@ -339,7 +355,7 @@
                     <label>Diámetro ext. Ø (mm):</label>
                     <input type="text" id="p_dim_hex_calc" class="input-readonly" readonly placeholder="Auto...">
                 </div>
-                
+
                 <div id="g_dim_t" class="dynamic-input-group">
                     <label id="lbl_dim_t">Pared [ e ] (mm):</label>
                     <input type="number" id="p_dim_t" value="5" step="0.5" class="auto-select" onkeypress="handleEnter(event, 'btn_pesos')">
@@ -398,7 +414,7 @@
         <div id="calcBrocas" class="tab-content">
             <h2>Brocas</h2>
             <h4 id="brocas_subtitulo">MD - Refrig. Interna</h4>
-            
+
             <label>Tipo de Broca:</label>
             <select id="tipo_broca" onchange="actualizarInfoBroca()">
                 <option value="int" selected>MD - Refrig. Interna</option>
@@ -487,7 +503,7 @@
         <!-- 4. FRESADO -->
         <div id="calcFresado" class="tab-content">
             <h2>Parámetros de Fresado</h2>
-            
+
             <select id="tipo_fresa_sel" class="main-selector" onchange="cambiarTipoFresa()">
                 <option value="general">Calculadora General (S × Z × fz)</option>
                 <option value="cocodrilo">Fresa de Cocodrilo</option>
@@ -538,7 +554,7 @@
             </div>
 
             <button id="btn_fresa" class="btn-calcular" onclick="calcularFresado()">CALCULAR PARÁMETROS</button>
-            
+
             <div class="results" id="res_fresa" style="display: none;">
                 <!-- Resultados Fresa General -->
                 <div id="res_fresa_general">
@@ -578,7 +594,7 @@
                 <p>Avance trabajo (F): <span class="highlight" id="f_tungaloy"></span></p>
                 <p>Pasada (Ap): <span class="highlight" id="ap_tungaloy"></span></p>
                 <p>Avance rev. (fn): <span class="highlight" id="fn_tungaloy"></span></p>
-                
+
                 <p style="margin-top: 15px; margin-bottom: 0; color: #444; font-weight: bold; font-size: 14px; text-align: center; border-bottom: none;">
                     Refrigeración recomendada: <span class="badge-info">Aire (G38)</span>
                 </p>
@@ -589,7 +605,7 @@
         <div id="calcEscariador" class="tab-content">
             <h2>Escariadores H7</h2>
             <h4>Broca Previa y Condiciones (G85)</h4>
-            
+
             <label>Material de la herramienta:</label>
             <select id="tipo_esc">
                 <option value="hss" selected>HSS (Acero Rápido)</option>
@@ -598,7 +614,7 @@
 
             <label>Diámetro del Escariador (mm):</label>
             <input type="number" id="diam_esc" value="8.0" step="0.1" class="auto-select" onkeypress="handleEnter(event, 'btn_esc')">
-            
+
             <label>Material a mecanizar:</label>
             <select id="mat_esc" onkeypress="handleEnter(event, 'btn_esc')">
                 <option value="acero">Acero</option>
@@ -606,9 +622,9 @@
                 <option value="inox">Inoxidable</option>
                 <option value="alu">Aluminio</option>
             </select>
-            
+
             <button id="btn_esc" class="btn-calcular" onclick="calcularEscariador()">CALCULAR PARÁMETROS</button>
-            
+
             <div class="results" id="res_escariador" style="display: none;">
                 <p>Ciclo sugerido: <span class="badge-warn">G85</span></p>
                 <p>Taladro Previo: <span class="badge-info" id="esc_broca"></span></p>
@@ -650,11 +666,10 @@
     function abrirModulo(modulo) {
         document.getElementById("home_screen").style.display = "none";
         document.getElementById("btn_volver").style.display = "block";
-        
+
         document.getElementById("modulo_cnc").style.display = "none";
         document.getElementById("modulo_pesos").style.display = "none";
         document.getElementById("modulo_trigo").style.display = "none";
-        document.getElementById("modulo_pcd").style.display = "none";
 
         if (modulo === 'cnc') {
             document.getElementById("modulo_cnc").style.display = "block";
@@ -674,8 +689,8 @@
         document.getElementById("modulo_cnc").style.display = "none";
         document.getElementById("modulo_pesos").style.display = "none";
         document.getElementById("modulo_trigo").style.display = "none";
-        document.getElementById("modulo_pcd").style.display = "none";
         document.getElementById("home_screen").style.display = "flex";
+        document.getElementById("home_screen").style.display = "grid";
         document.getElementById("btn_volver").style.display = "none";
         document.getElementById("header_subtitle").innerText = "Centro de Herramientas";
     }
@@ -754,10 +769,10 @@
                         <text x="202.5" y="100" text-anchor="start" alignment-baseline="middle" class="svg-cota" fill="#E3000F">B</text>
 
                         <!-- Ángulo Alfa entre B y C en la esquina inferior derecha (160, 130) -->
-                        <!-- Usamos un radio de 35 para el arco -->
+                        <path d="M 160 90 A 40 40 0 0 0 128.4 105.4" fill="none" stroke="#E3000F" stroke-width="1.5" />
+                        <text x="148" y="85" class="svg-cota" style="font-size: 19px;" fill="#E3000F">&alpha;</text>
                         <path d="M 160 95 A 35 35 0 0 0 132.4 108.5" fill="none" stroke="#E3000F" stroke-width="1.5" />
-                        <!-- Y posicionamos el texto de alfa un poco más "dentro" del triángulo (radio 45) -->
-                        <text x="140" y="90" text-anchor="middle" alignment-baseline="middle" class="svg-cota" style="font-size: 19px;" fill="#E3000F">&alpha;</text>
+                        <text x="144" y="98" class="svg-cota" style="font-size: 16px;" fill="#E3000F">&alpha;</text>
 
                         <!-- Cota C (Hipotenusa/Chaflán) -->
                         <text x="100" y="112" class="svg-cota" fill="#E3000F">C</text>
@@ -910,6 +925,11 @@
                         <line x1="41.03" y1="120" x2="118.97" y2="120" class="svg-linea"/>
                         <line x1="41.03" y1="115" x2="41.03" y2="125" class="svg-linea"/>
                         <line x1="118.97" y1="115" x2="118.97" y2="125" class="svg-linea"/>
+                        <polygon points="80,15 114.64,35 114.64,85 80,105 45.36,85 45.36,35" fill="#E3000F" />
+                        <!-- Cota A (Entrecaras exacto de 45.36 a 114.64) -->
+                        <line x1="45.36" y1="120" x2="114.64" y2="120" class="svg-linea"/>
+                        <line x1="45.36" y1="115" x2="45.36" y2="125" class="svg-linea"/>
+                        <line x1="114.64" y1="115" x2="114.64" y2="125" class="svg-linea"/>
                         <text x="80" y="137" text-anchor="middle" class="svg-cota">A</text>
                     </svg>`,
         'placa': `<svg viewBox="0 0 160 140" style="height:110px; max-width:100%;">
@@ -1016,14 +1036,14 @@
 
     function cambiarFormaPeso() {
         let forma = document.getElementById("p_forma").value;
-        
+
         let gA = document.getElementById("g_dim_a");
         let gB = document.getElementById("g_dim_b");
         let gT = document.getElementById("g_dim_t");
         let gDInt = document.getElementById("g_dim_d_int");
         let gModoRed = document.getElementById("g_modo_tubo_red");
         let gHex = document.getElementById("g_dim_hex");
-        
+
         let lblA = document.getElementById("lbl_dim_a");
         let lblB = document.getElementById("lbl_dim_b");
         let lblT = document.getElementById("lbl_dim_t");
@@ -1081,7 +1101,7 @@
     function calcularPeso() {
         let mat_densidad = parseFloat(document.getElementById("p_material").value);
         let forma = document.getElementById("p_forma").value;
-        
+
         let a = parseFloat(document.getElementById("p_dim_a").value) || 0;
         let b = parseFloat(document.getElementById("p_dim_b").value) || 0;
         let t = parseFloat(document.getElementById("p_dim_t").value) || 0;
@@ -1232,7 +1252,7 @@
             ciclo = "G82";
             nota = "Pasada (Q) ajustada y redondeada según material y diámetro para brocas HSS.";
         } else if (tipo === "placas") {
-            if (mat === "acero") { vc = 120; fn = 0.08; } else if (mat === "acero_duro") { vc = 90; fn = 0.07; } else if (mat === "inox") { working = 100; fn = 0.08; } else if (mat === "alu") { vc = 135; fn = 0.10; }
+            if (mat === "acero") { vc = 120; fn = 0.08; } else if (mat === "acero_duro") { vc = 90; fn = 0.07; } else if (mat === "inox") { vc = 100; fn = 0.08; } else if (mat === "alu") { vc = 135; fn = 0.10; }
             rpm_max = 9000; ciclo = "G81";
         }
 
@@ -1244,7 +1264,7 @@
         document.getElementById("b_s").innerHTML = rpm_teo > rpm_max ? "<span class='limit-warning'>" + rpm + " (Tope)</span>" : rpm + " RPM";
         document.getElementById("b_f").innerText = "F " + f_total + " mm/min";
         document.getElementById("b_fn").innerText = fn.toFixed(3) + " mm/rev";
-        
+
         if (q_val !== null) {
             document.getElementById("b_q").innerText = "Q " + (tipo === "hss" ? q_val.toFixed(1).replace(".",",") : q_val) + " mm";
             document.getElementById("row_q").style.display = "flex";
@@ -1285,7 +1305,7 @@
         let d = roscas_data[val];
         let usa_lam = (tipo === 'M' && d.d_calc <= 12);
         let vc;
-        
+
         if (usa_lam) {
             if (mat === "acero") vc = 6.6; else if (mat === "acero_duro") vc = 4; else if (mat === "inox") vc = 4; else if (mat === "alu") vc = 10; 
         } else if (tipo === 'MF') {
@@ -1394,7 +1414,7 @@
             let factor_ancho = 1; let info_ancho = "";
             if (w <= 2) { factor_ancho = 0.85; info_ancho = "<br><i>(Avance -15% por disco estrecho ≤ 2mm)</i>"; } 
             else if (w >= 4) { factor_ancho = 1.15; info_ancho = "<br><i>(Avance +15% por disco robusto ≥ 4mm)</i>"; }
-            
+
             fz = fz * factor_ancho;
             if(fz < 0.005) fz = 0.005;
 
@@ -1478,7 +1498,7 @@
         let rpm_teo = (d.vc * 1000) / (Math.PI * parseInt(diam));
         let rpm = redondear(rpm_teo, 50);
         let f_val = Math.round(rpm * d.fn);
-        
+
         document.getElementById("s_tungaloy").innerText = rpm + " RPM";
         document.getElementById("f_tungaloy").innerText = "F " + f_val + " mm/min";
         document.getElementById("ap_tungaloy").innerText = d.ap + " mm";
