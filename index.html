@@ -141,6 +141,7 @@
         <button class="pestana" onclick="abrirHerramienta(event, 'calcEscariador')">Escariador</button>
     </div>
 
+    <!-- 1. PUNTEADOR NC -->
     <div id="calcNine9" class="tab-content" style="display: block;">
         <h2>Punteador NC / Chaflán</h2>
         <label>Profundidad Z (mm):</label>
@@ -161,6 +162,7 @@
         </div>
     </div>
 
+    <!-- 2. BROCAS -->
     <div id="calcBrocas" class="tab-content">
         <h2>Brocas</h2>
         <h4 id="brocas_subtitulo">MD - Refrig. Interna</h4>
@@ -196,6 +198,7 @@
         </div>
     </div>
 
+    <!-- 3. ROSCAS -->
     <div id="calcRosca" class="tab-content">
         <h2>Roscado</h2>
         <h4>Broca Previa y Condiciones (G84)</h4>
@@ -249,6 +252,7 @@
         </div>
     </div>
 
+    <!-- 4. FRESADO -->
     <div id="calcFresado" class="tab-content">
         <h2>Parámetros de Fresado</h2>
         
@@ -258,6 +262,7 @@
             <option value="ranuras">Fresa para Ranuras T</option>
         </select>
 
+        <!-- SECCIÓN: Fresa General -->
         <div id="ui_fresa_general">
             <label>Revoluciones S (RPM):</label>
             <input type="number" id="rpm_fresa" value="3000" step="50" class="auto-select" onkeypress="handleEnter(event, 'btn_fresa')">
@@ -267,6 +272,7 @@
             <input type="number" id="fz_fresa" value="0.05" step="0.01" class="auto-select" onkeypress="handleEnter(event, 'btn_fresa')">
         </div>
 
+        <!-- SECCIÓN: Fresa Cocodrilo -->
         <div id="ui_fresa_cocodrilo" style="display:none;">
             <label>Diámetro de la Fresa (mm):</label>
             <input type="number" id="d_coco" value="11" step="1" class="auto-select" onkeypress="handleEnter(event, 'btn_fresa')">
@@ -279,9 +285,13 @@
             </select>
         </div>
 
+        <!-- SECCIÓN: Fresa Ranuras -->
         <div id="ui_fresa_ranuras" style="display:none;">
             <label>Diámetro Exterior Disco (mm):</label>
             <input type="number" id="d_ran" value="10.5" step="0.5" class="auto-select" onkeypress="handleEnter(event, 'btn_fresa')">
+            <!-- NUEVA CASILLA PARA EL ANCHO -->
+            <label>Ancho de la Fresa (mm):</label>
+            <input type="number" id="w_ran" value="2.0" step="0.5" class="auto-select" onkeypress="handleEnter(event, 'btn_fresa')">
             <label>Tipo de Operación:</label>
             <select id="tipo_corte_ran" onkeypress="handleEnter(event, 'btn_fresa')">
                 <option value="lateral">Ranurado Lateral (Abierto)</option>
@@ -299,9 +309,11 @@
         <button id="btn_fresa" class="btn-calcular" onclick="calcularFresado()">CALCULAR PARÁMETROS</button>
         
         <div class="results" id="res_fresa" style="display: none;">
+            <!-- Resultados Fresa General -->
             <div id="res_fresa_general">
                 <p>Avance trabajo (F): <span class="highlight" id="f_total_fresa"></span></p>
             </div>
+            <!-- Resultados Fresas Avanzadas -->
             <div id="res_fresa_avanzada" style="display:none;">
                 <p>Revoluciones (S): <span class="highlight" id="s_fresa_avz"></span></p>
                 <p>Avance trabajo (F): <span class="highlight" id="f_fresa_avz"></span></p>
@@ -310,6 +322,7 @@
         </div>
     </div>
 
+    <!-- 5. TUNGALOY -->
     <div id="calcTungaloy" class="tab-content">
         <h2>Platos Tungaloy</h2>
         <h4>Condiciones Turbo Tungaloy</h4>
@@ -341,6 +354,7 @@
         </div>
     </div>
 
+    <!-- 6. ESCARIADOR -->
     <div id="calcEscariador" class="tab-content">
         <h2>Escariadores H7</h2>
         <h4>Broca Previa y Condiciones (G85)</h4>
@@ -375,6 +389,7 @@
 
 </div>
 
+<!-- INICIO DEL SCRIPT -->
 <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
@@ -695,12 +710,12 @@
             if(!d) return alert("Introduce un diámetro.");
 
             let vc, fz_base;
-            if(mat === "acero") { vc = 35; fz_base = 0.012; } 
-            else if(mat === "acero_duro") { vc = 18; fz_base = 0.010; }
-            else if(mat === "inox") { vc = 12; fz_base = 0.008; }
-            else if(mat === "alu") { vc = 80; fz_base = 0.015; }
+            if(mat === "acero") { vc = 35; fz_base = 0.014; } 
+            else if(mat === "acero_duro") { vc = 18; fz_base = 0.011; }
+            else if(mat === "inox") { vc = 12; fz_base = 0.009; }
+            else if(mat === "alu") { vc = 80; fz_base = 0.022; }
 
-            let fz = fz_base * (d / 11);
+            let fz = fz_base * (d / 15);
             if(fz < 0.005) fz = 0.005;
             
             let z = (mat === "alu") ? 3 : 4; 
@@ -716,22 +731,37 @@
         }
         else if (tipo === "ranuras") {
             let d = parseFloat(document.getElementById("d_ran").value);
+            let w = parseFloat(document.getElementById("w_ran").value); // NUEVO DATO: ANCHO
             let mat = document.getElementById("mat_ran").value;
             let corte = document.getElementById("tipo_corte_ran").value;
-            if(!d) return alert("Faltan datos de la fresa.");
+            if(!d || !w) return alert("Faltan datos de la fresa.");
 
             // Cálculo dinámico de labios (Z) según el diámetro (aprox. D * 0.6)
             let z = Math.max(4, Math.round(d * 0.6)); 
 
             // Parámetros base seguros (66%) tomando como referencia la fresa de d=16.5 (Garant)
             let vc, fz_base;
-            if(mat === "acero") { vc = 20; fz_base = 0.040; } // 66% de 0.060
+            if(mat === "acero") { vc = 20; fz_base = 0.040; } 
             else if(mat === "acero_duro") { vc = 12; fz_base = 0.025; }
             else if(mat === "inox") { vc = 10; fz_base = 0.020; }
             else if(mat === "alu") { vc = 55; fz_base = 0.060; } 
 
             // Escalar avance según diámetro
             let fz = fz_base * (d / 16.5);
+            
+            // NUEVO: Escalar avance según anchura (Robustez de la pastilla)
+            let factor_ancho = 1;
+            let info_ancho = "";
+            if (w <= 2) {
+                factor_ancho = 0.85; // Disco frágil
+                info_ancho = "<br><i>(Avance -15% por disco estrecho ≤ 2mm)</i>";
+            } else if (w >= 4) {
+                factor_ancho = 1.15; // Disco robusto
+                info_ancho = "<br><i>(Avance +15% por disco robusto ≥ 4mm)</i>";
+            }
+            
+            fz = fz * factor_ancho;
+
             if(fz < 0.005) fz = 0.005;
 
             if (corte === "completa") {
@@ -746,7 +776,7 @@
 
             document.getElementById("s_fresa_avz").innerText = rpm + " RPM";
             document.getElementById("f_fresa_avz").innerText = "F " + f + " mm/min";
-            document.getElementById("nota_fresa_avz").innerHTML = "<span class='title'>Herramienta</span>Cálculos para Fresa Ranuras T <b>HSS Co5</b>. <br>Labios calculados (Z): <b>" + z + "</b>" + nota_extra;
+            document.getElementById("nota_fresa_avz").innerHTML = "<span class='title'>Herramienta</span>Cálculos para Fresa Ranuras T <b>HSS Co5</b>. <br>Labios calculados (Z): <b>" + z + "</b>" + nota_extra + info_ancho;
 
             document.getElementById("res_fresa_avanzada").style.display = "block";
         }
