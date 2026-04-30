@@ -70,28 +70,27 @@
         .header-text h1 { margin: 0; color: #E3000F; font-size: 28px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; line-height: 1; }
         .header-text span { display: block; font-size: 11px; color: #777; text-transform: uppercase; letter-spacing: 2px; margin-top: 4px; }
 
-        /* PANTALLA DE INICIO (HOME) GRID 2x2 */
+        /* PANTALLA DE INICIO (HOME) EN LISTA */
         #home_screen {
-            padding: 30px 20px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            align-content: center;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
             flex-grow: 1;
+            justify-content: center;
         }
 
         .home-btn {
             background-color: #fcfcfc;
             border: 2px solid #ddd;
             border-radius: 12px;
-            padding: 25px 15px;
+            padding: 30px 20px;
             text-align: center;
             cursor: pointer;
             transition: 0.2s;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             gap: 10px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
@@ -103,9 +102,9 @@
             box-shadow: 0 6px 12px rgba(227, 0, 15, 0.1);
         }
 
-        .home-btn span.icon { font-size: 35px; }
-        .home-btn span.title { font-size: 15px; font-weight: 900; color: #222; text-transform: uppercase; letter-spacing: 1px;}
-        .home-btn span.desc { font-size: 12px; color: #666; line-height: 1.3;}
+        .home-btn span.icon { font-size: 40px; }
+        .home-btn span.title { font-size: 18px; font-weight: 900; color: #222; text-transform: uppercase; letter-spacing: 1px;}
+        .home-btn span.desc { font-size: 13px; color: #666; }
 
         /* MÓDULOS DE APP */
         .app-module { display: none; flex-grow: 1; }
@@ -655,6 +654,7 @@
         document.getElementById("modulo_cnc").style.display = "none";
         document.getElementById("modulo_pesos").style.display = "none";
         document.getElementById("modulo_trigo").style.display = "none";
+        document.getElementById("modulo_pcd").style.display = "none";
 
         if (modulo === 'cnc') {
             document.getElementById("modulo_cnc").style.display = "block";
@@ -674,7 +674,8 @@
         document.getElementById("modulo_cnc").style.display = "none";
         document.getElementById("modulo_pesos").style.display = "none";
         document.getElementById("modulo_trigo").style.display = "none";
-        document.getElementById("home_screen").style.display = "grid";
+        document.getElementById("modulo_pcd").style.display = "none";
+        document.getElementById("home_screen").style.display = "flex";
         document.getElementById("btn_volver").style.display = "none";
         document.getElementById("header_subtitle").innerText = "Centro de Herramientas";
     }
@@ -753,8 +754,10 @@
                         <text x="202.5" y="100" text-anchor="start" alignment-baseline="middle" class="svg-cota" fill="#E3000F">B</text>
 
                         <!-- Ángulo Alfa entre B y C en la esquina inferior derecha (160, 130) -->
+                        <!-- Usamos un radio de 35 para el arco -->
                         <path d="M 160 95 A 35 35 0 0 0 132.4 108.5" fill="none" stroke="#E3000F" stroke-width="1.5" />
-                        <text x="144" y="98" class="svg-cota" style="font-size: 16px;" fill="#E3000F">&alpha;</text>
+                        <!-- Y posicionamos el texto de alfa un poco más "dentro" del triángulo (radio 45) -->
+                        <text x="140" y="90" text-anchor="middle" alignment-baseline="middle" class="svg-cota" style="font-size: 19px;" fill="#E3000F">&alpha;</text>
 
                         <!-- Cota C (Hipotenusa/Chaflán) -->
                         <text x="100" y="112" class="svg-cota" fill="#E3000F">C</text>
@@ -902,11 +905,11 @@
                     </svg>`,
         'hexagonal': `<svg viewBox="0 0 160 140" style="height:110px; max-width:100%;">
                         <!-- Hexágono matemáticamente perfecto: ancho = sqrt(3)/2 * alto -->
-                        <polygon points="80,15 114.64,35 114.64,85 80,105 45.36,85 45.36,35" fill="#E3000F" />
-                        <!-- Cota A (Entrecaras exacto de 45.36 a 114.64) -->
-                        <line x1="45.36" y1="120" x2="114.64" y2="120" class="svg-linea"/>
-                        <line x1="45.36" y1="115" x2="45.36" y2="125" class="svg-linea"/>
-                        <line x1="114.64" y1="115" x2="114.64" y2="125" class="svg-linea"/>
+                        <polygon points="80,15 118.97,37.5 118.97,82.5 80,105 41.03,82.5 41.03,37.5" fill="#E3000F" />
+                        <!-- Cota A (Entrecaras exacto de 41.03 a 118.97) -->
+                        <line x1="41.03" y1="120" x2="118.97" y2="120" class="svg-linea"/>
+                        <line x1="41.03" y1="115" x2="41.03" y2="125" class="svg-linea"/>
+                        <line x1="118.97" y1="115" x2="118.97" y2="125" class="svg-linea"/>
                         <text x="80" y="137" text-anchor="middle" class="svg-cota">A</text>
                     </svg>`,
         'placa': `<svg viewBox="0 0 160 140" style="height:110px; max-width:100%;">
@@ -1229,7 +1232,7 @@
             ciclo = "G82";
             nota = "Pasada (Q) ajustada y redondeada según material y diámetro para brocas HSS.";
         } else if (tipo === "placas") {
-            if (mat === "acero") { vc = 120; fn = 0.08; } else if (mat === "acero_duro") { vc = 90; fn = 0.07; } else if (mat === "inox") { vc = 100; fn = 0.08; } else if (mat === "alu") { vc = 135; fn = 0.10; }
+            if (mat === "acero") { vc = 120; fn = 0.08; } else if (mat === "acero_duro") { vc = 90; fn = 0.07; } else if (mat === "inox") { working = 100; fn = 0.08; } else if (mat === "alu") { vc = 135; fn = 0.10; }
             rpm_max = 9000; ciclo = "G81";
         }
 
