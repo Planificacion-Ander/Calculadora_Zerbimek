@@ -84,14 +84,14 @@
             background-color: #fcfcfc;
             border: 2px solid #ddd;
             border-radius: 12px;
-            padding: 30px 20px;
+            padding: 25px 20px;
             text-align: center;
             cursor: pointer;
             transition: 0.2s;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
 
@@ -120,7 +120,7 @@
 
         h2 { text-align: center; color: #222; margin-top: 0; font-size: 1.4rem; }
         h4 { text-align: center; color: #666; margin-top: 0; font-weight: normal; font-size: 0.9rem; margin-bottom: 20px;}
-        label { font-weight: bold; margin-top: 15px; display: block; color: #444; }
+        label { font-weight: bold; margin-top: 15px; display: block; color: #444; font-size: 14.5px;}
 
         input, select { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 16px; background-color: #fcfcfc;}
         input:focus, select:focus { outline: none; border-color: #E3000F; }
@@ -156,6 +156,9 @@
         /* Estilos texto cotas SVG */
         .svg-cota { font-family: sans-serif; font-size: 15px; font-weight: bold; fill: #E3000F; }
         .svg-linea { stroke: #999; stroke-width: 1.5; }
+        
+        /* Input Trigovagometria resaltado */
+        .input-trigo { background-color: #fffafb; border: 1px solid #ccc; font-weight: bold; color: #222;}
     </style>
 </head>
 <body>
@@ -188,6 +191,65 @@
             <span class="icon">⚖️</span>
             <span class="title">Calculadora de Pesos</span>
             <span class="desc">Estimación de peso por material y geometría</span>
+        </div>
+        <!-- NUEVO BOTÓN TRIGOVAGOMETRÍA -->
+        <div class="home-btn" onclick="abrirModulo('trigo')">
+            <span class="icon">📐</span>
+            <span class="title">Trigovagometría</span>
+            <span class="desc">Cálculo de chaflanes y triángulos</span>
+        </div>
+    </div>
+
+    <!-- MÓDULO 3: TRIGOVAGOMETRÍA -->
+    <div id="modulo_trigo" class="app-module">
+        <div class="tab-content" style="display: block;">
+            <h2>Trigovagometría</h2>
+            <h4>Porque pensar a pie de máquina está sobrevalorado</h4>
+            
+            <div class="shape-preview-container">
+                <svg viewBox="0 0 160 140" style="height:120px; max-width:100%;">
+                    <!-- Triángulo rectángulo -->
+                    <polygon points="30,110 120,110 120,30" fill="#f0f7ff" stroke="#E3000F" stroke-width="3" />
+                    <!-- Símbolo ángulo recto -->
+                    <rect x="110" y="100" width="10" height="10" fill="none" stroke="#E3000F" stroke-width="1.5" />
+                    <!-- Arco del ángulo Alfa -->
+                    <path d="M 52 110 A 20 20 0 0 0 46 95" fill="none" stroke="#E3000F" stroke-width="1.5" />
+                    <!-- Textos de las Cotas -->
+                    <text x="62" y="105" class="svg-cota" style="font-size: 13px;">&alpha;</text>
+                    <text x="75" y="130" class="svg-cota">A</text>
+                    <text x="132" y="75" class="svg-cota">B</text>
+                    <text x="65" y="60" class="svg-cota">C</text>
+                </svg>
+            </div>
+
+            <div class="info-box" style="margin-bottom: 20px; border-left-color: #1a73e8;">
+                <span class="title" style="color: #1a73e8;">Instrucciones</span>
+                Introduce <b>SOLO 2 DATOS</b> (los que sepas). La calculadora sacará automáticamente los otros dos.
+            </div>
+
+            <div class="dim-grid">
+                <div>
+                    <label>Cateto Base [ A ]:</label>
+                    <input type="number" id="t_a" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_trigo')" placeholder="mm">
+                </div>
+                <div>
+                    <label>Cateto Alto [ B ]:</label>
+                    <input type="number" id="t_b" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_trigo')" placeholder="mm">
+                </div>
+                <div>
+                    <label>Hipotenusa [ C ]:</label>
+                    <input type="number" id="t_c" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_trigo')" placeholder="mm">
+                </div>
+                <div>
+                    <label>Ángulo [ &alpha; ]:</label>
+                    <input type="number" id="t_ang" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_trigo')" placeholder="Grados (º)">
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 25px;">
+                <button class="btn-calcular" style="background-color: #666; flex: 1;" onclick="limpiarTrigo()">LIMPIAR</button>
+                <button id="btn_trigo" class="btn-calcular" style="margin-top: 0; flex: 2;" onclick="calcularTrigo()">CALCULAR</button>
+            </div>
         </div>
     </div>
 
@@ -560,25 +622,91 @@
         document.getElementById("home_screen").style.display = "none";
         document.getElementById("btn_volver").style.display = "block";
         
+        document.getElementById("modulo_cnc").style.display = "none";
+        document.getElementById("modulo_pesos").style.display = "none";
+        document.getElementById("modulo_trigo").style.display = "none";
+
         if (modulo === 'cnc') {
             document.getElementById("modulo_cnc").style.display = "block";
-            document.getElementById("modulo_pesos").style.display = "none";
             document.getElementById("header_subtitle").innerText = "Calculadora CNC";
         } else if (modulo === 'pesos') {
-            document.getElementById("modulo_cnc").style.display = "none";
             document.getElementById("modulo_pesos").style.display = "block";
             document.getElementById("header_subtitle").innerText = "Calculadora de Pesos";
             cambiarFormaPeso(); 
+        } else if (modulo === 'trigo') {
+            document.getElementById("modulo_trigo").style.display = "block";
+            document.getElementById("header_subtitle").innerText = "Trigovagometría";
         }
     }
 
     function irInicio() {
         document.getElementById("modulo_cnc").style.display = "none";
         document.getElementById("modulo_pesos").style.display = "none";
+        document.getElementById("modulo_trigo").style.display = "none";
         document.getElementById("home_screen").style.display = "flex";
         document.getElementById("btn_volver").style.display = "none";
         document.getElementById("header_subtitle").innerText = "Centro de Herramientas";
     }
+
+    // --- LOGICA TRIGOVAGOMETRÍA ---
+    function limpiarTrigo() {
+        document.getElementById('t_a').value = '';
+        document.getElementById('t_b').value = '';
+        document.getElementById('t_c').value = '';
+        document.getElementById('t_ang').value = '';
+    }
+
+    function calcularTrigo() {
+        let a = parseFloat(document.getElementById('t_a').value);
+        let b = parseFloat(document.getElementById('t_b').value);
+        let c = parseFloat(document.getElementById('t_c').value);
+        let ang = parseFloat(document.getElementById('t_ang').value);
+
+        let count = 0;
+        if(!isNaN(a)) count++;
+        if(!isNaN(b)) count++;
+        if(!isNaN(c)) count++;
+        if(!isNaN(ang)) count++;
+
+        if(count !== 2) {
+            alert("Vagometría rules: Introduce EXACTAMENTE 2 datos. Ni más, ni menos.");
+            return;
+        }
+
+        let rad = Math.PI / 180;
+        let deg = 180 / Math.PI;
+
+        if(!isNaN(a) && !isNaN(b)) {
+            c = Math.sqrt(a*a + b*b);
+            ang = Math.atan(b/a) * deg;
+        } else if(!isNaN(a) && !isNaN(c)) {
+            if(a >= c) return alert("¡Error! La hipotenusa [C] tiene que ser mayor que el cateto [A].");
+            b = Math.sqrt(c*c - a*a);
+            ang = Math.acos(a/c) * deg;
+        } else if(!isNaN(b) && !isNaN(c)) {
+            if(b >= c) return alert("¡Error! La hipotenusa [C] tiene que ser mayor que el cateto [B].");
+            a = Math.sqrt(c*c - b*b);
+            ang = Math.asin(b/c) * deg;
+        } else if(!isNaN(a) && !isNaN(ang)) {
+            if(ang >= 90 || ang <= 0) return alert("El ángulo debe estar entre 0.1 y 89.9 grados.");
+            b = a * Math.tan(ang * rad);
+            c = a / Math.cos(ang * rad);
+        } else if(!isNaN(b) && !isNaN(ang)) {
+            if(ang >= 90 || ang <= 0) return alert("El ángulo debe estar entre 0.1 y 89.9 grados.");
+            a = b / Math.tan(ang * rad);
+            c = b / Math.sin(ang * rad);
+        } else if(!isNaN(c) && !isNaN(ang)) {
+            if(ang >= 90 || ang <= 0) return alert("El ángulo debe estar entre 0.1 y 89.9 grados.");
+            a = c * Math.cos(ang * rad);
+            b = c * Math.sin(ang * rad);
+        }
+
+        document.getElementById('t_a').value = parseFloat(a.toFixed(3));
+        document.getElementById('t_b').value = parseFloat(b.toFixed(3));
+        document.getElementById('t_c').value = parseFloat(c.toFixed(3));
+        document.getElementById('t_ang').value = parseFloat(ang.toFixed(3));
+    }
+
 
     // --- LOGICA DE PESOS CON GRAFICOS SVG ACOTADOS ---
     const svgShapes = {
@@ -599,11 +727,12 @@
                         <text x="80" y="132" text-anchor="middle" class="svg-cota">A</text>
                     </svg>`,
         'hexagonal': `<svg viewBox="0 0 160 140" style="height:110px; max-width:100%;">
-                        <polygon points="80,20 114.6,40 114.6,80 80,100 45.4,80 45.4,40" fill="#E3000F" />
-                        <!-- Cota A -->
-                        <line x1="45.4" y1="120" x2="114.6" y2="120" class="svg-linea"/>
-                        <line x1="45.4" y1="115" x2="45.4" y2="125" class="svg-linea"/>
-                        <line x1="114.6" y1="115" x2="114.6" y2="125" class="svg-linea"/>
+                        <!-- Hexágono matemáticamente perfecto: ancho = sqrt(3)/2 * alto -->
+                        <polygon points="80,15 114.64,35 114.64,85 80,105 45.36,85 45.36,35" fill="#E3000F" />
+                        <!-- Cota A (Entrecaras exacto de 45.36 a 114.64) -->
+                        <line x1="45.36" y1="120" x2="114.64" y2="120" class="svg-linea"/>
+                        <line x1="45.36" y1="115" x2="45.36" y2="125" class="svg-linea"/>
+                        <line x1="114.64" y1="115" x2="114.64" y2="125" class="svg-linea"/>
                         <text x="80" y="137" text-anchor="middle" class="svg-cota">A</text>
                     </svg>`,
         'placa': `<svg viewBox="0 0 160 140" style="height:110px; max-width:100%;">
