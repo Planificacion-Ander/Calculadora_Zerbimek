@@ -201,7 +201,7 @@
         </div>
     </div>
 
-    <!-- MÓDULOS 3: TRIVAGOMETRÍA -->
+    <!-- MÓDULO 3: TRIVAGOMETRÍA -->
     <div id="modulo_trigo" class="app-module">
         <div class="tab-content" style="display: block;">
             <h2>Trivagometría</h2>
@@ -679,12 +679,12 @@
                         <line x1="172.5" y1="130" x2="187.5" y2="130" class="svg-linea" stroke="#E3000F"/>
                         <text x="195" y="100" text-anchor="start" alignment-baseline="middle" class="svg-cota" fill="#E3000F">B</text>
 
-                        <!-- Ángulo Alfa en la punta superior izquierda (Entre horizontal A y chaflán C) -->
-                        <path d="M 115 60 A 45 45 0 0 1 105.5 87.6" fill="none" stroke="#E3000F" stroke-width="1.5" />
-                        <text x="122" y="80" class="svg-cota" style="font-size: 19px;" fill="#E3000F">&alpha;</text>
+                        <!-- Ángulo Alfa entre B (vertical) y C (diagonal) en la punta inferior derecha -->
+                        <path d="M 160 95 A 35 35 0 0 0 132.4 108.5" fill="none" stroke="#E3000F" stroke-width="1.5" />
+                        <text x="146" y="120" class="svg-cota" style="font-size: 19px;" fill="#E3000F">&alpha;</text>
 
                         <!-- Cota C (Hipotenusa/Chaflán) -->
-                        <text x="103" y="113" class="svg-cota" fill="#E3000F">C</text>
+                        <text x="95" y="108" class="svg-cota" fill="#E3000F">C</text>
                     </svg>`
     };
 
@@ -716,6 +716,9 @@
     }
 
     function calcularTrigo() {
+        let forma = document.getElementById("t_forma").value;
+        let isChaflan = (forma === 'chaflan');
+
         let a = parseFloat(document.getElementById('t_a').value);
         let b = parseFloat(document.getElementById('t_b').value);
         let c = parseFloat(document.getElementById('t_c').value);
@@ -737,27 +740,27 @@
 
         if(!isNaN(a) && !isNaN(b)) {
             c = Math.sqrt(a*a + b*b);
-            ang = Math.atan(b/a) * deg;
+            ang = isChaflan ? Math.atan(a/b) * deg : Math.atan(b/a) * deg;
         } else if(!isNaN(a) && !isNaN(c)) {
             if(a >= c) return alert("¡Error! La hipotenusa/chaflán [ C ] tiene que ser mayor que el cateto [ A ].");
             b = Math.sqrt(c*c - a*a);
-            ang = Math.acos(a/c) * deg;
+            ang = isChaflan ? Math.asin(a/c) * deg : Math.acos(a/c) * deg;
         } else if(!isNaN(b) && !isNaN(c)) {
             if(b >= c) return alert("¡Error! La hipotenusa/chaflán [ C ] tiene que ser mayor que el cateto [ B ].");
             a = Math.sqrt(c*c - b*b);
-            ang = Math.asin(b/c) * deg;
+            ang = isChaflan ? Math.acos(b/c) * deg : Math.asin(b/c) * deg;
         } else if(!isNaN(a) && !isNaN(ang)) {
             if(ang >= 90 || ang <= 0) return alert("El ángulo debe estar entre 0.1 y 89.9 grados.");
-            b = a * Math.tan(ang * rad);
-            c = a / Math.cos(ang * rad);
+            b = isChaflan ? a / Math.tan(ang * rad) : a * Math.tan(ang * rad);
+            c = isChaflan ? a / Math.sin(ang * rad) : a / Math.cos(ang * rad);
         } else if(!isNaN(b) && !isNaN(ang)) {
             if(ang >= 90 || ang <= 0) return alert("El ángulo debe estar entre 0.1 y 89.9 grados.");
-            a = b / Math.tan(ang * rad);
-            c = b / Math.sin(ang * rad);
+            a = isChaflan ? b * Math.tan(ang * rad) : b / Math.tan(ang * rad);
+            c = isChaflan ? b / Math.cos(ang * rad) : b / Math.sin(ang * rad);
         } else if(!isNaN(c) && !isNaN(ang)) {
             if(ang >= 90 || ang <= 0) return alert("El ángulo debe estar entre 0.1 y 89.9 grados.");
-            a = c * Math.cos(ang * rad);
-            b = c * Math.sin(ang * rad);
+            a = isChaflan ? c * Math.sin(ang * rad) : c * Math.cos(ang * rad);
+            b = isChaflan ? c * Math.cos(ang * rad) : c * Math.sin(ang * rad);
         }
 
         document.getElementById('t_a').value = parseFloat(a.toFixed(3));
@@ -827,7 +830,7 @@
                         <line x1="40" y1="110" x2="40" y2="120" class="svg-linea"/>
                         <line x1="120" y1="110" x2="120" y2="120" class="svg-linea"/>
                         <text x="80" y="132" text-anchor="middle" class="svg-cota">A</text>
-                        <!-- Cota d interior -->
+                        <!-- Cota d interior (solo cruza blanco) -->
                         <line x1="52" y1="60" x2="108" y2="60" class="svg-linea"/>
                         <line x1="52" y1="55" x2="52" y2="65" class="svg-linea"/>
                         <line x1="108" y1="55" x2="108" y2="65" class="svg-linea"/>
