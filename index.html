@@ -209,8 +209,8 @@
             
             <label>Tipo de cálculo:</label>
             <select id="t_forma" class="main-selector" style="margin-bottom: 10px;" onchange="cambiarFormaTrigo()">
+                <option value="chaflan" selected>Chaflán en Pieza</option>
                 <option value="triangulo">Triángulo Rectángulo Clásico</option>
-                <option value="chaflan">Chaflán en Pieza</option>
             </select>
 
             <div id="trigo_preview" class="shape-preview-container"></div>
@@ -222,15 +222,15 @@
 
             <div class="dim-grid">
                 <div>
-                    <label id="lbl_trigo_a">Cateto Base [ A ]:</label>
+                    <label id="lbl_trigo_a">Longitud (Z) [ A ]:</label>
                     <input type="number" id="t_a" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_trigo')" placeholder="mm">
                 </div>
                 <div>
-                    <label id="lbl_trigo_b">Cateto Alto [ B ]:</label>
+                    <label id="lbl_trigo_b">Profundidad (X) [ B ]:</label>
                     <input type="number" id="t_b" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_trigo')" placeholder="mm">
                 </div>
                 <div>
-                    <label id="lbl_trigo_c">Hipotenusa [ C ]:</label>
+                    <label id="lbl_trigo_c">Chaflán [ C ]:</label>
                     <input type="number" id="t_c" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_trigo')" placeholder="mm">
                 </div>
                 <div>
@@ -657,34 +657,34 @@
                         <text x="132" y="75" class="svg-cota">B</text>
                         <text x="65" y="60" class="svg-cota">C</text>
                     </svg>`,
-        'chaflan': `<svg viewBox="0 0 160 140" style="height:120px; max-width:100%;">
+        'chaflan': `<svg viewBox="0 0 240 210" style="height:180px; max-width:100%;">
                         <!-- Perfil de la pieza rellenado para contexto -->
-                        <polygon points="10,40 60,40 110,80 110,130 10,130" fill="#f0f7ff" stroke="none" />
+                        <polygon points="15,60 90,60 165,120 165,195 15,195" fill="#f0f7ff" stroke="none" />
                         <!-- Línea gruesa simulando la arista de la pieza mecanizada -->
-                        <polyline points="10,40 60,40 110,80 110,130" fill="none" stroke="#222" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                        <polyline points="15,60 90,60 165,120 165,195" fill="none" stroke="#222" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
                         
                         <!-- Líneas de construcción (punteadas) para formar el triángulo invisible -->
-                        <line x1="60" y1="40" x2="125" y2="40" stroke="#E3000F" stroke-width="1.5" stroke-dasharray="5,3" />
-                        <line x1="110" y1="40" x2="110" y2="95" stroke="#E3000F" stroke-width="1.5" stroke-dasharray="5,3" />
+                        <line x1="90" y1="60" x2="187.5" y2="60" stroke="#E3000F" stroke-width="1.5" stroke-dasharray="7.5,4.5" />
+                        <line x1="165" y1="60" x2="165" y2="142.5" stroke="#E3000F" stroke-width="1.5" stroke-dasharray="7.5,4.5" />
 
                         <!-- Cota A (Longitud Z horizontal) -->
-                        <line x1="60" y1="20" x2="110" y2="20" class="svg-linea" stroke="#E3000F" />
-                        <line x1="60" y1="15" x2="60" y2="25" class="svg-linea" stroke="#E3000F"/>
-                        <line x1="110" y1="15" x2="110" y2="25" class="svg-linea" stroke="#E3000F"/>
-                        <text x="85" y="14" text-anchor="middle" class="svg-cota" fill="#E3000F">A</text>
+                        <line x1="90" y1="30" x2="165" y2="30" class="svg-linea" stroke="#E3000F" />
+                        <line x1="90" y1="22.5" x2="90" y2="37.5" class="svg-linea" stroke="#E3000F"/>
+                        <line x1="165" y1="22.5" x2="165" y2="37.5" class="svg-linea" stroke="#E3000F"/>
+                        <text x="127.5" y="21" text-anchor="middle" class="svg-cota" fill="#E3000F">A</text>
 
                         <!-- Cota B (Profundidad X vertical) -->
-                        <line x1="125" y1="40" x2="125" y2="80" class="svg-linea" stroke="#E3000F" />
-                        <line x1="120" y1="40" x2="130" y2="40" class="svg-linea" stroke="#E3000F"/>
-                        <line x1="120" y1="80" x2="130" y2="80" class="svg-linea" stroke="#E3000F"/>
-                        <text x="135" y="65" text-anchor="start" alignment-baseline="middle" class="svg-cota" fill="#E3000F">B</text>
+                        <line x1="187.5" y1="60" x2="187.5" y2="120" class="svg-linea" stroke="#E3000F" />
+                        <line x1="180" y1="60" x2="195" y2="60" class="svg-linea" stroke="#E3000F"/>
+                        <line x1="180" y1="120" x2="195" y2="120" class="svg-linea" stroke="#E3000F"/>
+                        <text x="202.5" y="90" text-anchor="start" alignment-baseline="middle" class="svg-cota" fill="#E3000F">B</text>
 
-                        <!-- Ángulo Alfa con la horizontal -->
-                        <path d="M 85 40 A 25 25 0 0 1 78 54" fill="none" stroke="#E3000F" stroke-width="1.5" />
-                        <text x="94" y="55" class="svg-cota" style="font-size: 13px;" fill="#E3000F">&alpha;</text>
+                        <!-- Ángulo Alfa entre B (vertical) y C (diagonal) -->
+                        <path d="M 165 90 A 30 30 0 0 0 141.6 101.3" fill="none" stroke="#E3000F" stroke-width="1.5" />
+                        <text x="148" y="95" class="svg-cota" style="font-size: 19.5px;" fill="#E3000F">&alpha;</text>
 
                         <!-- Cota C (Hipotenusa/Chaflán) -->
-                        <text x="75" y="75" class="svg-cota" fill="#E3000F">C</text>
+                        <text x="112.5" y="112.5" class="svg-cota" fill="#E3000F">C</text>
                     </svg>`
     };
 
@@ -716,6 +716,9 @@
     }
 
     function calcularTrigo() {
+        let forma = document.getElementById("t_forma").value;
+        let isChaflan = (forma === 'chaflan');
+
         let a = parseFloat(document.getElementById('t_a').value);
         let b = parseFloat(document.getElementById('t_b').value);
         let c = parseFloat(document.getElementById('t_c').value);
@@ -737,27 +740,27 @@
 
         if(!isNaN(a) && !isNaN(b)) {
             c = Math.sqrt(a*a + b*b);
-            ang = Math.atan(b/a) * deg;
+            ang = isChaflan ? Math.atan(a/b) * deg : Math.atan(b/a) * deg;
         } else if(!isNaN(a) && !isNaN(c)) {
             if(a >= c) return alert("¡Error! La hipotenusa/chaflán [ C ] tiene que ser mayor que el cateto [ A ].");
             b = Math.sqrt(c*c - a*a);
-            ang = Math.acos(a/c) * deg;
+            ang = isChaflan ? Math.asin(a/c) * deg : Math.acos(a/c) * deg;
         } else if(!isNaN(b) && !isNaN(c)) {
             if(b >= c) return alert("¡Error! La hipotenusa/chaflán [ C ] tiene que ser mayor que el cateto [ B ].");
             a = Math.sqrt(c*c - b*b);
-            ang = Math.asin(b/c) * deg;
+            ang = isChaflan ? Math.acos(b/c) * deg : Math.asin(b/c) * deg;
         } else if(!isNaN(a) && !isNaN(ang)) {
             if(ang >= 90 || ang <= 0) return alert("El ángulo debe estar entre 0.1 y 89.9 grados.");
-            b = a * Math.tan(ang * rad);
-            c = a / Math.cos(ang * rad);
+            b = isChaflan ? a / Math.tan(ang * rad) : a * Math.tan(ang * rad);
+            c = isChaflan ? a / Math.sin(ang * rad) : a / Math.cos(ang * rad);
         } else if(!isNaN(b) && !isNaN(ang)) {
             if(ang >= 90 || ang <= 0) return alert("El ángulo debe estar entre 0.1 y 89.9 grados.");
-            a = b / Math.tan(ang * rad);
-            c = b / Math.sin(ang * rad);
+            a = isChaflan ? b * Math.tan(ang * rad) : b / Math.tan(ang * rad);
+            c = isChaflan ? b / Math.cos(ang * rad) : b / Math.sin(ang * rad);
         } else if(!isNaN(c) && !isNaN(ang)) {
             if(ang >= 90 || ang <= 0) return alert("El ángulo debe estar entre 0.1 y 89.9 grados.");
-            a = c * Math.cos(ang * rad);
-            b = c * Math.sin(ang * rad);
+            a = isChaflan ? c * Math.sin(ang * rad) : c * Math.cos(ang * rad);
+            b = isChaflan ? c * Math.cos(ang * rad) : c * Math.sin(ang * rad);
         }
 
         document.getElementById('t_a').value = parseFloat(a.toFixed(3));
