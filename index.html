@@ -70,28 +70,29 @@
         .header-text h1 { margin: 0; color: #E3000F; font-size: 28px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; line-height: 1; }
         .header-text span { display: block; font-size: 11px; color: #777; text-transform: uppercase; letter-spacing: 2px; margin-top: 4px; }
 
-        /* PANTALLA DE INICIO (HOME) */
+        /* PANTALLA DE INICIO (HOME) GRID 2x2 */
         #home_screen {
-            padding: 40px 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+            padding: 30px 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            align-content: center;
             flex-grow: 1;
-            justify-content: center;
         }
 
         .home-btn {
             background-color: #fcfcfc;
             border: 2px solid #ddd;
             border-radius: 12px;
-            padding: 25px 20px;
+            padding: 25px 15px;
             text-align: center;
             cursor: pointer;
             transition: 0.2s;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
+            gap: 10px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
 
@@ -102,9 +103,9 @@
             box-shadow: 0 6px 12px rgba(227, 0, 15, 0.1);
         }
 
-        .home-btn span.icon { font-size: 40px; }
-        .home-btn span.title { font-size: 18px; font-weight: 900; color: #222; text-transform: uppercase; letter-spacing: 1px;}
-        .home-btn span.desc { font-size: 13px; color: #666; }
+        .home-btn span.icon { font-size: 35px; }
+        .home-btn span.title { font-size: 15px; font-weight: 900; color: #222; text-transform: uppercase; letter-spacing: 1px;}
+        .home-btn span.desc { font-size: 12px; color: #666; line-height: 1.3;}
 
         /* MÓDULOS DE APP */
         .app-module { display: none; flex-grow: 1; }
@@ -185,13 +186,13 @@
     <div id="home_screen">
         <div class="home-btn" onclick="abrirModulo('cnc')">
             <span class="icon">⚙️</span>
-            <span class="title">Cálculo CNC</span>
-            <span class="desc">RPM, Avances, Roscado</span>
+            <span class="title">Calculadora CNC</span>
+            <span class="desc">RPM, Avances, Roscado y Herramientas</span>
         </div>
         <div class="home-btn" onclick="abrirModulo('pesos')">
             <span class="icon">⚖️</span>
-            <span class="title">Pesos</span>
-            <span class="desc">Materiales y geometrías</span>
+            <span class="title">Calculadora de Pesos</span>
+            <span class="desc">Estimación de peso por material y geometría</span>
         </div>
         <div class="home-btn" onclick="abrirModulo('trigo')">
             <span class="icon">📐</span>
@@ -673,7 +674,7 @@
         document.getElementById("modulo_cnc").style.display = "none";
         document.getElementById("modulo_pesos").style.display = "none";
         document.getElementById("modulo_trigo").style.display = "none";
-        document.getElementById("home_screen").style.display = "flex";
+        document.getElementById("home_screen").style.display = "grid";
         document.getElementById("btn_volver").style.display = "none";
         document.getElementById("header_subtitle").innerText = "Centro de Herramientas";
     }
@@ -752,8 +753,8 @@
                         <text x="202.5" y="100" text-anchor="start" alignment-baseline="middle" class="svg-cota" fill="#E3000F">B</text>
 
                         <!-- Ángulo Alfa entre B y C en la esquina inferior derecha (160, 130) -->
-                        <path d="M 160 90 A 40 40 0 0 0 128.4 105.4" fill="none" stroke="#E3000F" stroke-width="1.5" />
-                        <text x="148" y="85" class="svg-cota" style="font-size: 19px;" fill="#E3000F">&alpha;</text>
+                        <path d="M 160 95 A 35 35 0 0 0 132.4 108.5" fill="none" stroke="#E3000F" stroke-width="1.5" />
+                        <text x="144" y="98" class="svg-cota" style="font-size: 16px;" fill="#E3000F">&alpha;</text>
 
                         <!-- Cota C (Hipotenusa/Chaflán) -->
                         <text x="100" y="112" class="svg-cota" fill="#E3000F">C</text>
@@ -901,11 +902,11 @@
                     </svg>`,
         'hexagonal': `<svg viewBox="0 0 160 140" style="height:110px; max-width:100%;">
                         <!-- Hexágono matemáticamente perfecto: ancho = sqrt(3)/2 * alto -->
-                        <polygon points="80,15 118.97,37.5 118.97,82.5 80,105 41.03,82.5 41.03,37.5" fill="#E3000F" />
-                        <!-- Cota A (Entrecaras exacto de 41.03 a 118.97) -->
-                        <line x1="41.03" y1="120" x2="118.97" y2="120" class="svg-linea"/>
-                        <line x1="41.03" y1="115" x2="41.03" y2="125" class="svg-linea"/>
-                        <line x1="118.97" y1="115" x2="118.97" y2="125" class="svg-linea"/>
+                        <polygon points="80,15 114.64,35 114.64,85 80,105 45.36,85 45.36,35" fill="#E3000F" />
+                        <!-- Cota A (Entrecaras exacto de 45.36 a 114.64) -->
+                        <line x1="45.36" y1="120" x2="114.64" y2="120" class="svg-linea"/>
+                        <line x1="45.36" y1="115" x2="45.36" y2="125" class="svg-linea"/>
+                        <line x1="114.64" y1="115" x2="114.64" y2="125" class="svg-linea"/>
                         <text x="80" y="137" text-anchor="middle" class="svg-cota">A</text>
                     </svg>`,
         'placa': `<svg viewBox="0 0 160 140" style="height:110px; max-width:100%;">
