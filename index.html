@@ -159,6 +159,7 @@
         
         /* Input Trigovagometria resaltado */
         .input-trigo { background-color: #fffafb; border: 1px solid #ccc; font-weight: bold; color: #222;}
+        .input-trigo:focus { border-color: #E3000F; background-color: #fff;}
     </style>
 </head>
 <body>
@@ -192,7 +193,7 @@
             <span class="title">Calculadora de Pesos</span>
             <span class="desc">Estimación de peso por material y geometría</span>
         </div>
-        <!-- NUEVO BOTÓN TRIVAGOMETRÍA -->
+        <!-- BOTÓN TRIVAGOMETRÍA -->
         <div class="home-btn" onclick="abrirModulo('trigo')">
             <span class="icon">📐</span>
             <span class="title">Trivagometría</span>
@@ -206,21 +207,13 @@
             <h2>Trivagometría</h2>
             <h4>Porque pensar a pie de máquina está sobrevalorado</h4>
             
-            <div class="shape-preview-container">
-                <svg viewBox="0 0 160 140" style="height:120px; max-width:100%;">
-                    <!-- Triángulo rectángulo -->
-                    <polygon points="30,110 120,110 120,30" fill="#f0f7ff" stroke="#E3000F" stroke-width="3" />
-                    <!-- Símbolo ángulo recto -->
-                    <rect x="110" y="100" width="10" height="10" fill="none" stroke="#E3000F" stroke-width="1.5" />
-                    <!-- Arco del ángulo Alfa -->
-                    <path d="M 52 110 A 20 20 0 0 0 46 95" fill="none" stroke="#E3000F" stroke-width="1.5" />
-                    <!-- Textos de las Cotas -->
-                    <text x="62" y="105" class="svg-cota" style="font-size: 13px;">&alpha;</text>
-                    <text x="75" y="130" class="svg-cota">A</text>
-                    <text x="132" y="75" class="svg-cota">B</text>
-                    <text x="65" y="60" class="svg-cota">C</text>
-                </svg>
-            </div>
+            <label>Tipo de cálculo:</label>
+            <select id="t_forma" class="main-selector" style="margin-bottom: 10px;" onchange="cambiarFormaTrigo()">
+                <option value="triangulo">Triángulo Rectángulo Clásico</option>
+                <option value="chaflan">Chaflán en Pieza</option>
+            </select>
+
+            <div id="trigo_preview" class="shape-preview-container"></div>
 
             <div class="info-box" style="margin-bottom: 20px; border-left-color: #1a73e8;">
                 <span class="title" style="color: #1a73e8;">Instrucciones</span>
@@ -229,15 +222,15 @@
 
             <div class="dim-grid">
                 <div>
-                    <label>Cateto Base [ A ]:</label>
+                    <label id="lbl_trigo_a">Cateto Base [ A ]:</label>
                     <input type="number" id="t_a" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_trigo')" placeholder="mm">
                 </div>
                 <div>
-                    <label>Cateto Alto [ B ]:</label>
+                    <label id="lbl_trigo_b">Cateto Alto [ B ]:</label>
                     <input type="number" id="t_b" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_trigo')" placeholder="mm">
                 </div>
                 <div>
-                    <label>Hipotenusa [ C ]:</label>
+                    <label id="lbl_trigo_c">Hipotenusa [ C ]:</label>
                     <input type="number" id="t_c" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_trigo')" placeholder="mm">
                 </div>
                 <div>
@@ -636,6 +629,7 @@
         } else if (modulo === 'trigo') {
             document.getElementById("modulo_trigo").style.display = "block";
             document.getElementById("header_subtitle").innerText = "Trivagometría";
+            cambiarFormaTrigo();
         }
     }
 
@@ -649,6 +643,71 @@
     }
 
     // --- LOGICA TRIVAGOMETRÍA ---
+    const svgTrigo = {
+        'triangulo': `<svg viewBox="0 0 160 140" style="height:120px; max-width:100%;">
+                        <!-- Triángulo rectángulo -->
+                        <polygon points="30,110 120,110 120,30" fill="#f0f7ff" stroke="#E3000F" stroke-width="3" />
+                        <!-- Símbolo ángulo recto -->
+                        <rect x="110" y="100" width="10" height="10" fill="none" stroke="#E3000F" stroke-width="1.5" />
+                        <!-- Arco del ángulo Alfa -->
+                        <path d="M 52 110 A 20 20 0 0 0 46 95" fill="none" stroke="#E3000F" stroke-width="1.5" />
+                        <!-- Textos de las Cotas -->
+                        <text x="62" y="105" class="svg-cota" style="font-size: 13px;">&alpha;</text>
+                        <text x="75" y="130" class="svg-cota">A</text>
+                        <text x="132" y="75" class="svg-cota">B</text>
+                        <text x="65" y="60" class="svg-cota">C</text>
+                    </svg>`,
+        'chaflan': `<svg viewBox="0 0 160 140" style="height:120px; max-width:100%;">
+                        <!-- Perfil de la pieza rellenado para contexto -->
+                        <polygon points="10,40 60,40 110,80 110,130 10,130" fill="#f0f7ff" stroke="none" />
+                        <!-- Línea gruesa simulando la arista de la pieza mecanizada -->
+                        <polyline points="10,40 60,40 110,80 110,130" fill="none" stroke="#222" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                        
+                        <!-- Líneas de construcción (punteadas) para formar el triángulo invisible -->
+                        <line x1="60" y1="40" x2="125" y2="40" stroke="#E3000F" stroke-width="1.5" stroke-dasharray="5,3" />
+                        <line x1="110" y1="40" x2="110" y2="95" stroke="#E3000F" stroke-width="1.5" stroke-dasharray="5,3" />
+
+                        <!-- Cota A (Longitud Z horizontal) -->
+                        <line x1="60" y1="20" x2="110" y2="20" class="svg-linea" stroke="#E3000F" />
+                        <line x1="60" y1="15" x2="60" y2="25" class="svg-linea" stroke="#E3000F"/>
+                        <line x1="110" y1="15" x2="110" y2="25" class="svg-linea" stroke="#E3000F"/>
+                        <text x="85" y="14" text-anchor="middle" class="svg-cota" fill="#E3000F">A</text>
+
+                        <!-- Cota B (Profundidad X vertical) -->
+                        <line x1="125" y1="40" x2="125" y2="80" class="svg-linea" stroke="#E3000F" />
+                        <line x1="120" y1="40" x2="130" y2="40" class="svg-linea" stroke="#E3000F"/>
+                        <line x1="120" y1="80" x2="130" y2="80" class="svg-linea" stroke="#E3000F"/>
+                        <text x="135" y="65" text-anchor="start" alignment-baseline="middle" class="svg-cota" fill="#E3000F">B</text>
+
+                        <!-- Ángulo Alfa con la horizontal -->
+                        <path d="M 85 40 A 25 25 0 0 1 78 54" fill="none" stroke="#E3000F" stroke-width="1.5" />
+                        <text x="94" y="55" class="svg-cota" style="font-size: 13px;" fill="#E3000F">&alpha;</text>
+
+                        <!-- Cota C (Hipotenusa/Chaflán) -->
+                        <text x="75" y="75" class="svg-cota" fill="#E3000F">C</text>
+                    </svg>`
+    };
+
+    function cambiarFormaTrigo() {
+        let forma = document.getElementById("t_forma").value;
+        document.getElementById("trigo_preview").innerHTML = svgTrigo[forma];
+
+        let lblA = document.getElementById("lbl_trigo_a");
+        let lblB = document.getElementById("lbl_trigo_b");
+        let lblC = document.getElementById("lbl_trigo_c");
+
+        if (forma === 'triangulo') {
+            lblA.innerText = "Cateto Base [ A ]:";
+            lblB.innerText = "Cateto Alto [ B ]:";
+            lblC.innerText = "Hipotenusa [ C ]:";
+        } else {
+            lblA.innerText = "Longitud (Z) [ A ]:";
+            lblB.innerText = "Profundidad (X) [ B ]:";
+            lblC.innerText = "Chaflán [ C ]:";
+        }
+        limpiarTrigo(); 
+    }
+
     function limpiarTrigo() {
         document.getElementById('t_a').value = '';
         document.getElementById('t_b').value = '';
@@ -680,11 +739,11 @@
             c = Math.sqrt(a*a + b*b);
             ang = Math.atan(b/a) * deg;
         } else if(!isNaN(a) && !isNaN(c)) {
-            if(a >= c) return alert("¡Error! La hipotenusa [C] tiene que ser mayor que el cateto [A].");
+            if(a >= c) return alert("¡Error! La hipotenusa/chaflán [ C ] tiene que ser mayor que el cateto [ A ].");
             b = Math.sqrt(c*c - a*a);
             ang = Math.acos(a/c) * deg;
         } else if(!isNaN(b) && !isNaN(c)) {
-            if(b >= c) return alert("¡Error! La hipotenusa [C] tiene que ser mayor que el cateto [B].");
+            if(b >= c) return alert("¡Error! La hipotenusa/chaflán [ C ] tiene que ser mayor que el cateto [ B ].");
             a = Math.sqrt(c*c - b*b);
             ang = Math.asin(b/c) * deg;
         } else if(!isNaN(a) && !isNaN(ang)) {
@@ -768,7 +827,7 @@
                         <line x1="40" y1="110" x2="40" y2="120" class="svg-linea"/>
                         <line x1="120" y1="110" x2="120" y2="120" class="svg-linea"/>
                         <text x="80" y="132" text-anchor="middle" class="svg-cota">A</text>
-                        <!-- Cota d interior (solo cruza blanco) -->
+                        <!-- Cota d interior -->
                         <line x1="52" y1="60" x2="108" y2="60" class="svg-linea"/>
                         <line x1="52" y1="55" x2="52" y2="65" class="svg-linea"/>
                         <line x1="108" y1="55" x2="108" y2="65" class="svg-linea"/>
