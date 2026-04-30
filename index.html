@@ -124,6 +124,8 @@
 
         input, select { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 16px; background-color: #fcfcfc;}
         input:focus, select:focus { outline: none; border-color: #E3000F; }
+        
+        .input-readonly { background-color: #f0f0f0; border: 1px dashed #ccc; color: #666; }
 
         .btn-calcular { background-color: #E3000F; color: white; border: none; cursor: pointer; font-weight: bold; margin-top: 25px; font-size: 16px; padding: 15px; width: 100%; border-radius: 6px; transition: 0.2s; text-transform: uppercase; letter-spacing: 1px;}
         .btn-calcular:active { transform: scale(0.98); background-color: #B3000C; }
@@ -227,19 +229,24 @@
                 </select>
             </div>
 
-            <!-- CONTENEDOR DE LA IMAGEN SVG CON COTAS (DELINEANTE) -->
+            <!-- CONTENEDOR DE LA IMAGEN SVG CON COTAS -->
             <div id="shape_preview" class="shape-preview-container"></div>
 
             <!-- INPUTS DINÁMICOS -->
             <div class="dim-grid">
                 <div id="g_dim_a">
                     <label id="lbl_dim_a">Diámetro [ A ] (mm):</label>
-                    <input type="number" id="p_dim_a" value="50" step="1" class="auto-select" onkeypress="handleEnter(event, 'btn_pesos')">
+                    <input type="number" id="p_dim_a" value="50" step="1" class="auto-select" onkeypress="handleEnter(event, 'btn_pesos')" oninput="calcularHexagonoD()">
                 </div>
                 
                 <div id="g_dim_b" class="dynamic-input-group">
                     <label id="lbl_dim_b">Alto [ B ] (mm):</label>
                     <input type="number" id="p_dim_b" value="20" step="1" class="auto-select" onkeypress="handleEnter(event, 'btn_pesos')">
+                </div>
+
+                <div id="g_dim_hex" class="dynamic-input-group">
+                    <label>Diámetro ext. Ø (mm):</label>
+                    <input type="text" id="p_dim_hex_calc" class="input-readonly" readonly placeholder="Auto...">
                 </div>
                 
                 <div id="g_dim_t" class="dynamic-input-group">
@@ -573,7 +580,7 @@
         document.getElementById("header_subtitle").innerText = "Centro de Herramientas";
     }
 
-    // --- LOGICA DE PESOS CON GRAFICOS SVG ACOTADOS (VERSION ZERBIMEK) ---
+    // --- LOGICA DE PESOS CON GRAFICOS SVG ACOTADOS (DISEÑO DELINEANTE) ---
     const svgShapes = {
         'redondo': `<svg viewBox="0 0 160 140" style="height:110px; max-width:100%;">
                         <circle cx="80" cy="60" r="40" fill="#E3000F" />
@@ -592,12 +599,13 @@
                         <text x="80" y="132" text-anchor="middle" class="svg-cota">A</text>
                     </svg>`,
         'hexagonal': `<svg viewBox="0 0 160 140" style="height:110px; max-width:100%;">
-                        <polygon points="80,15 115,35 115,85 80,105 45,85 45,35" fill="#E3000F" />
-                        <!-- Cota A -->
-                        <line x1="45" y1="120" x2="115" y2="120" class="svg-linea"/>
-                        <line x1="45" y1="115" x2="45" y2="125" class="svg-linea"/>
-                        <line x1="115" y1="115" x2="115" y2="125" class="svg-linea"/>
-                        <text x="80" y="137" text-anchor="middle" class="svg-cota">A</text>
+                        <!-- Hexágono girado para base plana -->
+                        <polygon points="55,20 105,20 130,60 105,100 55,100 30,60" fill="#E3000F" />
+                        <!-- Cota A (Entrecaras) -->
+                        <line x1="55" y1="115" x2="105" y2="115" class="svg-linea"/>
+                        <line x1="55" y1="110" x2="55" y2="120" class="svg-linea"/>
+                        <line x1="105" y1="110" x2="105" y2="120" class="svg-linea"/>
+                        <text x="80" y="132" text-anchor="middle" class="svg-cota">A</text>
                     </svg>`,
         'placa': `<svg viewBox="0 0 160 140" style="height:110px; max-width:100%;">
                         <rect x="30" y="40" width="100" height="40" fill="#E3000F" />
@@ -646,60 +654,72 @@
                         <line x1="120" y1="110" x2="120" y2="120" class="svg-linea"/>
                         <text x="80" y="132" text-anchor="middle" class="svg-cota">A</text>
                         <!-- Cota e exterior arriba derecha -->
-                        <line x1="90" y1="20" x2="135" y2="20" class="svg-linea"/>
-                        <line x1="90" y1="32" x2="135" y2="32" class="svg-linea"/>
+                        <line x1="105" y1="20" x2="135" y2="20" class="svg-linea"/>
+                        <line x1="105" y1="32" x2="135" y2="32" class="svg-linea"/>
                         <line x1="130" y1="20" x2="130" y2="32" class="svg-linea"/>
                         <text x="144" y="30" alignment-baseline="middle" text-anchor="middle" class="svg-cota">e</text>
                     </svg>`,
         'tubo_rect': `<svg viewBox="0 0 160 140" style="height:110px; max-width:100%;">
-                        <rect x="31" y="36" width="88" height="48" fill="none" stroke="#E3000F" stroke-width="12"/>
+                        <rect x="36" y="36" width="88" height="48" fill="none" stroke="#E3000F" stroke-width="12"/>
                         <!-- Cota A (Dist=15) -->
-                        <line x1="25" y1="105" x2="125" y2="105" class="svg-linea"/>
-                        <line x1="25" y1="100" x2="25" y2="110" class="svg-linea"/>
-                        <line x1="125" y1="100" x2="125" y2="110" class="svg-linea"/>
-                        <text x="75" y="122" text-anchor="middle" class="svg-cota">A</text>
+                        <line x1="30" y1="105" x2="130" y2="105" class="svg-linea"/>
+                        <line x1="30" y1="100" x2="30" y2="110" class="svg-linea"/>
+                        <line x1="130" y1="100" x2="130" y2="110" class="svg-linea"/>
+                        <text x="80" y="122" text-anchor="middle" class="svg-cota">A</text>
                         <!-- Cota B (Dist=15) -->
-                        <line x1="140" y1="30" x2="140" y2="90" class="svg-linea"/>
-                        <line x1="135" y1="30" x2="145" y2="30" class="svg-linea"/>
-                        <line x1="135" y1="90" x2="145" y2="90" class="svg-linea"/>
-                        <text x="153" y="64" alignment-baseline="middle" text-anchor="middle" class="svg-cota">B</text>
+                        <line x1="145" y1="30" x2="145" y2="90" class="svg-linea"/>
+                        <line x1="140" y1="30" x2="150" y2="30" class="svg-linea"/>
+                        <line x1="140" y1="90" x2="150" y2="90" class="svg-linea"/>
+                        <text x="156" y="64" alignment-baseline="middle" text-anchor="middle" class="svg-cota">B</text>
                         <!-- Cota e exterior arriba izquierda -->
-                        <line x1="25" y1="30" x2="10" y2="30" class="svg-linea"/>
-                        <line x1="25" y1="42" x2="10" y2="42" class="svg-linea"/>
-                        <line x1="15" y1="30" x2="15" y2="42" class="svg-linea"/>
-                        <text x="6" y="39" text-anchor="end" class="svg-cota">e</text>
+                        <line x1="30" y1="30" x2="15" y2="30" class="svg-linea"/>
+                        <line x1="30" y1="42" x2="15" y2="42" class="svg-linea"/>
+                        <line x1="20" y1="30" x2="20" y2="42" class="svg-linea"/>
+                        <text x="10" y="40" text-anchor="end" class="svg-cota">e</text>
                     </svg>`,
         'perfil_u': `<svg viewBox="0 0 160 140" style="height:110px; max-width:100%;">
-                        <path d="M 31 30 L 31 84 L 119 84 L 119 30" fill="none" stroke="#E3000F" stroke-width="12" stroke-linejoin="miter"/>
+                        <path d="M 36 30 L 36 84 L 124 84 L 124 30" fill="none" stroke="#E3000F" stroke-width="12" stroke-linejoin="miter"/>
                         <!-- Cota A (Dist=15) -->
-                        <line x1="25" y1="105" x2="125" y2="105" class="svg-linea"/>
-                        <line x1="25" y1="100" x2="25" y2="110" class="svg-linea"/>
-                        <line x1="125" y1="100" x2="125" y2="110" class="svg-linea"/>
-                        <text x="75" y="122" text-anchor="middle" class="svg-cota">A</text>
+                        <line x1="30" y1="105" x2="130" y2="105" class="svg-linea"/>
+                        <line x1="30" y1="100" x2="30" y2="110" class="svg-linea"/>
+                        <line x1="130" y1="100" x2="130" y2="110" class="svg-linea"/>
+                        <text x="80" y="122" text-anchor="middle" class="svg-cota">A</text>
                         <!-- Cota B (Dist=15) -->
-                        <line x1="140" y1="30" x2="140" y2="90" class="svg-linea"/>
-                        <line x1="135" y1="30" x2="145" y2="30" class="svg-linea"/>
-                        <line x1="135" y1="90" x2="145" y2="90" class="svg-linea"/>
-                        <text x="153" y="64" alignment-baseline="middle" text-anchor="middle" class="svg-cota">B</text>
+                        <line x1="145" y1="30" x2="145" y2="90" class="svg-linea"/>
+                        <line x1="140" y1="30" x2="150" y2="30" class="svg-linea"/>
+                        <line x1="140" y1="90" x2="150" y2="90" class="svg-linea"/>
+                        <text x="156" y="64" alignment-baseline="middle" text-anchor="middle" class="svg-cota">B</text>
                         <!-- Cota e (Pared ala izquierda superior) -->
-                        <line x1="25" y1="30" x2="25" y2="10" class="svg-linea"/>
-                        <line x1="37" y1="30" x2="37" y2="10" class="svg-linea"/>
-                        <line x1="25" y1="15" x2="37" y2="15" class="svg-linea"/>
-                        <text x="31" y="9" text-anchor="middle" class="svg-cota">e</text>
+                        <line x1="30" y1="30" x2="30" y2="15" class="svg-linea"/>
+                        <line x1="42" y1="30" x2="42" y2="15" class="svg-linea"/>
+                        <line x1="30" y1="20" x2="42" y2="20" class="svg-linea"/>
+                        <text x="36" y="14" text-anchor="middle" class="svg-cota">e</text>
                     </svg>`
     };
+
+    function calcularHexagonoD() {
+        let forma = document.getElementById("p_forma").value;
+        if(forma !== "hexagonal") return;
+        let a = parseFloat(document.getElementById("p_dim_a").value);
+        if(a > 0) {
+            // D = Entrecaras / cos(30º)  (cos(30) = sqrt(3)/2 = 0.866)
+            let d_calc = a / (Math.sqrt(3) / 2);
+            document.getElementById("p_dim_hex_calc").value = d_calc.toFixed(2);
+        } else {
+            document.getElementById("p_dim_hex_calc").value = "";
+        }
+    }
 
     function cambiarFormaPeso() {
         let forma = document.getElementById("p_forma").value;
         
-        // Elementos UI
         let gA = document.getElementById("g_dim_a");
         let gB = document.getElementById("g_dim_b");
         let gT = document.getElementById("g_dim_t");
         let gDInt = document.getElementById("g_dim_d_int");
         let gModoRed = document.getElementById("g_modo_tubo_red");
+        let gHex = document.getElementById("g_dim_hex");
         
-        // Labels
         let lblA = document.getElementById("lbl_dim_a");
         let lblB = document.getElementById("lbl_dim_b");
         let lblT = document.getElementById("lbl_dim_t");
@@ -709,6 +729,7 @@
         gT.style.display = "none";
         gDInt.style.display = "none";
         gModoRed.style.display = "none";
+        gHex.style.display = "none";
         document.getElementById("res_pesos").style.display = "none";
 
         let svgKey = forma;
@@ -719,6 +740,8 @@
             lblA.innerText = "Lado [ A ] (mm):";
         } else if (forma === "hexagonal") {
             lblA.innerText = "Entrecaras [ A ] (mm):";
+            gHex.style.display = "block";
+            calcularHexagonoD(); // Dispara el cálculo inicial
         } else if (forma === "placa") {
             lblA.innerText = "Ancho [ A ] (mm):";
             lblT.innerText = "Espesor [ e ] (mm):";
@@ -770,6 +793,7 @@
         } else if (forma === "cuadrado") {
             area_mm2 = a * a;
         } else if (forma === "hexagonal") {
+            // El área de un hexágono por entrecaras(A) es: 2 * sqrt(3) * (A/2)^2 = sqrt(3)/2 * A^2
             area_mm2 = (Math.sqrt(3) / 2) * (a * a);
         } else if (forma === "placa") {
             if (t <= 0) return alert("Falta el espesor.");
