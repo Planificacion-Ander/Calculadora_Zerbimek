@@ -218,6 +218,15 @@
                 <option value="perfil_u">Perfil en U</option>
             </select>
 
+            <!-- OPCIÓN EXCLUSIVA PARA TUBO REDONDO -->
+            <div id="g_modo_tubo_red" style="display: none; margin-bottom: 10px;">
+                <label>Definir hueco por:</label>
+                <select id="p_modo_tubo_red" class="main-selector" style="margin-bottom: 0;" onchange="cambiarFormaPeso()">
+                    <option value="espesor">Espesor de pared [ e ]</option>
+                    <option value="interior">Diámetro Interior [ d ]</option>
+                </select>
+            </div>
+
             <!-- CONTENEDOR DE LA IMAGEN SVG CON COTAS -->
             <div id="shape_preview" class="shape-preview-container"></div>
 
@@ -234,8 +243,13 @@
                 </div>
                 
                 <div id="g_dim_t" class="dynamic-input-group">
-                    <label id="lbl_dim_t">Espesor pared [ e ] (mm):</label>
+                    <label id="lbl_dim_t">Pared [ e ] (mm):</label>
                     <input type="number" id="p_dim_t" value="5" step="0.5" class="auto-select" onkeypress="handleEnter(event, 'btn_pesos')">
+                </div>
+
+                <div id="g_dim_d_int" class="dynamic-input-group">
+                    <label id="lbl_dim_d_int">Diám. Int. [ d ] (mm):</label>
+                    <input type="number" id="p_dim_d_int" value="40" step="1" class="auto-select" onkeypress="handleEnter(event, 'btn_pesos')">
                 </div>
             </div>
 
@@ -561,106 +575,135 @@
 
     // --- LOGICA DE PESOS CON GRAFICOS SVG ACOTADOS ---
     const svgShapes = {
-        'redondo': `<svg viewBox="0 0 120 120" style="height:100px;">
-                        <circle cx="60" cy="50" r="40" fill="#f8f9fa" stroke="#E3000F" stroke-width="3"/>
-                        <line x1="20" y1="100" x2="100" y2="100" class="svg-linea"/>
-                        <line x1="20" y1="95" x2="20" y2="105" class="svg-linea"/>
-                        <line x1="100" y1="95" x2="100" y2="105" class="svg-linea"/>
-                        <text x="60" y="115" text-anchor="middle" class="svg-cota">A</text>
-                    </svg>`,
-        'cuadrado': `<svg viewBox="0 0 120 120" style="height:100px;">
-                        <rect x="20" y="10" width="80" height="80" fill="#f8f9fa" stroke="#E3000F" stroke-width="3"/>
-                        <line x1="20" y1="100" x2="100" y2="100" class="svg-linea"/>
-                        <line x1="20" y1="95" x2="20" y2="105" class="svg-linea"/>
-                        <line x1="100" y1="95" x2="100" y2="105" class="svg-linea"/>
-                        <text x="60" y="115" text-anchor="middle" class="svg-cota">A</text>
-                    </svg>`,
-        'hexagonal': `<svg viewBox="0 0 120 120" style="height:100px;">
-                        <polygon points="60,5 95,25 95,75 60,95 25,75 25,25" fill="#f8f9fa" stroke="#E3000F" stroke-width="3"/>
-                        <line x1="25" y1="105" x2="95" y2="105" class="svg-linea"/>
-                        <line x1="25" y1="100" x2="25" y2="110" class="svg-linea"/>
-                        <line x1="95" y1="100" x2="95" y2="110" class="svg-linea"/>
-                        <text x="60" y="120" text-anchor="middle" class="svg-cota">A</text>
-                    </svg>`,
-        'placa': `<svg viewBox="0 0 120 120" style="height:100px;">
-                        <rect x="10" y="40" width="100" height="30" fill="#f8f9fa" stroke="#E3000F" stroke-width="3"/>
-                        <!-- Cota A (Ancho) -->
-                        <line x1="10" y1="80" x2="110" y2="80" class="svg-linea"/>
-                        <line x1="10" y1="75" x2="10" y2="85" class="svg-linea"/>
-                        <line x1="110" y1="75" x2="110" y2="85" class="svg-linea"/>
-                        <text x="60" y="95" text-anchor="middle" class="svg-cota">A</text>
-                        <!-- Cota B (Espesor) -->
-                        <line x1="115" y1="40" x2="115" y2="70" class="svg-linea"/>
-                        <line x1="110" y1="40" x2="120" y2="40" class="svg-linea"/>
-                        <line x1="110" y1="70" x2="120" y2="70" class="svg-linea"/>
-                        <text x="105" y="60" text-anchor="end" alignment-baseline="middle" class="svg-cota">e</text>
-                    </svg>`,
-        'tubo_red': `<svg viewBox="0 0 120 120" style="height:100px;">
-                        <circle cx="60" cy="50" r="40" fill="none" stroke="#E3000F" stroke-width="12"/>
-                        <!-- Cota A (Exterior) -->
-                        <line x1="20" y1="100" x2="100" y2="100" class="svg-linea"/>
-                        <line x1="20" y1="95" x2="20" y2="105" class="svg-linea"/>
-                        <line x1="100" y1="95" x2="100" y2="105" class="svg-linea"/>
-                        <text x="60" y="115" text-anchor="middle" class="svg-cota">A</text>
-                        <!-- Cota e (Pared) -->
-                        <line x1="60" y1="10" x2="60" y2="22" class="svg-linea"/>
-                        <text x="68" y="22" text-anchor="start" class="svg-cota">e</text>
-                    </svg>`,
-        'tubo_cua': `<svg viewBox="0 0 120 120" style="height:100px;">
-                        <rect x="20" y="10" width="80" height="80" fill="none" stroke="#E3000F" stroke-width="12"/>
-                        <line x1="20" y1="100" x2="100" y2="100" class="svg-linea"/>
-                        <line x1="20" y1="95" x2="20" y2="105" class="svg-linea"/>
-                        <line x1="100" y1="95" x2="100" y2="105" class="svg-linea"/>
-                        <text x="60" y="115" text-anchor="middle" class="svg-cota">A</text>
-                        <text x="28" y="25" text-anchor="start" class="svg-cota">e</text>
-                    </svg>`,
-        'tubo_rect': `<svg viewBox="0 0 130 120" style="height:100px;">
-                        <rect x="10" y="25" width="100" height="60" fill="none" stroke="#E3000F" stroke-width="10"/>
-                        <!-- Cota A (Base) -->
-                        <line x1="10" y1="95" x2="110" y2="95" class="svg-linea"/>
-                        <line x1="10" y1="90" x2="10" y2="100" class="svg-linea"/>
-                        <line x1="110" y1="90" x2="110" y2="100" class="svg-linea"/>
-                        <text x="60" y="110" text-anchor="middle" class="svg-cota">A</text>
-                        <!-- Cota B (Alto) -->
-                        <line x1="120" y1="25" x2="120" y2="85" class="svg-linea"/>
-                        <line x1="115" y1="25" x2="125" y2="25" class="svg-linea"/>
-                        <line x1="115" y1="85" x2="125" y2="85" class="svg-linea"/>
-                        <text x="110" y="60" text-anchor="end" alignment-baseline="middle" class="svg-cota">B</text>
-                        <text x="20" y="45" text-anchor="start" class="svg-cota">e</text>
-                    </svg>`,
-        'perfil_u': `<svg viewBox="0 0 130 120" style="height:100px;">
-                        <path d="M 20 20 L 20 90 L 100 90 L 100 20" fill="none" stroke="#E3000F" stroke-width="12" stroke-linejoin="miter"/>
-                        <!-- Cota A (Base) -->
+        'redondo': `<svg viewBox="0 0 120 120" style="height:100px; max-width:100%;">
+                        <circle cx="60" cy="50" r="40" fill="#f8f9fa" stroke="#E3000F" stroke-width="4"/>
                         <line x1="20" y1="105" x2="100" y2="105" class="svg-linea"/>
                         <line x1="20" y1="100" x2="20" y2="110" class="svg-linea"/>
                         <line x1="100" y1="100" x2="100" y2="110" class="svg-linea"/>
-                        <text x="60" y="120" text-anchor="middle" class="svg-cota">A</text>
-                        <!-- Cota B (Alto) -->
-                        <line x1="110" y1="20" x2="110" y2="90" class="svg-linea"/>
-                        <line x1="105" y1="20" x2="115" y2="20" class="svg-linea"/>
-                        <line x1="105" y1="90" x2="115" y2="90" class="svg-linea"/>
-                        <text x="125" y="60" text-anchor="start" alignment-baseline="middle" class="svg-cota">B</text>
-                        <text x="45" y="80" text-anchor="middle" class="svg-cota">e</text>
+                        <text x="60" y="118" text-anchor="middle" class="svg-cota">A</text>
+                    </svg>`,
+        'cuadrado': `<svg viewBox="0 0 120 120" style="height:100px; max-width:100%;">
+                        <rect x="20" y="10" width="80" height="80" fill="#f8f9fa" stroke="#E3000F" stroke-width="4"/>
+                        <line x1="20" y1="105" x2="100" y2="105" class="svg-linea"/>
+                        <line x1="20" y1="100" x2="20" y2="110" class="svg-linea"/>
+                        <line x1="100" y1="100" x2="100" y2="110" class="svg-linea"/>
+                        <text x="60" y="118" text-anchor="middle" class="svg-cota">A</text>
+                    </svg>`,
+        'hexagonal': `<svg viewBox="0 0 120 120" style="height:100px; max-width:100%;">
+                        <polygon points="60,5 95,25 95,75 60,95 25,75 25,25" fill="#f8f9fa" stroke="#E3000F" stroke-width="4"/>
+                        <line x1="25" y1="105" x2="95" y2="105" class="svg-linea"/>
+                        <line x1="25" y1="100" x2="25" y2="110" class="svg-linea"/>
+                        <line x1="95" y1="100" x2="95" y2="110" class="svg-linea"/>
+                        <text x="60" y="118" text-anchor="middle" class="svg-cota">A</text>
+                    </svg>`,
+        'placa': `<svg viewBox="0 0 120 120" style="height:100px; max-width:100%;">
+                        <rect x="10" y="30" width="100" height="40" fill="#f8f9fa" stroke="#E3000F" stroke-width="4"/>
+                        <!-- Cota A -->
+                        <line x1="10" y1="85" x2="110" y2="85" class="svg-linea"/>
+                        <line x1="10" y1="80" x2="10" y2="90" class="svg-linea"/>
+                        <line x1="110" y1="80" x2="110" y2="90" class="svg-linea"/>
+                        <text x="60" y="105" text-anchor="middle" class="svg-cota">A</text>
+                        <!-- Cota e interior derecha -->
+                        <text x="100" y="55" text-anchor="middle" alignment-baseline="middle" class="svg-cota">e</text>
+                    </svg>`,
+        'tubo_red_espesor': `<svg viewBox="0 0 120 120" style="height:100px; max-width:100%;">
+                        <circle cx="60" cy="50" r="34" fill="none" stroke="#E3000F" stroke-width="12"/>
+                        <!-- Cota A -->
+                        <line x1="20" y1="105" x2="100" y2="105" class="svg-linea"/>
+                        <line x1="20" y1="100" x2="20" y2="110" class="svg-linea"/>
+                        <line x1="100" y1="100" x2="100" y2="110" class="svg-linea"/>
+                        <text x="60" y="118" text-anchor="middle" class="svg-cota">A</text>
+                        <!-- Cota e exterior derecha -->
+                        <line x1="60" y1="10" x2="105" y2="10" class="svg-linea"/>
+                        <line x1="60" y1="22" x2="105" y2="22" class="svg-linea"/>
+                        <line x1="100" y1="10" x2="100" y2="22" class="svg-linea"/>
+                        <text x="110" y="16" alignment-baseline="middle" class="svg-cota">e</text>
+                    </svg>`,
+        'tubo_red_interior': `<svg viewBox="0 0 120 120" style="height:100px; max-width:100%;">
+                        <circle cx="60" cy="50" r="34" fill="none" stroke="#E3000F" stroke-width="12"/>
+                        <!-- Cota A -->
+                        <line x1="20" y1="105" x2="100" y2="105" class="svg-linea"/>
+                        <line x1="20" y1="100" x2="20" y2="110" class="svg-linea"/>
+                        <line x1="100" y1="100" x2="100" y2="110" class="svg-linea"/>
+                        <text x="60" y="118" text-anchor="middle" class="svg-cota">A</text>
+                        <!-- Cota d interior -->
+                        <line x1="26" y1="50" x2="94" y2="50" class="svg-linea"/>
+                        <line x1="26" y1="45" x2="26" y2="55" class="svg-linea"/>
+                        <line x1="94" y1="45" x2="94" y2="55" class="svg-linea"/>
+                        <text x="60" y="45" text-anchor="middle" class="svg-cota">d</text>
+                    </svg>`,
+        'tubo_cua': `<svg viewBox="0 0 120 120" style="height:100px; max-width:100%;">
+                        <rect x="26" y="16" width="68" height="68" fill="none" stroke="#E3000F" stroke-width="12"/>
+                        <!-- Cota A -->
+                        <line x1="20" y1="105" x2="100" y2="105" class="svg-linea"/>
+                        <line x1="20" y1="100" x2="20" y2="110" class="svg-linea"/>
+                        <line x1="100" y1="100" x2="100" y2="110" class="svg-linea"/>
+                        <text x="60" y="118" text-anchor="middle" class="svg-cota">A</text>
+                        <!-- Cota e exterior arriba derecha -->
+                        <line x1="80" y1="10" x2="115" y2="10" class="svg-linea"/>
+                        <line x1="80" y1="22" x2="115" y2="22" class="svg-linea"/>
+                        <line x1="110" y1="10" x2="110" y2="22" class="svg-linea"/>
+                        <text x="120" y="16" alignment-baseline="middle" text-anchor="middle" class="svg-cota">e</text>
+                    </svg>`,
+        'tubo_rect': `<svg viewBox="0 0 140 120" style="height:100px; max-width:100%;">
+                        <rect x="26" y="26" width="88" height="48" fill="none" stroke="#E3000F" stroke-width="12"/>
+                        <!-- Cota A -->
+                        <line x1="20" y1="95" x2="120" y2="95" class="svg-linea"/>
+                        <line x1="20" y1="90" x2="20" y2="100" class="svg-linea"/>
+                        <line x1="120" y1="90" x2="120" y2="100" class="svg-linea"/>
+                        <text x="70" y="110" text-anchor="middle" class="svg-cota">A</text>
+                        <!-- Cota B -->
+                        <line x1="130" y1="20" x2="130" y2="80" class="svg-linea"/>
+                        <line x1="125" y1="20" x2="135" y2="20" class="svg-linea"/>
+                        <line x1="125" y1="80" x2="135" y2="80" class="svg-linea"/>
+                        <text x="140" y="50" alignment-baseline="middle" class="svg-cota">B</text>
+                        <!-- Cota e exterior arriba izquierda -->
+                        <line x1="20" y1="20" x2="5" y2="20" class="svg-linea"/>
+                        <line x1="20" y1="32" x2="5" y2="32" class="svg-linea"/>
+                        <line x1="10" y1="20" x2="10" y2="32" class="svg-linea"/>
+                        <text x="5" y="15" text-anchor="middle" class="svg-cota">e</text>
+                    </svg>`,
+        'perfil_u': `<svg viewBox="0 0 140 120" style="height:100px; max-width:100%;">
+                        <path d="M 26 20 L 26 84 L 114 84 L 114 20" fill="none" stroke="#E3000F" stroke-width="12" stroke-linejoin="miter"/>
+                        <!-- Cota A -->
+                        <line x1="20" y1="105" x2="120" y2="105" class="svg-linea"/>
+                        <line x1="20" y1="100" x2="20" y2="110" class="svg-linea"/>
+                        <line x1="120" y1="100" x2="120" y2="110" class="svg-linea"/>
+                        <text x="70" y="120" text-anchor="middle" class="svg-cota">A</text>
+                        <!-- Cota B -->
+                        <line x1="130" y1="20" x2="130" y2="90" class="svg-linea"/>
+                        <line x1="125" y1="20" x2="135" y2="20" class="svg-linea"/>
+                        <line x1="125" y1="90" x2="135" y2="90" class="svg-linea"/>
+                        <text x="140" y="55" alignment-baseline="middle" class="svg-cota">B</text>
+                        <!-- Cota e interior -->
+                        <line x1="70" y1="78" x2="70" y2="90" class="svg-linea"/>
+                        <text x="60" y="88" class="svg-cota">e</text>
                     </svg>`
     };
 
     function cambiarFormaPeso() {
         let forma = document.getElementById("p_forma").value;
         
-        // Pinta la imagen de la forma
-        document.getElementById("shape_preview").innerHTML = svgShapes[forma];
-
+        // Elementos UI
         let gA = document.getElementById("g_dim_a");
         let gB = document.getElementById("g_dim_b");
         let gT = document.getElementById("g_dim_t");
+        let gDInt = document.getElementById("g_dim_d_int");
+        let gModoRed = document.getElementById("g_modo_tubo_red");
         
+        // Labels
         let lblA = document.getElementById("lbl_dim_a");
         let lblB = document.getElementById("lbl_dim_b");
         let lblT = document.getElementById("lbl_dim_t");
 
+        // Reseteo visual
         gB.style.display = "none";
         gT.style.display = "none";
+        gDInt.style.display = "none";
+        gModoRed.style.display = "none";
         document.getElementById("res_pesos").style.display = "none";
+
+        let svgKey = forma;
 
         if (forma === "redondo") {
             lblA.innerText = "Diámetro [ A ] (mm):";
@@ -673,9 +716,17 @@
             lblT.innerText = "Espesor [ e ] (mm):";
             gT.style.display = "block";
         } else if (forma === "tubo_red") {
+            gModoRed.style.display = "block";
+            let modo = document.getElementById("p_modo_tubo_red").value;
             lblA.innerText = "Diám. Ext. [ A ] (mm):";
-            lblT.innerText = "Pared [ e ] (mm):";
-            gT.style.display = "block";
+            if (modo === "espesor") {
+                lblT.innerText = "Pared [ e ] (mm):";
+                gT.style.display = "block";
+                svgKey = "tubo_red_espesor";
+            } else {
+                gDInt.style.display = "block";
+                svgKey = "tubo_red_interior";
+            }
         } else if (forma === "tubo_cua") {
             lblA.innerText = "Lado Ext. [ A ] (mm):";
             lblT.innerText = "Pared [ e ] (mm):";
@@ -687,6 +738,9 @@
             gB.style.display = "block";
             gT.style.display = "block";
         }
+
+        // Pinta el gráfico
+        document.getElementById("shape_preview").innerHTML = svgShapes[svgKey];
     }
 
     function calcularPeso() {
@@ -696,6 +750,7 @@
         let a = parseFloat(document.getElementById("p_dim_a").value) || 0;
         let b = parseFloat(document.getElementById("p_dim_b").value) || 0;
         let t = parseFloat(document.getElementById("p_dim_t").value) || 0;
+        let d_int = parseFloat(document.getElementById("p_dim_d_int").value) || 0;
         let l = parseFloat(document.getElementById("p_largo").value) || 0;
 
         if (a <= 0 || l <= 0) return alert("Introduce dimensiones válidas.");
@@ -712,9 +767,15 @@
             if (t <= 0) return alert("Falta el espesor.");
             area_mm2 = a * t;
         } else if (forma === "tubo_red") {
-            if (t <= 0 || t >= a/2) return alert("Espesor de pared inválido.");
-            let d_int = a - (2 * t);
-            area_mm2 = (Math.PI * Math.pow(a/2, 2)) - (Math.PI * Math.pow(d_int/2, 2));
+            let modo = document.getElementById("p_modo_tubo_red").value;
+            if (modo === "espesor") {
+                if (t <= 0 || t >= a/2) return alert("Espesor de pared inválido.");
+                let diam_interior_calc = a - (2 * t);
+                area_mm2 = (Math.PI * Math.pow(a/2, 2)) - (Math.PI * Math.pow(diam_interior_calc/2, 2));
+            } else {
+                if (d_int <= 0 || d_int >= a) return alert("Diámetro interior inválido.");
+                area_mm2 = (Math.PI * Math.pow(a/2, 2)) - (Math.PI * Math.pow(d_int/2, 2));
+            }
         } else if (forma === "tubo_cua") {
             if (t <= 0 || t >= a/2) return alert("Espesor de pared inválido.");
             let l_int = a - (2 * t);
