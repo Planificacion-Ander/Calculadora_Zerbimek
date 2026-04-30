@@ -192,18 +192,18 @@
             <span class="title">Calculadora de Pesos</span>
             <span class="desc">Estimación de peso por material y geometría</span>
         </div>
-        <!-- NUEVO BOTÓN TRIGOVAGOMETRÍA -->
+        <!-- NUEVO BOTÓN TRIVAGOMETRÍA -->
         <div class="home-btn" onclick="abrirModulo('trigo')">
             <span class="icon">📐</span>
-            <span class="title">Trigovagometría</span>
-            <span class="desc">Cálculo de chaflanes y triángulos</span>
+            <span class="title">Trivagometría</span>
+            <span class="desc">Cálculo rápido de chaflanes y triángulos</span>
         </div>
     </div>
 
-    <!-- MÓDULO 3: TRIGOVAGOMETRÍA -->
+    <!-- MÓDULO 3: TRIVAGOMETRÍA -->
     <div id="modulo_trigo" class="app-module">
         <div class="tab-content" style="display: block;">
-            <h2>Trigovagometría</h2>
+            <h2>Trivagometría</h2>
             <h4>Porque pensar a pie de máquina está sobrevalorado</h4>
             
             <div class="shape-preview-container">
@@ -635,7 +635,7 @@
             cambiarFormaPeso(); 
         } else if (modulo === 'trigo') {
             document.getElementById("modulo_trigo").style.display = "block";
-            document.getElementById("header_subtitle").innerText = "Trigovagometría";
+            document.getElementById("header_subtitle").innerText = "Trivagometría";
         }
     }
 
@@ -648,7 +648,7 @@
         document.getElementById("header_subtitle").innerText = "Centro de Herramientas";
     }
 
-    // --- LOGICA TRIGOVAGOMETRÍA ---
+    // --- LOGICA TRIVAGOMETRÍA ---
     function limpiarTrigo() {
         document.getElementById('t_a').value = '';
         document.getElementById('t_b').value = '';
@@ -768,7 +768,7 @@
                         <line x1="40" y1="110" x2="40" y2="120" class="svg-linea"/>
                         <line x1="120" y1="110" x2="120" y2="120" class="svg-linea"/>
                         <text x="80" y="132" text-anchor="middle" class="svg-cota">A</text>
-                        <!-- Cota d interior -->
+                        <!-- Cota d interior (solo cruza blanco) -->
                         <line x1="52" y1="60" x2="108" y2="60" class="svg-linea"/>
                         <line x1="52" y1="55" x2="52" y2="65" class="svg-linea"/>
                         <line x1="108" y1="55" x2="108" y2="65" class="svg-linea"/>
