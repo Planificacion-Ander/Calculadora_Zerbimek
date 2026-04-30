@@ -573,38 +573,41 @@
         document.getElementById("header_subtitle").innerText = "Centro de Herramientas";
     }
 
-    // --- LOGICA DE PESOS CON GRAFICOS SVG ACOTADOS ---
+    // --- LOGICA DE PESOS CON GRAFICOS SVG ACOTADOS (VERSION FINAL) ---
     const svgShapes = {
         'redondo': `<svg viewBox="0 0 120 120" style="height:100px; max-width:100%;">
-                        <circle cx="60" cy="50" r="40" fill="#f8f9fa" stroke="#E3000F" stroke-width="4"/>
+                        <circle cx="60" cy="50" r="40" fill="#000" stroke="#000" stroke-width="2"/>
                         <line x1="20" y1="105" x2="100" y2="105" class="svg-linea"/>
                         <line x1="20" y1="100" x2="20" y2="110" class="svg-linea"/>
                         <line x1="100" y1="100" x2="100" y2="110" class="svg-linea"/>
                         <text x="60" y="118" text-anchor="middle" class="svg-cota">A</text>
                     </svg>`,
         'cuadrado': `<svg viewBox="0 0 120 120" style="height:100px; max-width:100%;">
-                        <rect x="20" y="10" width="80" height="80" fill="#f8f9fa" stroke="#E3000F" stroke-width="4"/>
+                        <rect x="20" y="10" width="80" height="80" fill="#000" stroke="#000" stroke-width="2"/>
                         <line x1="20" y1="105" x2="100" y2="105" class="svg-linea"/>
                         <line x1="20" y1="100" x2="20" y2="110" class="svg-linea"/>
                         <line x1="100" y1="100" x2="100" y2="110" class="svg-linea"/>
                         <text x="60" y="118" text-anchor="middle" class="svg-cota">A</text>
                     </svg>`,
         'hexagonal': `<svg viewBox="0 0 120 120" style="height:100px; max-width:100%;">
-                        <polygon points="60,5 95,25 95,75 60,95 25,75 25,25" fill="#f8f9fa" stroke="#E3000F" stroke-width="4"/>
+                        <polygon points="60,5 95,25 95,75 60,95 25,75 25,25" fill="#000" stroke="#000" stroke-width="2"/>
                         <line x1="25" y1="105" x2="95" y2="105" class="svg-linea"/>
                         <line x1="25" y1="100" x2="25" y2="110" class="svg-linea"/>
                         <line x1="95" y1="100" x2="95" y2="110" class="svg-linea"/>
                         <text x="60" y="118" text-anchor="middle" class="svg-cota">A</text>
                     </svg>`,
-        'placa': `<svg viewBox="0 0 120 120" style="height:100px; max-width:100%;">
-                        <rect x="10" y="30" width="100" height="40" fill="#f8f9fa" stroke="#E3000F" stroke-width="4"/>
+        'placa': `<svg viewBox="0 0 130 120" style="height:100px; max-width:100%;">
+                        <rect x="10" y="30" width="90" height="40" fill="#E3000F" stroke="#E3000F" stroke-width="2"/>
                         <!-- Cota A -->
-                        <line x1="10" y1="85" x2="110" y2="85" class="svg-linea"/>
+                        <line x1="10" y1="85" x2="100" y2="85" class="svg-linea"/>
                         <line x1="10" y1="80" x2="10" y2="90" class="svg-linea"/>
-                        <line x1="110" y1="80" x2="110" y2="90" class="svg-linea"/>
-                        <text x="60" y="105" text-anchor="middle" class="svg-cota">A</text>
-                        <!-- Cota e interior derecha -->
-                        <text x="100" y="55" text-anchor="middle" alignment-baseline="middle" class="svg-cota">e</text>
+                        <line x1="100" y1="80" x2="100" y2="90" class="svg-linea"/>
+                        <text x="55" y="105" text-anchor="middle" class="svg-cota">A</text>
+                        <!-- Cota e (Exterior derecha) -->
+                        <line x1="110" y1="30" x2="110" y2="70" class="svg-linea"/>
+                        <line x1="105" y1="30" x2="115" y2="30" class="svg-linea"/>
+                        <line x1="105" y1="70" x2="115" y2="70" class="svg-linea"/>
+                        <text x="120" y="55" text-anchor="start" alignment-baseline="middle" class="svg-cota">e</text>
                     </svg>`,
         'tubo_red_espesor': `<svg viewBox="0 0 120 120" style="height:100px; max-width:100%;">
                         <circle cx="60" cy="50" r="34" fill="none" stroke="#E3000F" stroke-width="12"/>
@@ -613,7 +616,7 @@
                         <line x1="20" y1="100" x2="20" y2="110" class="svg-linea"/>
                         <line x1="100" y1="100" x2="100" y2="110" class="svg-linea"/>
                         <text x="60" y="118" text-anchor="middle" class="svg-cota">A</text>
-                        <!-- Cota e exterior derecha -->
+                        <!-- Cota e exterior arriba -->
                         <line x1="60" y1="10" x2="105" y2="10" class="svg-linea"/>
                         <line x1="60" y1="22" x2="105" y2="22" class="svg-linea"/>
                         <line x1="100" y1="10" x2="100" y2="22" class="svg-linea"/>
@@ -626,10 +629,10 @@
                         <line x1="20" y1="100" x2="20" y2="110" class="svg-linea"/>
                         <line x1="100" y1="100" x2="100" y2="110" class="svg-linea"/>
                         <text x="60" y="118" text-anchor="middle" class="svg-cota">A</text>
-                        <!-- Cota d interior -->
-                        <line x1="26" y1="50" x2="94" y2="50" class="svg-linea"/>
-                        <line x1="26" y1="45" x2="26" y2="55" class="svg-linea"/>
-                        <line x1="94" y1="45" x2="94" y2="55" class="svg-linea"/>
+                        <!-- Cota d interior AJUSTADA al hueco -->
+                        <line x1="33" y1="50" x2="87" y2="50" class="svg-linea"/>
+                        <line x1="33" y1="45" x2="33" y2="55" class="svg-linea"/>
+                        <line x1="87" y1="45" x2="87" y2="55" class="svg-linea"/>
                         <text x="60" y="45" text-anchor="middle" class="svg-cota">d</text>
                     </svg>`,
         'tubo_cua': `<svg viewBox="0 0 120 120" style="height:100px; max-width:100%;">
@@ -640,8 +643,8 @@
                         <line x1="100" y1="100" x2="100" y2="110" class="svg-linea"/>
                         <text x="60" y="118" text-anchor="middle" class="svg-cota">A</text>
                         <!-- Cota e exterior arriba derecha -->
-                        <line x1="80" y1="10" x2="115" y2="10" class="svg-linea"/>
-                        <line x1="80" y1="22" x2="115" y2="22" class="svg-linea"/>
+                        <line x1="88" y1="10" x2="115" y2="10" class="svg-linea"/>
+                        <line x1="88" y1="22" x2="115" y2="22" class="svg-linea"/>
                         <line x1="110" y1="10" x2="110" y2="22" class="svg-linea"/>
                         <text x="120" y="16" alignment-baseline="middle" text-anchor="middle" class="svg-cota">e</text>
                     </svg>`,
@@ -675,9 +678,11 @@
                         <line x1="125" y1="20" x2="135" y2="20" class="svg-linea"/>
                         <line x1="125" y1="90" x2="135" y2="90" class="svg-linea"/>
                         <text x="140" y="55" alignment-baseline="middle" class="svg-cota">B</text>
-                        <!-- Cota e interior -->
-                        <line x1="70" y1="78" x2="70" y2="90" class="svg-linea"/>
-                        <text x="60" y="88" class="svg-cota">e</text>
+                        <!-- Cota e interior base -->
+                        <line x1="80" y1="78" x2="80" y2="90" class="svg-linea"/>
+                        <line x1="75" y1="78" x2="85" y2="78" class="svg-linea"/>
+                        <line x1="75" y1="90" x2="85" y2="90" class="svg-linea"/>
+                        <text x="92" y="86" class="svg-cota">e</text>
                     </svg>`
     };
 
