@@ -149,7 +149,11 @@
         .dim-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         
         /* Contenedor de la vista previa SVG */
-        .shape-preview-container { text-align: center; margin: 15px 0; min-height: 75px;}
+        .shape-preview-container { text-align: center; margin: 15px 0; min-height: 100px; display: flex; justify-content: center; align-items: center;}
+        
+        /* Estilos texto cotas SVG */
+        .svg-cota { font-family: monospace; font-size: 16px; font-weight: bold; fill: #E3000F; }
+        .svg-linea { stroke: #999; stroke-width: 1.5; }
     </style>
 </head>
 <body>
@@ -214,23 +218,23 @@
                 <option value="perfil_u">Perfil en U</option>
             </select>
 
-            <!-- CONTENEDOR DE LA IMAGEN SVG -->
+            <!-- CONTENEDOR DE LA IMAGEN SVG CON COTAS -->
             <div id="shape_preview" class="shape-preview-container"></div>
 
             <!-- INPUTS DINÁMICOS -->
             <div class="dim-grid">
                 <div id="g_dim_a">
-                    <label id="lbl_dim_a">Diámetro (mm):</label>
+                    <label id="lbl_dim_a">Diámetro [ A ] (mm):</label>
                     <input type="number" id="p_dim_a" value="50" step="1" class="auto-select" onkeypress="handleEnter(event, 'btn_pesos')">
                 </div>
                 
                 <div id="g_dim_b" class="dynamic-input-group">
-                    <label id="lbl_dim_b">Alto (mm):</label>
+                    <label id="lbl_dim_b">Alto [ B ] (mm):</label>
                     <input type="number" id="p_dim_b" value="20" step="1" class="auto-select" onkeypress="handleEnter(event, 'btn_pesos')">
                 </div>
                 
                 <div id="g_dim_t" class="dynamic-input-group">
-                    <label id="lbl_dim_t">Espesor pared (mm):</label>
+                    <label id="lbl_dim_t">Espesor pared [ e ] (mm):</label>
                     <input type="number" id="p_dim_t" value="5" step="0.5" class="auto-select" onkeypress="handleEnter(event, 'btn_pesos')">
                 </div>
             </div>
@@ -555,16 +559,89 @@
         document.getElementById("header_subtitle").innerText = "Centro de Herramientas";
     }
 
-    // --- LOGICA DE PESOS (LUMETAL STYLE) ---
+    // --- LOGICA DE PESOS CON GRAFICOS SVG ACOTADOS ---
     const svgShapes = {
-        'redondo': '<svg viewBox="0 0 100 100" style="width:70px;height:70px;"><circle cx="50" cy="50" r="45" fill="#f8f9fa" stroke="#E3000F" stroke-width="4"/></svg>',
-        'cuadrado': '<svg viewBox="0 0 100 100" style="width:70px;height:70px;"><rect x="10" y="10" width="80" height="80" fill="#f8f9fa" stroke="#E3000F" stroke-width="4"/></svg>',
-        'hexagonal': '<svg viewBox="0 0 100 100" style="width:70px;height:70px;"><polygon points="50,5 89,27 89,73 50,95 11,73 11,27" fill="#f8f9fa" stroke="#E3000F" stroke-width="4"/></svg>',
-        'placa': '<svg viewBox="0 0 100 100" style="width:70px;height:70px;"><rect x="5" y="30" width="90" height="40" fill="#f8f9fa" stroke="#E3000F" stroke-width="4"/></svg>',
-        'tubo_red': '<svg viewBox="0 0 100 100" style="width:70px;height:70px;"><circle cx="50" cy="50" r="45" fill="none" stroke="#E3000F" stroke-width="12"/></svg>',
-        'tubo_cua': '<svg viewBox="0 0 100 100" style="width:70px;height:70px;"><rect x="10" y="10" width="80" height="80" fill="none" stroke="#E3000F" stroke-width="12"/></svg>',
-        'tubo_rect': '<svg viewBox="0 0 100 100" style="width:70px;height:70px;"><rect x="5" y="25" width="90" height="50" fill="none" stroke="#E3000F" stroke-width="12"/></svg>',
-        'perfil_u': '<svg viewBox="0 0 100 100" style="width:70px;height:70px;"><path d="M 15 15 L 15 85 L 85 85 L 85 15" fill="none" stroke="#E3000F" stroke-width="12" stroke-linejoin="miter"/></svg>'
+        'redondo': `<svg viewBox="0 0 120 120" style="height:100px;">
+                        <circle cx="60" cy="50" r="40" fill="#f8f9fa" stroke="#E3000F" stroke-width="3"/>
+                        <line x1="20" y1="100" x2="100" y2="100" class="svg-linea"/>
+                        <line x1="20" y1="95" x2="20" y2="105" class="svg-linea"/>
+                        <line x1="100" y1="95" x2="100" y2="105" class="svg-linea"/>
+                        <text x="60" y="115" text-anchor="middle" class="svg-cota">A</text>
+                    </svg>`,
+        'cuadrado': `<svg viewBox="0 0 120 120" style="height:100px;">
+                        <rect x="20" y="10" width="80" height="80" fill="#f8f9fa" stroke="#E3000F" stroke-width="3"/>
+                        <line x1="20" y1="100" x2="100" y2="100" class="svg-linea"/>
+                        <line x1="20" y1="95" x2="20" y2="105" class="svg-linea"/>
+                        <line x1="100" y1="95" x2="100" y2="105" class="svg-linea"/>
+                        <text x="60" y="115" text-anchor="middle" class="svg-cota">A</text>
+                    </svg>`,
+        'hexagonal': `<svg viewBox="0 0 120 120" style="height:100px;">
+                        <polygon points="60,5 95,25 95,75 60,95 25,75 25,25" fill="#f8f9fa" stroke="#E3000F" stroke-width="3"/>
+                        <line x1="25" y1="105" x2="95" y2="105" class="svg-linea"/>
+                        <line x1="25" y1="100" x2="25" y2="110" class="svg-linea"/>
+                        <line x1="95" y1="100" x2="95" y2="110" class="svg-linea"/>
+                        <text x="60" y="120" text-anchor="middle" class="svg-cota">A</text>
+                    </svg>`,
+        'placa': `<svg viewBox="0 0 120 120" style="height:100px;">
+                        <rect x="10" y="40" width="100" height="30" fill="#f8f9fa" stroke="#E3000F" stroke-width="3"/>
+                        <!-- Cota A (Ancho) -->
+                        <line x1="10" y1="80" x2="110" y2="80" class="svg-linea"/>
+                        <line x1="10" y1="75" x2="10" y2="85" class="svg-linea"/>
+                        <line x1="110" y1="75" x2="110" y2="85" class="svg-linea"/>
+                        <text x="60" y="95" text-anchor="middle" class="svg-cota">A</text>
+                        <!-- Cota B (Espesor) -->
+                        <line x1="115" y1="40" x2="115" y2="70" class="svg-linea"/>
+                        <line x1="110" y1="40" x2="120" y2="40" class="svg-linea"/>
+                        <line x1="110" y1="70" x2="120" y2="70" class="svg-linea"/>
+                        <text x="105" y="60" text-anchor="end" alignment-baseline="middle" class="svg-cota">e</text>
+                    </svg>`,
+        'tubo_red': `<svg viewBox="0 0 120 120" style="height:100px;">
+                        <circle cx="60" cy="50" r="40" fill="none" stroke="#E3000F" stroke-width="12"/>
+                        <!-- Cota A (Exterior) -->
+                        <line x1="20" y1="100" x2="100" y2="100" class="svg-linea"/>
+                        <line x1="20" y1="95" x2="20" y2="105" class="svg-linea"/>
+                        <line x1="100" y1="95" x2="100" y2="105" class="svg-linea"/>
+                        <text x="60" y="115" text-anchor="middle" class="svg-cota">A</text>
+                        <!-- Cota e (Pared) -->
+                        <line x1="60" y1="10" x2="60" y2="22" class="svg-linea"/>
+                        <text x="68" y="22" text-anchor="start" class="svg-cota">e</text>
+                    </svg>`,
+        'tubo_cua': `<svg viewBox="0 0 120 120" style="height:100px;">
+                        <rect x="20" y="10" width="80" height="80" fill="none" stroke="#E3000F" stroke-width="12"/>
+                        <line x1="20" y1="100" x2="100" y2="100" class="svg-linea"/>
+                        <line x1="20" y1="95" x2="20" y2="105" class="svg-linea"/>
+                        <line x1="100" y1="95" x2="100" y2="105" class="svg-linea"/>
+                        <text x="60" y="115" text-anchor="middle" class="svg-cota">A</text>
+                        <text x="28" y="25" text-anchor="start" class="svg-cota">e</text>
+                    </svg>`,
+        'tubo_rect': `<svg viewBox="0 0 130 120" style="height:100px;">
+                        <rect x="10" y="25" width="100" height="60" fill="none" stroke="#E3000F" stroke-width="10"/>
+                        <!-- Cota A (Base) -->
+                        <line x1="10" y1="95" x2="110" y2="95" class="svg-linea"/>
+                        <line x1="10" y1="90" x2="10" y2="100" class="svg-linea"/>
+                        <line x1="110" y1="90" x2="110" y2="100" class="svg-linea"/>
+                        <text x="60" y="110" text-anchor="middle" class="svg-cota">A</text>
+                        <!-- Cota B (Alto) -->
+                        <line x1="120" y1="25" x2="120" y2="85" class="svg-linea"/>
+                        <line x1="115" y1="25" x2="125" y2="25" class="svg-linea"/>
+                        <line x1="115" y1="85" x2="125" y2="85" class="svg-linea"/>
+                        <text x="110" y="60" text-anchor="end" alignment-baseline="middle" class="svg-cota">B</text>
+                        <text x="20" y="45" text-anchor="start" class="svg-cota">e</text>
+                    </svg>`,
+        'perfil_u': `<svg viewBox="0 0 130 120" style="height:100px;">
+                        <path d="M 20 20 L 20 90 L 100 90 L 100 20" fill="none" stroke="#E3000F" stroke-width="12" stroke-linejoin="miter"/>
+                        <!-- Cota A (Base) -->
+                        <line x1="20" y1="105" x2="100" y2="105" class="svg-linea"/>
+                        <line x1="20" y1="100" x2="20" y2="110" class="svg-linea"/>
+                        <line x1="100" y1="100" x2="100" y2="110" class="svg-linea"/>
+                        <text x="60" y="120" text-anchor="middle" class="svg-cota">A</text>
+                        <!-- Cota B (Alto) -->
+                        <line x1="110" y1="20" x2="110" y2="90" class="svg-linea"/>
+                        <line x1="105" y1="20" x2="115" y2="20" class="svg-linea"/>
+                        <line x1="105" y1="90" x2="115" y2="90" class="svg-linea"/>
+                        <text x="125" y="60" text-anchor="start" alignment-baseline="middle" class="svg-cota">B</text>
+                        <text x="45" y="80" text-anchor="middle" class="svg-cota">e</text>
+                    </svg>`
     };
 
     function cambiarFormaPeso() {
@@ -586,27 +663,27 @@
         document.getElementById("res_pesos").style.display = "none";
 
         if (forma === "redondo") {
-            lblA.innerText = "Diámetro (mm):";
+            lblA.innerText = "Diámetro [ A ] (mm):";
         } else if (forma === "cuadrado") {
-            lblA.innerText = "Lado (mm):";
+            lblA.innerText = "Lado [ A ] (mm):";
         } else if (forma === "hexagonal") {
-            lblA.innerText = "Entrecaras (mm):";
+            lblA.innerText = "Entrecaras [ A ] (mm):";
         } else if (forma === "placa") {
-            lblA.innerText = "Ancho (mm):";
-            lblT.innerText = "Espesor (mm):";
+            lblA.innerText = "Ancho [ A ] (mm):";
+            lblT.innerText = "Espesor [ e ] (mm):";
             gT.style.display = "block";
         } else if (forma === "tubo_red") {
-            lblA.innerText = "Diám. Exterior (mm):";
-            lblT.innerText = "Espesor Pared (mm):";
+            lblA.innerText = "Diám. Ext. [ A ] (mm):";
+            lblT.innerText = "Pared [ e ] (mm):";
             gT.style.display = "block";
         } else if (forma === "tubo_cua") {
-            lblA.innerText = "Lado Exterior (mm):";
-            lblT.innerText = "Espesor Pared (mm):";
+            lblA.innerText = "Lado Ext. [ A ] (mm):";
+            lblT.innerText = "Pared [ e ] (mm):";
             gT.style.display = "block";
         } else if (forma === "tubo_rect" || forma === "perfil_u") {
-            lblA.innerText = "Base Exterior (mm):";
-            lblB.innerText = "Altura Ext. (mm):";
-            lblT.innerText = "Espesor Pared (mm):";
+            lblA.innerText = "Base Ext. [ A ] (mm):";
+            lblB.innerText = "Alto Ext. [ B ] (mm):";
+            lblT.innerText = "Pared [ e ] (mm):";
             gB.style.display = "block";
             gT.style.display = "block";
         }
