@@ -146,9 +146,10 @@
         .main-selector { border: 2px solid #222; font-weight: bold; color: #222; background-color: #fff; padding: 10px; margin-bottom: 20px; }
         
         .dynamic-input-group { display: none; }
-        
-        /* Grid para inputs de dimensiones */
         .dim-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        
+        /* Contenedor de la vista previa SVG */
+        .shape-preview-container { text-align: center; margin: 15px 0; min-height: 75px;}
     </style>
 </head>
 <body>
@@ -184,7 +185,7 @@
         </div>
     </div>
 
-    <!-- MÓDULO 1: CALCULADORA DE PESOS -->
+    <!-- MÓDULOS 1: CALCULADORA DE PESOS -->
     <div id="modulo_pesos" class="app-module">
         <div class="tab-content" style="display: block;">
             <h2>Calculadora de Material</h2>
@@ -202,7 +203,7 @@
             </select>
 
             <label>Forma del perfil:</label>
-            <select id="p_forma" class="main-selector" onchange="cambiarFormaPeso()">
+            <select id="p_forma" class="main-selector" style="margin-bottom: 5px;" onchange="cambiarFormaPeso()">
                 <option value="redondo">Redondo / Cilindro</option>
                 <option value="cuadrado">Cuadrado</option>
                 <option value="hexagonal">Hexagonal</option>
@@ -213,28 +214,27 @@
                 <option value="perfil_u">Perfil en U</option>
             </select>
 
+            <!-- CONTENEDOR DE LA IMAGEN SVG -->
+            <div id="shape_preview" class="shape-preview-container"></div>
+
             <!-- INPUTS DINÁMICOS -->
             <div class="dim-grid">
-                <!-- Dimensión A (Suele ser Diámetro, Lado, Ancho o Entrecaras) -->
                 <div id="g_dim_a">
                     <label id="lbl_dim_a">Diámetro (mm):</label>
                     <input type="number" id="p_dim_a" value="50" step="1" class="auto-select" onkeypress="handleEnter(event, 'btn_pesos')">
                 </div>
                 
-                <!-- Dimensión B (Suele ser Alto) -->
                 <div id="g_dim_b" class="dynamic-input-group">
                     <label id="lbl_dim_b">Alto (mm):</label>
                     <input type="number" id="p_dim_b" value="20" step="1" class="auto-select" onkeypress="handleEnter(event, 'btn_pesos')">
                 </div>
                 
-                <!-- Espesor / Pared -->
                 <div id="g_dim_t" class="dynamic-input-group">
                     <label id="lbl_dim_t">Espesor pared (mm):</label>
                     <input type="number" id="p_dim_t" value="5" step="0.5" class="auto-select" onkeypress="handleEnter(event, 'btn_pesos')">
                 </div>
             </div>
 
-            <!-- Longitud siempre presente -->
             <label>Longitud (mm):</label>
             <input type="number" id="p_largo" value="1000" step="10" class="auto-select" style="border-color: #1a73e8; background-color: #f0f7ff;" onkeypress="handleEnter(event, 'btn_pesos')">
 
@@ -246,7 +246,7 @@
         </div>
     </div>
 
-    <!-- MÓDULO 2: CALCULADORA CNC (TODO LO ANTERIOR) -->
+    <!-- MÓDULO 2: CALCULADORA CNC -->
     <div id="modulo_cnc" class="app-module">
         <div class="menu">
             <button class="pestana active" onclick="abrirHerramienta(event, 'calcNine9')">Punteador</button>
@@ -543,7 +543,7 @@
             document.getElementById("modulo_cnc").style.display = "none";
             document.getElementById("modulo_pesos").style.display = "block";
             document.getElementById("header_subtitle").innerText = "Calculadora de Pesos";
-            cambiarFormaPeso(); // Forzar interfaz dinámica al abrir
+            cambiarFormaPeso(); 
         }
     }
 
@@ -556,20 +556,31 @@
     }
 
     // --- LOGICA DE PESOS (LUMETAL STYLE) ---
+    const svgShapes = {
+        'redondo': '<svg viewBox="0 0 100 100" style="width:70px;height:70px;"><circle cx="50" cy="50" r="45" fill="#f8f9fa" stroke="#E3000F" stroke-width="4"/></svg>',
+        'cuadrado': '<svg viewBox="0 0 100 100" style="width:70px;height:70px;"><rect x="10" y="10" width="80" height="80" fill="#f8f9fa" stroke="#E3000F" stroke-width="4"/></svg>',
+        'hexagonal': '<svg viewBox="0 0 100 100" style="width:70px;height:70px;"><polygon points="50,5 89,27 89,73 50,95 11,73 11,27" fill="#f8f9fa" stroke="#E3000F" stroke-width="4"/></svg>',
+        'placa': '<svg viewBox="0 0 100 100" style="width:70px;height:70px;"><rect x="5" y="30" width="90" height="40" fill="#f8f9fa" stroke="#E3000F" stroke-width="4"/></svg>',
+        'tubo_red': '<svg viewBox="0 0 100 100" style="width:70px;height:70px;"><circle cx="50" cy="50" r="45" fill="none" stroke="#E3000F" stroke-width="12"/></svg>',
+        'tubo_cua': '<svg viewBox="0 0 100 100" style="width:70px;height:70px;"><rect x="10" y="10" width="80" height="80" fill="none" stroke="#E3000F" stroke-width="12"/></svg>',
+        'tubo_rect': '<svg viewBox="0 0 100 100" style="width:70px;height:70px;"><rect x="5" y="25" width="90" height="50" fill="none" stroke="#E3000F" stroke-width="12"/></svg>',
+        'perfil_u': '<svg viewBox="0 0 100 100" style="width:70px;height:70px;"><path d="M 15 15 L 15 85 L 85 85 L 85 15" fill="none" stroke="#E3000F" stroke-width="12" stroke-linejoin="miter"/></svg>'
+    };
+
     function cambiarFormaPeso() {
         let forma = document.getElementById("p_forma").value;
         
-        // Cajas
+        // Pinta la imagen de la forma
+        document.getElementById("shape_preview").innerHTML = svgShapes[forma];
+
         let gA = document.getElementById("g_dim_a");
         let gB = document.getElementById("g_dim_b");
         let gT = document.getElementById("g_dim_t");
         
-        // Labels
         let lblA = document.getElementById("lbl_dim_a");
         let lblB = document.getElementById("lbl_dim_b");
         let lblT = document.getElementById("lbl_dim_t");
 
-        // Reseteo visual
         gB.style.display = "none";
         gT.style.display = "none";
         document.getElementById("res_pesos").style.display = "none";
@@ -638,11 +649,9 @@
             area_mm2 = (a * b) - (base_int * alt_int);
         } else if (forma === "perfil_u") {
             if (t <= 0 || b <= 0 || t >= a || t >= b) return alert("Dimensiones o espesor inválidos.");
-            // Calculado como Base*Espesor + 2*(Altura-Espesor)*Espesor (asumiendo espesor uniforme)
             area_mm2 = (a * t) + 2 * ((b - t) * t);
         }
 
-        // Volumen en cm³ = Area(mm²)/100 * L(mm)/10
         let volumen_cm3 = (area_mm2 / 100) * (l / 10);
         let peso_kg = (volumen_cm3 * mat_densidad) / 1000;
 
@@ -651,7 +660,7 @@
         document.getElementById("res_pesos").style.display = "block";
     }
 
-    // --- LOGICA CNC EXISTENTE (NO TOCADA) ---
+    // --- LOGICA CNC ---
     const roscas_data = {
         "M3": { paso: 0.5, d_calc: 3, broca_corte: 2.5, broca_lam: 2.8 },
         "M4": { paso: 0.7, d_calc: 4, broca_corte: 3.3, broca_lam: 3.7 },
