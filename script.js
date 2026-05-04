@@ -164,25 +164,24 @@ const svgTrigo = {
                 <line x1="75" y1="80" x2="85" y2="80" stroke="#E3000F" stroke-width="1.5"/>
                 <line x1="75" y1="117" x2="85" y2="117" stroke="#E3000F" stroke-width="1.5"/>
             </svg>`,
-'ranura_t': `<svg viewBox="0 0 280 260" style="height:240px; max-width:100%;">
-                    <!-- PIEZA: Pared delgada para que el mango quede fuera -->
+'ranura_t': `<svg viewBox="0 0 320 260" style="height:240px; max-width:100%;">
+                    <!-- PIEZA: Pared delgada, mango trabajando al aire -->
                     <rect x="200" y="80" width="40" height="100" fill="#f0f7ff" />
                     <path d="M 200 10 L 200 80 L 240 80 L 240 180 L 200 180 L 200 250" fill="none" stroke="#222" stroke-width="3" />
                     
-                    <!-- FRESA T: Construida desde el centro del disco (x=160) -->
+                    <!-- FRESA T: Mango robusto y simétrico sobre x=160 -->
                     <g>
-                        <!-- Mango (Eje en x=160, Ancho 16 -> de 152 a 168) -->
-                        <rect x="152" y="10" width="16" height="80" fill="#bbb" stroke="#444" stroke-width="1"/>
+                        <!-- Mango (Eje central x=160, Ancho 24 -> de 148 a 172) -->
+                        <rect x="148" y="10" width="24" height="80" fill="#bbb" stroke="#444" stroke-width="1"/>
                         
-                        <!-- Cuello cónico (Simétrico sobre x=160) -->
-                        <path d="M 152 90 L 168 90 L 164 135 L 156 135 Z" fill="#999" stroke="#444" stroke-width="1"/>
+                        <!-- Cuello cónico robusto (Simétrico sobre x=160) -->
+                        <path d="M 148 90 L 172 90 L 166 135 L 154 135 Z" fill="#999" stroke="#444" stroke-width="1"/>
                         
                         <!-- Disco de corte (Centro x=160, Borde derecho toca fondo en x=240) -->
-                        <!-- Si el borde derecho es 240 y el centro es 160, el radio es 80. Ancho total = 160 -->
-                        <!-- Por tanto, empieza en x = 160 - 80 = 80 -->
+                        <!-- Radio 80, por tanto empieza en x=80 -->
                         <rect x="80" y="135" width="160" height="20" rx="1" fill="#E3000F" stroke="#900" stroke-width="1.5"/>
                         
-                        <!-- Dientes (Solo en la parte que entra en la pieza) -->
+                        <!-- Dientes de corte dentro de la pieza -->
                         <line x1="205" y1="135" x2="205" y2="155" stroke="#fff" opacity="0.4" stroke-width="1.5"/>
                         <line x1="215" y1="135" x2="215" y2="155" stroke="#fff" opacity="0.4" stroke-width="1.5"/>
                         <line x1="225" y1="135" x2="225" y2="155" stroke="#fff" opacity="0.4" stroke-width="1.5"/>
@@ -190,14 +189,14 @@ const svgTrigo = {
                     </g>
 
                     <!-- COTA Z FONDO -->
-                    <line x1="200" y1="180" x2="275" y2="180" stroke="#E3000F" stroke-width="2" stroke-dasharray="6,4"/>
-                    <text x="235" y="205" text-anchor="middle" class="svg-cota" font-size="16" font-weight="bold" fill="#E3000F">Z Fondo</text>
+                    <line x1="200" y1="180" x2="280" y2="180" stroke="#E3000F" stroke-width="2" stroke-dasharray="6,4"/>
+                    <text x="240" y="205" text-anchor="middle" class="svg-cota" font-size="16" font-weight="bold" fill="#E3000F">Z Fondo</text>
                     
-                    <!-- COTA ANCHO (Desplazada a la derecha) -->
-                    <line x1="260" y1="80" x2="260" y2="180" stroke="#222" stroke-width="1.5"/>
-                    <line x1="255" y1="80" x2="265" y2="80" stroke="#222" stroke-width="1.5"/>
-                    <line x1="255" y1="180" x2="265" y2="180" stroke="#222" stroke-width="1.5"/>
-                    <text x="265" y="130" text-anchor="start" alignment-baseline="middle" class="svg-cota" font-size="15" fill="#222">Ancho</text>
+                    <!-- COTA ANCHO (Ahora con espacio de sobra para leerse) -->
+                    <line x1="270" y1="80" x2="270" y2="180" stroke="#222" stroke-width="1.5"/>
+                    <line x1="262" y1="80" x2="278" y2="80" stroke="#222" stroke-width="1.5"/>
+                    <line x1="262" y1="180" x2="278" y2="180" stroke="#222" stroke-width="1.5"/>
+                    <text x="282" y="130" text-anchor="start" alignment-baseline="middle" class="svg-cota" font-size="16" font-weight="bold" fill="#222">Ancho</text>
                 </svg>`
 };
 
