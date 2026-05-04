@@ -64,27 +64,45 @@
             <h2>Trivagometría</h2>
             <h4>Geometría de taller rápida y sin fallos</h4>
             
-            <!-- NUEVA BOTONERA VISUAL -->
+           <!-- NUEVA BOTONERA VISUAL CON ICONOS SVG -->
             <div class="trigo-menu">
                 <div class="trigo-btn active" onclick="cambiarFormaTrigo('chaflan', this)">
-                    <span class="icon">📐</span>
+                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 20h16V10L14 4H4v16z"/>
+                    </svg>
                     <span class="text">Chaflán Pieza</span>
                 </div>
                 <div class="trigo-btn" onclick="cambiarFormaTrigo('triangulo', this)">
-                    <span class="icon">🔺</span>
+                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="5,20 20,20 5,5" />
+                        <rect x="5" y="16" width="4" height="4" />
+                    </svg>
                     <span class="text">Triángulo Rec.</span>
                 </div>
                 <div class="trigo-btn" onclick="cambiarFormaTrigo('pcd', this)">
-                    <span class="icon">⭕</span>
+                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="7" stroke-dasharray="3,3"/>
+                        <circle cx="12" cy="5" r="1.5" fill="currentColor"/>
+                        <circle cx="12" cy="19" r="1.5" fill="currentColor"/>
+                        <circle cx="5" cy="12" r="1.5" fill="currentColor"/>
+                        <circle cx="19" cy="12" r="1.5" fill="currentColor"/>
+                    </svg>
                     <span class="text">Círculo PCD</span>
                 </div>
                 <div class="trigo-btn" onclick="cambiarFormaTrigo('avellanado', this)">
-                    <span class="icon">🔽</span>
+                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round">
+                        <path d="M3 5h18l-5 7v8H8v-8L3 5z"/>
+                        <line x1="12" y1="2" x2="12" y2="22" stroke-dasharray="2,2" stroke-width="1"/>
+                    </svg>
                     <span class="text">Avellanado</span>
                 </div>
                 <div class="trigo-btn" style="grid-column: span 2;" onclick="cambiarFormaTrigo('arco', this)">
-                    <span class="icon">🪃</span>
-                    <span class="text">Radio de Arco (Cuerda y Flecha)</span>
+                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <path d="M4 16 Q 12 4 20 16" />
+                        <line x1="4" y1="16" x2="20" y2="16" stroke-dasharray="3,3"/>
+                        <line x1="12" y1="16" x2="12" y2="10" />
+                    </svg>
+                    <span class="text">Radio de Arco</span>
                 </div>
             </div>
 
