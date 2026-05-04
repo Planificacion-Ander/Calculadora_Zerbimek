@@ -163,7 +163,8 @@
                 </div>
                 
                 <label style="margin-top: 15px;">Ø Taladro Previo [ d ] (0 si es ciego):</label>
-                <input type="number" id="ave_d_previo" class="auto-select" value="0" onkeypress="handleEnter(event, 'btn_ave')" placeholder="Ej: 8.5">
+                <!-- AQUÍ ESTÁ EL CAMBIO: añadida la clase 'input-trigo' -->
+                <input type="number" id="ave_d_previo" class="auto-select input-trigo" value="0" onkeypress="handleEnter(event, 'btn_ave')" placeholder="Ej: 8.5">
 
                 <button id="btn_ave" class="btn-calcular" onclick="calcularAvellanado()" style="margin-top: 25px;">CALCULAR Z</button>
 
