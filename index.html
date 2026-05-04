@@ -140,7 +140,7 @@
         </div>
     </div>
 
-    <!-- MÓDULOS 1: CALCULADORA DE PESOS -->
+   <!-- MÓDULOS 1: CALCULADORA DE PESOS -->
     <div id="modulo_pesos" class="app-module">
         <div class="tab-content" style="display: block;">
             <h2>Calculadora de Material</h2>
@@ -181,7 +181,7 @@
             <!-- CONTENEDOR DE LA IMAGEN SVG CON COTAS -->
             <div id="shape_preview" class="shape-preview-container"></div>
 
-            <!-- INPUTS DINÁMICOS Y DE LONGITUD/CANTIDAD -->
+            <!-- INPUTS DINÁMICOS -->
             <div class="dim-grid">
                 <div id="g_dim_a">
                     <label id="lbl_dim_a">Diámetro [ A ] (mm):</label>
@@ -207,21 +207,21 @@
                     <label id="lbl_dim_d_int">Diám. Int. [ d ] (mm):</label>
                     <input type="number" id="p_dim_d_int" value="40" step="1" class="auto-select" onkeypress="handleEnter(event, 'btn_pesos')">
                 </div>
+            </div>
 
-                <!-- NUEVOS CAMPOS: LONGITUD Y CANTIDAD -->
-                <div>
-                    <label>Longitud (mm):</label>
-                    <input type="number" id="p_largo" value="1000" step="10" class="auto-select" style="border-color: #1a73e8; background-color: #f0f7ff;" onkeypress="handleEnter(event, 'btn_pesos')">
-                </div>
-                <div>
-                    <label>Cantidad:</label>
-                    <input type="number" id="p_cantidad" value="1" step="1" min="1" class="auto-select" style="border-color: #1a73e8; background-color: #f0f7ff; font-weight: bold;" onkeypress="handleEnter(event, 'btn_pesos')">
-                </div>
+            <!-- LONGITUD (Vuelve a ser de ancho completo) -->
+            <label style="margin-top: 15px;">Longitud (mm):</label>
+            <input type="number" id="p_largo" value="1000" step="10" class="auto-select" style="border-color: #1a73e8; background-color: #f0f7ff;" onkeypress="handleEnter(event, 'btn_pesos')">
+
+            <!-- CAJA ESPECIAL PARA CANTIDAD -->
+            <div style="margin-top: 20px; padding: 15px; background-color: #f8f9fa; border: 2px dashed #ddd; border-radius: 8px; display: flex; align-items: center; justify-content: space-between;">
+                <label style="margin-top: 0; color: #444; font-size: 15px; font-weight: 900;">✖ Cantidad de piezas:</label>
+                <input type="number" id="p_cantidad" value="1" step="1" min="1" class="auto-select" style="width: 100px; margin-top: 0; border: 2px solid #222; font-weight: 900; text-align: center; font-size: 18px; color: #E3000F; background-color: #fff;" onkeypress="handleEnter(event, 'btn_pesos')">
             </div>
 
             <button id="btn_pesos" class="btn-calcular" onclick="calcularPeso()">CALCULAR PESO</button>
 
-            <!-- CONTENEDOR DE RESULTADOS ACTUALIZADO -->
+            <!-- RESULTADOS -->
             <div class="results" id="res_pesos" style="display: none;">
                 <p id="p_res_unidad_fila" style="display: none; color: #666; font-size: 14px;">Peso por unidad: <span id="p_resultado_unidad_kg"></span></p>
                 <p style="font-weight: bold;">Peso Total: <span class="peso-gigante" id="p_resultado_total_kg"></span></p>
