@@ -143,3 +143,45 @@ input:focus, select:focus { outline: none; border-color: #E3000F; }
 /* Input Trigovagometria resaltado */
 .input-trigo { background-color: #fffafb; border: 1px solid #ccc; font-weight: bold; color: #222;}
 .input-trigo:focus { border-color: #E3000F; background-color: #fff;}
+
+/* BOTONERA TRIVAGOMETRÍA */
+.trigo-menu {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.trigo-btn {
+    background-color: #fcfcfc;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 15px 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.trigo-btn:hover, .trigo-btn:active {
+    background-color: #fffafb;
+    border-color: #E3000F;
+}
+
+.trigo-btn.active {
+    background-color: #E3000F;
+    border-color: #E3000F;
+    color: white;
+}
+
+.trigo-btn span.icon {
+    font-size: 24px;
+}
+
+.trigo-btn span.text {
+    font-size: 13px;
+    font-weight: bold;
+}
