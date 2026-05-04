@@ -9,7 +9,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#E3000F">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link rel="icon" sizes="192x192" href="./icono.png">
     <link rel="apple-touch-icon" href="./icono.png">
     <link rel="manifest" href="./manifest.json">
@@ -24,6 +24,7 @@
     <div class="header-zerbimek">
         <button id="btn_volver" class="btn-volver" onclick="irInicio()">&#8592;</button>
         <div class="header-logo">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="55" height="55">
             <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="85" height="85">
                 <circle cx="100" cy="100" r="100" fill="#E3000F"/>
                 <polygon points="50,45 90,45 75,75 50,75" fill="#ffffff"/>
@@ -38,7 +39,7 @@
 
 <!-- PANTALLA INICIO (DISEÑO ORIGINAL LIMPIO) -->
     <div id="home_screen" class="home-container-original">
-        
+
         <div class="home-card-original" onclick="abrirModulo('cnc')">
             <div class="emoji-original">⚙️</div>
             <h3>CALCULADORA CNC</h3>
@@ -62,7 +63,7 @@
     <div id="modulo_pesos" class="app-module">
         <div class="tab-content" style="display: block;">
             <h2>Calculadora de Material</h2>
-            
+
             <label>Material:</label>
             <select id="p_material" class="main-selector" style="margin-bottom: 10px;" onchange="cambiarMaterial()">
                 <option value="7.85">Acero (7.85)</option>
@@ -108,7 +109,7 @@
                     <label id="lbl_dim_a">Diámetro [ A ] (mm):</label>
                     <input type="number" id="p_dim_a" value="50" step="1" class="auto-select" onkeypress="handleEnter(event, 'btn_pesos')" oninput="calcularHexagonoD()">
                 </div>
-                
+
                 <div id="g_dim_b" class="dynamic-input-group">
                     <label id="lbl_dim_b">Alto [ B ] (mm):</label>
                     <input type="number" id="p_dim_b" value="20" step="1" class="auto-select" onkeypress="handleEnter(event, 'btn_pesos')">
@@ -118,7 +119,7 @@
                     <label>Diámetro ext. Ø (mm):</label>
                     <input type="text" id="p_dim_hex_calc" class="input-readonly" readonly placeholder="Auto...">
                 </div>
-                
+
                 <div id="g_dim_t" class="dynamic-input-group">
                     <label id="lbl_dim_t">Pared [ e ] (mm):</label>
                     <input type="number" id="p_dim_t" value="5" step="0.5" class="auto-select" onkeypress="handleEnter(event, 'btn_pesos')">
@@ -190,7 +191,7 @@
         <div id="calcBrocas" class="tab-content">
             <h2>Brocas</h2>
             <h4 id="brocas_subtitulo">MD - Refrig. Interna</h4>
-            
+
             <label>Tipo de Broca:</label>
             <select id="tipo_broca" onchange="actualizarInfoBroca()">
                 <option value="int" selected>MD - Refrig. Interna</option>
@@ -279,7 +280,7 @@
         <!-- 4. FRESADO -->
         <div id="calcFresado" class="tab-content">
             <h2>Parámetros de Fresado</h2>
-            
+
             <select id="tipo_fresa_sel" class="main-selector" onchange="cambiarTipoFresa()">
                 <option value="general">Calculadora General (S × Z × fz)</option>
                 <option value="cocodrilo">Fresa de Cocodrilo</option>
@@ -330,7 +331,7 @@
             </div>
 
             <button id="btn_fresa" class="btn-calcular" onclick="calcularFresado()">CALCULAR PARÁMETROS</button>
-            
+
             <div class="results" id="res_fresa" style="display: none;">
                 <!-- Resultados Fresa General -->
                 <div id="res_fresa_general">
@@ -370,7 +371,7 @@
                 <p>Avance trabajo (F): <span class="highlight" id="f_tungaloy"></span></p>
                 <p>Pasada (Ap): <span class="highlight" id="ap_tungaloy"></span></p>
                 <p>Avance rev. (fn): <span class="highlight" id="fn_tungaloy"></span></p>
-                
+
                 <p style="margin-top: 15px; margin-bottom: 0; color: #444; font-weight: bold; font-size: 14px; text-align: center; border-bottom: none;">
                     Refrigeración recomendada: <span class="badge-info">Aire (G38)</span>
                 </p>
@@ -381,7 +382,7 @@
         <div id="calcEscariador" class="tab-content">
             <h2>Escariadores H7</h2>
             <h4>Broca Previa y Condiciones (G85)</h4>
-            
+
             <label>Material de la herramienta:</label>
             <select id="tipo_esc">
                 <option value="hss" selected>HSS (Acero Rápido)</option>
@@ -390,7 +391,7 @@
 
             <label>Diámetro del Escariador (mm):</label>
             <input type="number" id="diam_esc" value="8.0" step="0.1" class="auto-select" onkeypress="handleEnter(event, 'btn_esc')">
-            
+
             <label>Material a mecanizar:</label>
             <select id="mat_esc" onkeypress="handleEnter(event, 'btn_esc')">
                 <option value="acero">Acero</option>
@@ -398,9 +399,9 @@
                 <option value="inox">Inoxidable</option>
                 <option value="alu">Aluminio</option>
             </select>
-            
+
             <button id="btn_esc" class="btn-calcular" onclick="calcularEscariador()">CALCULAR PARÁMETROS</button>
-            
+
             <div class="results" id="res_escariador" style="display: none;">
                 <p>Ciclo sugerido: <span class="badge-warn">G85</span></p>
                 <p>Taladro Previo: <span class="badge-info" id="esc_broca"></span></p>
@@ -416,7 +417,7 @@
         <div class="tab-content" style="display: block;">
             <h2>Trivagometría</h2>
             <h4>Geometría de taller rápida y sin fallos</h4>
-            
+
             <!-- NUEVA BOTONERA VISUAL CON 6 ICONOS (3x2) -->
             <div class="trigo-menu">
                 <div class="trigo-btn active" onclick="cambiarFormaTrigo('chaflan', this)">
@@ -547,7 +548,7 @@
                         <input type="number" id="ave_ang" class="auto-select input-trigo" value="45" onkeypress="handleEnter(event, 'btn_ave')" placeholder="Ej: 45">
                     </div>
                 </div>
-                
+
                 <label style="margin-top: 15px;">Ø Taladro Previo [ d ] (0 si es ciego):</label>
                 <input type="number" id="ave_d_previo" class="auto-select input-trigo" value="0" onkeypress="handleEnter(event, 'btn_ave')" placeholder="Ej: 8.5">
 
@@ -590,7 +591,7 @@
                         <input type="number" id="rt_w_ranura" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_rt')" placeholder="Ej: 7">
                     </div>
                 </div>
-                
+
                 <label style="margin-top: 15px;">Espesor de la Fresa de disco:</label>
                 <input type="number" id="rt_w_fresa" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_rt')" placeholder="Ej: 2">
 
