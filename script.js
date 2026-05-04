@@ -327,8 +327,9 @@ function calcularPeso() {
     let t = parseFloat(document.getElementById("p_dim_t").value) || 0;
     let d_int = parseFloat(document.getElementById("p_dim_d_int").value) || 0;
     let l = parseFloat(document.getElementById("p_largo").value) || 0;
+    let cantidad = parseInt(document.getElementById("p_cantidad").value) || 1; 
 
-    if (a <= 0 || l <= 0) return alert("Introduce dimensiones válidas.");
+    if (a <= 0 || l <= 0 || cantidad <= 0) return alert("Introduce dimensiones y cantidad válidas.");
 
     let area_mm2 = 0;
 
@@ -366,10 +367,21 @@ function calcularPeso() {
     }
 
     let volumen_cm3 = (area_mm2 / 100) * (l / 10);
-    let peso_kg = (volumen_cm3 * mat_densidad) / 1000;
+    let peso_unidad_kg = (volumen_cm3 * mat_densidad) / 1000;
+    let peso_total_kg = peso_unidad_kg * cantidad;
 
-    let peso_txt = peso_kg.toFixed(3).replace(".", ",");
-    document.getElementById("p_resultado_kg").innerText = peso_txt + " kg";
+    let peso_uni_txt = peso_unidad_kg.toFixed(3).replace(".", ",");
+    let peso_tot_txt = peso_total_kg.toFixed(3).replace(".", ",");
+
+    let filaUnidad = document.getElementById("p_res_unidad_fila");
+    if (cantidad > 1) {
+        document.getElementById("p_resultado_unidad_kg").innerText = peso_uni_txt + " kg";
+        filaUnidad.style.display = "flex";
+    } else {
+        filaUnidad.style.display = "none";
+    }
+
+    document.getElementById("p_resultado_total_kg").innerText = peso_tot_txt + " kg";
     document.getElementById("res_pesos").style.display = "block";
 }
 
