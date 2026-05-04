@@ -244,6 +244,17 @@ const svgShapes = {
     'perfil_u': `<svg viewBox="-20 0 190 140" style="height:110px; max-width:100%;"><path d="M 31 30 L 31 84 L 119 84 L 119 30" fill="none" stroke="#E3000F" stroke-width="12" stroke-linejoin="miter"/><line x1="25" y1="105" x2="125" y2="105" class="svg-linea"/><line x1="25" y1="100" x2="25" y2="110" class="svg-linea"/><line x1="125" y1="100" x2="125" y2="110" class="svg-linea"/><text x="75" y="122" text-anchor="middle" class="svg-cota">A</text><line x1="140" y1="30" x2="140" y2="90" class="svg-linea"/><line x1="135" y1="30" x2="145" y2="30" class="svg-linea"/><line x1="135" y1="90" x2="145" y2="90" class="svg-linea"/><text x="153" y="64" alignment-baseline="middle" text-anchor="middle" class="svg-cota">B</text><line x1="25" y1="30" x2="25" y2="15" class="svg-linea"/><line x1="37" y1="30" x2="37" y2="15" class="svg-linea"/><line x1="25" y1="20" x2="37" y2="20" class="svg-linea"/><text x="31" y="9" text-anchor="middle" class="svg-cota">e</text></svg>`
 };
 
+// NUEVA FUNCIÓN: Mostrar u ocultar la densidad manual
+function cambiarMaterial() {
+    let mat = document.getElementById("p_material").value;
+    if (mat === "custom") {
+        document.getElementById("g_mat_custom").style.display = "block";
+        document.getElementById("p_densidad_custom").focus();
+    } else {
+        document.getElementById("g_mat_custom").style.display = "none";
+    }
+}
+
 function calcularHexagonoD() {
     let forma = document.getElementById("p_forma").value;
     if(forma !== "hexagonal") return;
@@ -319,15 +330,25 @@ function cambiarFormaPeso() {
 }
 
 function calcularPeso() {
-    let mat_densidad = parseFloat(document.getElementById("p_material").value);
-    let forma = document.getElementById("p_forma").value;
+    // MODIFICADO: Lógica para leer el material manual
+    let val_material = document.getElementById("p_material").value;
+    let mat_densidad = 0;
     
+    if (val_material === "custom") {
+        mat_densidad = parseFloat(document.getElementById("p_densidad_custom").value);
+        if (!mat_densidad || mat_densidad <= 0) return alert("Introduce una densidad válida para el material manual.");
+    } else {
+        mat_densidad = parseFloat(val_material);
+    }
+    
+    let forma = document.getElementById("p_forma").value;
     let a = parseFloat(document.getElementById("p_dim_a").value) || 0;
     let b = parseFloat(document.getElementById("p_dim_b").value) || 0;
     let t = parseFloat(document.getElementById("p_dim_t").value) || 0;
     let d_int = parseFloat(document.getElementById("p_dim_d_int").value) || 0;
     let l = parseFloat(document.getElementById("p_largo").value) || 0;
     let cantidad = parseInt(document.getElementById("p_cantidad").value) || 1; 
+    let precio_kg = parseFloat(document.getElementById("p_precio").value) || 0; // Leemos el precio
 
     if (a <= 0 || l <= 0 || cantidad <= 0) return alert("Introduce dimensiones y cantidad válidas.");
 
@@ -382,6 +403,17 @@ function calcularPeso() {
     }
 
     document.getElementById("p_resultado_total_kg").innerText = peso_tot_txt + " kg";
+
+    // MODIFICADO: Lógica para calcular y mostrar el coste si han metido un precio
+    let filaCoste = document.getElementById("p_res_coste_fila");
+    if (precio_kg > 0) {
+        let coste_total = peso_total_kg * precio_kg;
+        document.getElementById("p_resultado_coste").innerText = coste_total.toFixed(2).replace(".", ",") + " €";
+        filaCoste.style.display = "flex";
+    } else {
+        filaCoste.style.display = "none";
+    }
+
     document.getElementById("res_pesos").style.display = "block";
 }
 
