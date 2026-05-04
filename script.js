@@ -134,23 +134,30 @@ const svgTrigo = {
                 <line x1="120" y1="135" x2="120" y2="145" class="svg-linea" stroke="#E3000F"/>
                 <text x="80" y="145" class="svg-cota" fill="#E3000F" text-anchor="middle">D</text>
             </svg>`,
-    'avellanado': `<svg viewBox="0 0 160 140" style="height:120px; max-width:100%;">
-                    <polygon points="20,20 140,20 140,40 100,80 100,140 60,140 60,80 20,40" fill="#f0f7ff" stroke="#222" stroke-width="2"/>
-                    <line x1="80" y1="0" x2="80" y2="150" stroke="#E3000F" stroke-dasharray="4,4" stroke-width="1.5"/>
-                    <line x1="20" y1="10" x2="140" y2="10" class="svg-linea" stroke="#E3000F"/>
-                    <line x1="20" y1="5" x2="20" y2="15" class="svg-linea" stroke="#E3000F"/>
-                    <line x1="140" y1="5" x2="140" y2="15" class="svg-linea" stroke="#E3000F"/>
-                    <text x="80" y="8" text-anchor="middle" class="svg-cota">D</text>
-                    <line x1="60" y1="110" x2="100" y2="110" class="svg-linea" stroke="#E3000F"/>
-                    <line x1="60" y1="105" x2="60" y2="115" class="svg-linea" stroke="#E3000F"/>
-                    <line x1="100" y1="105" x2="100" y2="115" class="svg-linea" stroke="#E3000F"/>
-                    <text x="80" y="106" text-anchor="middle" class="svg-cota">d</text>
-                    <line x1="145" y1="20" x2="145" y2="80" class="svg-linea" stroke="#E3000F"/>
-                    <line x1="140" y1="20" x2="150" y2="20" class="svg-linea" stroke="#E3000F"/>
-                    <line x1="140" y1="80" x2="150" y2="80" class="svg-linea" stroke="#E3000F"/>
-                    <text x="153" y="55" alignment-baseline="middle" class="svg-cota">Z</text>
-                    <path d="M 68 70 A 20 20 0 0 1 92 70" fill="none" stroke="#E3000F" stroke-width="1.5"/>
-                    <text x="80" y="65" text-anchor="middle" font-size="12" font-weight="bold" fill="#E3000F">&alpha;</text>
+    'avellanado': `<svg viewBox="0 0 260 220" style="height:180px; max-width:100%;">
+                    <polygon points="50,50 210,50 170,120 170,200 90,200 90,120" fill="#f0f7ff" stroke="#222" stroke-width="2.5"/>
+                    <line x1="130" y1="20" x2="130" y2="210" stroke="#E3000F" stroke-dasharray="10,5,3,5" stroke-width="1.5"/>
+                    <!-- D -->
+                    <line x1="50" y1="30" x2="210" y2="30" stroke="#E3000F" stroke-width="1.5"/>
+                    <line x1="50" y1="22" x2="50" y2="38" stroke="#E3000F" stroke-width="1.5"/>
+                    <line x1="210" y1="22" x2="210" y2="38" stroke="#E3000F" stroke-width="1.5"/>
+                    <rect x="115" y="16" width="30" height="20" fill="#fff" />
+                    <text x="130" y="32" text-anchor="middle" class="svg-cota" font-size="18">D</text>
+                    <!-- d -->
+                    <line x1="90" y1="180" x2="170" y2="180" stroke="#E3000F" stroke-width="1.5"/>
+                    <line x1="90" y1="172" x2="90" y2="188" stroke="#E3000F" stroke-width="1.5"/>
+                    <line x1="170" y1="172" x2="170" y2="188" stroke="#E3000F" stroke-width="1.5"/>
+                    <rect x="115" y="166" width="30" height="20" fill="#fff" />
+                    <text x="130" y="182" text-anchor="middle" class="svg-cota" font-size="18">d</text>
+                    <!-- Z -->
+                    <line x1="210" y1="50" x2="245" y2="50" stroke="#E3000F" stroke-width="1.5"/>
+                    <line x1="170" y1="120" x2="245" y2="120" stroke="#E3000F" stroke-width="1.5"/>
+                    <line x1="230" y1="50" x2="230" y2="120" stroke="#E3000F" stroke-width="1.5"/>
+                    <text x="245" y="90" alignment-baseline="middle" class="svg-cota" font-size="18">Z</text>
+                    <!-- Alpha -->
+                    <line x1="170" y1="50" x2="170" y2="120" stroke="#E3000F" stroke-dasharray="4,4" stroke-width="1.5"/>
+                    <path d="M 170 80 A 40 40 0 0 1 189.8 85.3" fill="none" stroke="#E3000F" stroke-width="2"/>
+                    <text x="178" y="70" class="svg-cota" font-size="16" font-weight="bold">&alpha;</text>
                 </svg>`,
     'arco': `<svg viewBox="0 0 160 140" style="height:120px; max-width:100%;">
                 <path d="M 20 80 Q 80 160 140 80" fill="#f0f7ff" stroke="#222" stroke-width="3"/>
@@ -223,8 +230,8 @@ function calcularAvellanado() {
     let ang = parseFloat(document.getElementById("ave_ang").value);
     let d_previo = parseFloat(document.getElementById("ave_d_previo").value) || 0;
 
-    if (isNaN(d_obj) || isNaN(ang) || d_obj <= 0 || ang <= 0 || ang >= 180) {
-        alert("Por favor, introduce un diámetro y un ángulo válidos.");
+    if (isNaN(d_obj) || isNaN(ang) || d_obj <= 0 || ang <= 0 || ang >= 90) {
+        alert("Por favor, introduce un diámetro y un ángulo de chaflán válidos (entre 1 y 89 grados).");
         return;
     }
 
@@ -233,7 +240,9 @@ function calcularAvellanado() {
         return;
     }
 
-    let rad = (ang / 2) * (Math.PI / 180);
+    // Fórmula: Z = (D - d) / ( 2 * tan(ang) )
+    // Al usar el ángulo del chaflán directo (ej. 45º), no hace falta dividirlo entre 2.
+    let rad = ang * (Math.PI / 180);
     let z = (d_obj - d_previo) / (2 * Math.tan(rad));
 
     document.getElementById("ave_z_res").innerText = z.toFixed(3).replace(".", ",") + " mm";
