@@ -165,20 +165,15 @@ const svgTrigo = {
                 <line x1="75" y1="117" x2="85" y2="117" stroke="#E3000F" stroke-width="1.5"/>
             </svg>`,
     'ranura_t': `<svg viewBox="0 0 160 140" style="height:130px; max-width:100%;">
-                    <!-- Pared del agujero con la ranura -->
                     <polyline points="40,10 40,40 80,40 80,90 40,90 40,130" fill="none" stroke="#222" stroke-width="3" stroke-linejoin="miter"/>
                     <rect x="0" y="10" width="40" height="120" fill="#f0f7ff" />
-                    <!-- Herramienta (Fresa T) -->
                     <rect x="40" y="60" width="30" height="20" fill="#E3000F" opacity="0.8"/>
                     <rect x="60" y="10" width="10" height="50" fill="#E3000F" opacity="0.8"/>
-                    <!-- Cotas Z -->
                     <line x1="80" y1="40" x2="140" y2="40" class="svg-linea" stroke="#E3000F"/>
                     <line x1="80" y1="90" x2="140" y2="90" class="svg-linea" stroke="#E3000F"/>
                     <text x="145" y="40" alignment-baseline="middle" class="svg-cota" font-size="12">Z Techo</text>
                     <text x="145" y="90" alignment-baseline="middle" class="svg-cota" font-size="12">Z Fondo</text>
-                    <!-- Cota ancho ranura -->
                     <line x1="90" y1="40" x2="90" y2="90" stroke="#E3000F" stroke-width="1.5"/>
-                    <!-- Cota fresa -->
                     <line x1="45" y1="60" x2="45" y2="80" stroke="#fff" stroke-width="2"/>
                 </svg>`
 };
@@ -209,22 +204,22 @@ function cambiarFormaTrigo(nuevaForma, elementoBoton) {
     let instArco = document.getElementById("instrucciones_arco");
     let instRt = document.getElementById("instrucciones_ranura_t");
 
-    // Limpiar pantalla
     groupTrigo.style.display = "none";
     groupPcd.style.display = "none";
     groupAve.style.display = "none";
     groupArco.style.display = "none";
     groupRt.style.display = "none";
+    
     instTrigo.style.display = "none";
     instAve.style.display = "none";
     instArco.style.display = "none";
     instRt.style.display = "none";
+    
     document.getElementById("res_pcd").style.display = "none";
     document.getElementById("res_ave").style.display = "none";
     document.getElementById("res_arco").style.display = "none";
     document.getElementById("res_ranura_t").style.display = "none";
 
-    // Mostrar lo correspondiente
     if (forma === 'pcd') {
         groupPcd.style.display = "block";
     } else if (forma === 'avellanado') {
@@ -272,11 +267,7 @@ function calcularRanuraT() {
         return;
     }
 
-    // El cálculo asume que el cero de la herramienta se hace en su base inferior.
-    // Z de la pasada del fondo (baja todo lo que da la ranura menos el techo).
     let z_fondo = z_techo - w_ranura;
-    
-    // Z de la pasada superior (sube hasta que el techo de la fresa toca el techo de la ranura)
     let z_arriba = z_techo - w_fresa;
 
     document.getElementById("rt_z_fondo").innerText = "Z " + z_fondo.toFixed(3).replace(".", ",");
