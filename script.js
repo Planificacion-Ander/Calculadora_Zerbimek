@@ -174,8 +174,24 @@ const svgTrigo = {
             </svg>`
 };
 
-function cambiarFormaTrigo() {
-    let forma = document.getElementById("t_forma").value;
+function cambiarFormaTrigo(nuevaForma, elementoBoton) {
+    // Si la función se llama sin parámetros (ej. al inicio), lee el valor oculto
+    let forma = nuevaForma || document.getElementById("t_forma").value;
+    
+    // Actualizar el valor oculto
+    document.getElementById("t_forma").value = forma;
+
+    // Gestionar el color rojo "active" de los botones
+    if (elementoBoton) {
+        let botones = document.querySelectorAll(".trigo-btn");
+        botones.forEach(btn => btn.classList.remove("active"));
+        elementoBoton.classList.add("active");
+    } else {
+        // Inicializar el primer botón en rojo al cargar
+        let primerBoton = document.querySelector(".trigo-btn");
+        if(primerBoton) primerBoton.classList.add("active");
+    }
+
     document.getElementById("trigo_preview").innerHTML = svgTrigo[forma];
 
     let groupTrigo = document.getElementById("inputs_trigo");
