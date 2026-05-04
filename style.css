@@ -1,0 +1,145 @@
+body { 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    background-color: #e9ecef; 
+    color: #333; 
+    margin: 0; 
+    padding: 10px; 
+    display: flex; 
+    justify-content: center; 
+}
+
+.app-container { 
+    background-color: #fff; 
+    border-radius: 12px; 
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15); 
+    max-width: 500px; 
+    width: 100%; 
+    overflow: hidden; 
+    border-top: 5px solid #E3000F; 
+    display: flex;
+    flex-direction: column;
+    min-height: 95vh;
+}
+
+/* CABECERA CON BOTÓN VOLVER */
+.header-zerbimek {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 10px 15px 10px;
+    background-color: #ffffff;
+    gap: 15px;
+    position: relative;
+}
+
+.btn-volver {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #E3000F;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    display: none;
+    padding: 5px 10px;
+}
+
+.header-logo { display: flex; align-items: center; justify-content: center; }
+
+.header-text { text-align: left; }
+.header-text h1 { margin: 0; color: #E3000F; font-size: 28px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; line-height: 1; }
+.header-text span { display: block; font-size: 11px; color: #777; text-transform: uppercase; letter-spacing: 2px; margin-top: 4px; }
+
+/* PANTALLA DE INICIO (HOME) EN LISTA */
+#home_screen {
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex-grow: 1;
+    justify-content: center;
+}
+
+.home-btn {
+    background-color: #fcfcfc;
+    border: 2px solid #ddd;
+    border-radius: 12px;
+    padding: 30px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.home-btn:hover, .home-btn:active {
+    border-color: #E3000F;
+    background-color: #fffafb;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(227, 0, 15, 0.1);
+}
+
+.home-btn span.icon { font-size: 40px; }
+.home-btn span.title { font-size: 18px; font-weight: 900; color: #222; text-transform: uppercase; letter-spacing: 1px;}
+.home-btn span.desc { font-size: 13px; color: #666; }
+
+/* MÓDULOS DE APP */
+.app-module { display: none; flex-grow: 1; }
+
+/* MENÚ 3x2 PERFECTO PARA CNC */
+.menu { display: grid; grid-template-columns: repeat(3, 1fr); background-color: #222; }
+.menu button { background-color: inherit; color: #e6e6e6; border: none; padding: 14px 2px; cursor: pointer; font-size: 13.5px; font-weight: 900; transition: 0.3s; border-bottom: 3px solid #222; letter-spacing: 0.5px; text-transform: uppercase; }
+.menu button:hover { color: #fff; }
+.menu button.active { background-color: #333; border-bottom: 3px solid #E3000F; color: #E3000F; }
+
+.tab-content { display: none; padding: 25px 20px; animation: fadeEffect 0.4s; }
+@keyframes fadeEffect { from {opacity: 0;} to {opacity: 1;} }
+
+h2 { text-align: center; color: #222; margin-top: 0; font-size: 1.4rem; }
+h4 { text-align: center; color: #666; margin-top: 0; font-weight: normal; font-size: 0.9rem; margin-bottom: 20px;}
+label { font-weight: bold; margin-top: 15px; display: block; color: #444; font-size: 14.5px;}
+
+input, select { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 16px; background-color: #fcfcfc;}
+input:focus, select:focus { outline: none; border-color: #E3000F; }
+
+.input-readonly { background-color: #f0f0f0; border: 1px dashed #ccc; color: #666; }
+
+.btn-calcular { background-color: #E3000F; color: white; border: none; cursor: pointer; font-weight: bold; margin-top: 25px; font-size: 16px; padding: 15px; width: 100%; border-radius: 6px; transition: 0.2s; text-transform: uppercase; letter-spacing: 1px;}
+.btn-calcular:active { transform: scale(0.98); background-color: #B3000C; }
+
+.results { margin-top: 25px; padding: 15px; background-color: #f8f9fa; border-radius: 6px; border-left: 6px solid #E3000F; box-shadow: inset 0 0 5px rgba(0,0,0,0.02);}
+.results p { margin: 10px 0; font-size: 15px; display: flex; justify-content: space-between; border-bottom: 1px dashed #ddd; padding-bottom: 6px; align-items: center;}
+.results p:last-child { border-bottom: none; padding-bottom: 0; }
+
+.highlight { font-weight: bold; color: #333; font-size: 16px;}
+.limit-warning { color: #d32f2f; font-weight: bold; font-size: 14px; }
+.peso-gigante { font-size: 24px; color: #E3000F; font-weight: 900; }
+
+.info-box { margin-top: 15px; padding: 12px 15px; background-color: #ffffff; border: 1px solid #e0e0e0; border-left: 4px solid #222; border-radius: 4px; font-size: 13.5px; color: #444; font-weight: 500; line-height: 1.5; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+.info-box span.title { color: #E3000F; font-weight: 900; text-transform: uppercase; font-size: 10.5px; letter-spacing: 1px; display: block; margin-bottom: 4px; }
+
+.badge { background-color: #444; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+.badge-warn { background-color: #E3000F; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+.badge-info { background-color: #1a73e8; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+
+.main-selector { border: 2px solid #222; font-weight: bold; color: #222; background-color: #fff; padding: 10px; margin-bottom: 20px; }
+
+.dynamic-input-group { display: none; }
+.dim-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* Contenedor de la vista previa SVG */
+.shape-preview-container { text-align: center; margin: 15px 0; min-height: 110px; display: flex; justify-content: center; align-items: center;}
+
+/* Estilos texto cotas SVG */
+.svg-cota { font-family: sans-serif; font-size: 15px; font-weight: bold; fill: #E3000F; }
+.svg-linea { stroke: #999; stroke-width: 1.5; }
+
+/* Input Trigovagometria resaltado */
+.input-trigo { background-color: #fffafb; border: 1px solid #ccc; font-weight: bold; color: #222;}
+.input-trigo:focus { border-color: #E3000F; background-color: #fff;}
