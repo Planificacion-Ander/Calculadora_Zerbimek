@@ -568,28 +568,27 @@
                 </div>
             </div>
 
-            <!-- INPUTS RANURA T -->
+           <!-- INPUTS RANURA T -->
             <div id="inputs_ranura_t" style="display: none;">
                 <div class="dim-grid">
                     <div>
-                        <label>Techo de la Ranura (Z):</label>
-                        <input type="number" id="rt_z_techo" class="auto-select input-trigo" style="border-color: #E3000F;" onkeypress="handleEnter(event, 'btn_rt')" placeholder="Ej: -10">
+                        <label>Z Fondo de la Ranura:</label>
+                        <input type="number" id="rt_z_fondo" class="auto-select input-trigo" style="border-color: #E3000F;" onkeypress="handleEnter(event, 'btn_rt')" placeholder="Ej: -17">
                     </div>
                     <div>
                         <label>Ancho total Ranura:</label>
-                        <input type="number" id="rt_w_ranura" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_rt')" placeholder="Ej: 5">
+                        <input type="number" id="rt_w_ranura" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_rt')" placeholder="Ej: 7">
                     </div>
                 </div>
                 
                 <label style="margin-top: 15px;">Espesor de la Fresa de disco:</label>
-                <input type="number" id="rt_w_fresa" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_rt')" placeholder="Ej: 2.5">
+                <input type="number" id="rt_w_fresa" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_rt')" placeholder="Ej: 2">
 
                 <button id="btn_rt" class="btn-calcular" onclick="calcularRanuraT()" style="margin-top: 25px;">CALCULAR PASADAS Z</button>
 
                 <div class="results" id="res_ranura_t" style="display: none; margin-top: 15px;">
-                    <p>Pasada 1 (Fondo): <span class="highlight" id="rt_z_fondo"></span></p>
-                    <p>Pasada 2 (Techo): <span class="highlight" id="rt_z_arriba"></span></p>
-                    <div id="rt_nota" class="info-box" style="display: none; margin-top: 10px;"></div>
+                    <div id="res_ranura_t_list"></div>
+                    <div id="rt_nota" class="info-box" style="display: none; margin-top: 15px;"></div>
                 </div>
             </div>
 
