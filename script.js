@@ -257,11 +257,11 @@ function cambiarFormaTrigo(nuevaForma, elementoBoton) {
 }
 
 function calcularRanuraT() {
-    let z_techo = parseFloat(document.getElementById("rt_z_techo").value);
+    let z_fondo = parseFloat(document.getElementById("rt_z_fondo").value);
     let w_ranura = parseFloat(document.getElementById("rt_w_ranura").value);
     let w_fresa = parseFloat(document.getElementById("rt_w_fresa").value);
 
-    if (isNaN(z_techo) || isNaN(w_ranura) || isNaN(w_fresa) || w_ranura <= 0 || w_fresa <= 0) {
+    if (isNaN(z_fondo) || isNaN(w_ranura) || isNaN(w_fresa) || w_ranura <= 0 || w_fresa <= 0) {
         alert("Introduce valores válidos. El ancho debe ser mayor que 0.");
         return;
     }
@@ -271,23 +271,45 @@ function calcularRanuraT() {
         return;
     }
 
-    let z_fondo = z_techo - w_ranura;
-    let z_arriba = z_techo - w_fresa;
-
-    document.getElementById("rt_z_fondo").innerText = "Z " + z_fondo.toFixed(3).replace(".", ",");
-    document.getElementById("rt_z_arriba").innerText = "Z " + z_arriba.toFixed(3).replace(".", ",");
+    // La herramienta se calibra por debajo, así que la pasada 1 es directamente el Z de fondo
+    let z_pasada_1 = z_fondo;
     
-    let nota = document.getElementById("rt_nota");
-    if (w_ranura > (w_fresa * 2)) {
-        nota.innerHTML = "<span class='title'>Aviso de Mecanizado</span>La ranura es muy ancha. Recomendable programar pasadas intermedias entre el fondo y el techo.";
-        nota.style.display = "block";
-    } else if (w_ranura === w_fresa) {
-        nota.innerHTML = "<span class='title'>Ranura de una pasada</span>La fresa tiene el mismo ancho que la ranura. Haz solo la pasada del <b>Fondo</b>.";
-        nota.style.display = "block";
+    // Para hacer el techo, subimos (en Z positivo) el ancho de la ranura, 
+    // pero bajamos el espesor de la fresa porque nuestro cero de herramienta está abajo.
+    let z_pasada_final = (z_fondo + w_ranura) - w_fresa;
+    
+    let html_pasadas = "";
+    
+    if (w_ranura === w_fresa) {
+        // Entra justa de una pasada
+        html_pasadas += `<p>Pasada Única: <span class="highlight">Z ${z_pasada_1.toFixed(3).replace(".", ",")}</span></p>`;
+        document.getElementById("rt_nota").innerHTML = "<span class='title'>Ranura de una pasada</span>La fresa tiene exactamente el mismo espesor que la ranura.";
+        document.getElementById("rt_nota").style.display = "block";
     } else {
-        nota.style.display = "none";
+        // Necesita varias pasadas
+        let distancia_total = Math.abs(z_pasada_final - z_pasada_1);
+        
+        // Calculamos cuántos tramos necesitamos para que la fresa solape al menos un 20%
+        let max_pasada = w_fresa * 0.8; 
+        let num_tramos = Math.ceil(distancia_total / max_pasada);
+        let incremento = distancia_total / num_tramos; // Dividimos el hueco en partes iguales
+        
+        for(let i = 0; i <= num_tramos; i++) {
+            let z_actual = z_pasada_1 + (incremento * i);
+            
+            let nombre_pasada = "";
+            if (i === 0) nombre_pasada = "Fondo";
+            else if (i === num_tramos) nombre_pasada = "Techo";
+            else nombre_pasada = "Intermedia";
+
+            html_pasadas += `<p>Pasada ${i+1} (${nombre_pasada}): <span class="highlight">Z ${z_actual.toFixed(3).replace(".", ",")}</span></p>`;
+        }
+        
+        document.getElementById("rt_nota").innerHTML = "<span class='title'>Mecanizado Seguro</span>Se han calculado <b>" + (num_tramos + 1) + " pasadas</b> distribuidas equitativamente para asegurar un buen solape de corte.";
+        document.getElementById("rt_nota").style.display = "block";
     }
 
+    document.getElementById("res_ranura_t_list").innerHTML = html_pasadas;
     document.getElementById("res_ranura_t").style.display = "block";
 }
 
