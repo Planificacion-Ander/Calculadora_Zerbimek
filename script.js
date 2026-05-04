@@ -165,30 +165,32 @@ const svgTrigo = {
                 <line x1="75" y1="117" x2="85" y2="117" stroke="#E3000F" stroke-width="1.5"/>
             </svg>`,
 'ranura_t': `<svg viewBox="0 0 280 260" style="height:240px; max-width:100%;">
-                    <!-- Pieza (Sección lateral derecha) -->
-                    <path d="M 120 10 L 120 80 L 220 80 L 220 180 L 120 180 L 120 250" fill="none" stroke="#222" stroke-width="3" />
-                    <rect x="120" y="80" width="100" height="100" fill="#f0f7ff" />
+                    <!-- Pieza (Sección lateral) -->
+                    <path d="M 150 10 L 150 80 L 250 80 L 250 180 L 150 180 L 150 250" fill="none" stroke="#222" stroke-width="3" />
+                    <rect x="150" y="80" width="100" height="100" fill="#f0f7ff" />
                     
-                    <!-- Fresa en T Vertical (Mango a la izquierda, FUERA de la pieza) -->
+                    <!-- Fresa en T Vertical (Eje centrado y posición de corte) -->
                     <g transform="translate(0, 5)">
-                        <!-- Mango y Cuello (Totalmente a la izquierda de la pared de la pieza) -->
-                        <rect x="50" y="0" width="15" height="100" fill="#bbb" stroke="#444" stroke-width="1"/>
-                        <path d="M 50 100 L 65 100 L 60 135 L 55 135 Z" fill="#999" stroke="#444" stroke-width="1"/>
+                        <!-- Mango (Centrado con el disco: disco empieza en 80 y mide 110 -> centro en 135) -->
+                        <!-- Mango de ancho 16: de 127 a 143 -->
+                        <rect x="127" y="0" width="16" height="80" fill="#bbb" stroke="#444" stroke-width="1"/>
                         
-                        <!-- Disco de corte GRANDE (La esquina derecha coincide con el fondo) -->
-                        <!-- El disco mide 100 de ancho, va desde x=20 hasta x=120 -->
-                        <rect x="20" y="135" width="100" height="20" rx="1" fill="#E3000F" stroke="#900" stroke-width="1.5"/>
+                        <!-- Cuello cónico (Centrado) -->
+                        <path d="M 127 80 L 143 80 L 138 135 L 132 135 Z" fill="#999" stroke="#444" stroke-width="1"/>
                         
-                        <!-- Dientes representativos -->
-                        <line x1="35" y1="135" x2="35" y2="155" stroke="#fff" opacity="0.4" stroke-width="1.2"/>
-                        <line x1="55" y1="135" x2="55" y2="155" stroke="#fff" opacity="0.4" stroke-width="1.2"/>
-                        <line x1="75" y1="135" x2="75" y2="155" stroke="#fff" opacity="0.4" stroke-width="1.2"/>
-                        <line x1="95" y1="135" x2="95" y2="155" stroke="#fff" opacity="0.4" stroke-width="1.2"/>
-                        <line x1="115" y1="135" x2="115" y2="155" stroke="#fff" opacity="0.4" stroke-width="1.2"/>
+                        <!-- Disco de corte (Borde derecho toca el fondo en x=150) -->
+                        <!-- Ancho 70: va de x=80 a x=150 -->
+                        <rect x="80" y="135" width="70" height="20" rx="1" fill="#E3000F" stroke="#900" stroke-width="1.5"/>
+                        
+                        <!-- Dientes de la fresa -->
+                        <line x1="90" y1="135" x2="90" y2="155" stroke="#fff" opacity="0.4" stroke-width="1.2"/>
+                        <line x1="105" y1="135" x2="105" y2="155" stroke="#fff" opacity="0.4" stroke-width="1.2"/>
+                        <line x1="120" y1="135" x2="120" y2="155" stroke="#fff" opacity="0.4" stroke-width="1.2"/>
+                        <line x1="135" y1="135" x2="135" y2="155" stroke="#fff" opacity="0.4" stroke-width="1.2"/>
                     </g>
 
-                    <!-- Cota Z Fondo (Alineada con la base del disco y la ranura) -->
-                    <line x1="120" y1="180" x2="260" y2="180" stroke="#E3000F" stroke-width="2" stroke-dasharray="6,4"/>
+                    <!-- Cota Z Fondo (Alineada con la base de la ranura y el disco) -->
+                    <line x1="150" y1="180" x2="270" y2="180" stroke="#E3000F" stroke-width="2" stroke-dasharray="6,4"/>
                     <text x="215" y="200" text-anchor="middle" class="svg-cota" font-size="16" font-weight="bold" fill="#E3000F">Z Fondo</text>
                     
                     <!-- Cota Ancho Ranura -->
