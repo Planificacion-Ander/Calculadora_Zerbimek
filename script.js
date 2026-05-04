@@ -164,17 +164,21 @@ const svgTrigo = {
                 <line x1="75" y1="80" x2="85" y2="80" stroke="#E3000F" stroke-width="1.5"/>
                 <line x1="75" y1="117" x2="85" y2="117" stroke="#E3000F" stroke-width="1.5"/>
             </svg>`,
-    'ranura_t': `<svg viewBox="0 0 160 140" style="height:130px; max-width:100%;">
-                    <polyline points="40,10 40,40 80,40 80,90 40,90 40,130" fill="none" stroke="#222" stroke-width="3" stroke-linejoin="miter"/>
-                    <rect x="0" y="10" width="40" height="120" fill="#f0f7ff" />
-                    <rect x="40" y="60" width="30" height="20" fill="#E3000F" opacity="0.8"/>
-                    <rect x="60" y="10" width="10" height="50" fill="#E3000F" opacity="0.8"/>
-                    <line x1="80" y1="40" x2="140" y2="40" class="svg-linea" stroke="#E3000F"/>
-                    <line x1="80" y1="90" x2="140" y2="90" class="svg-linea" stroke="#E3000F"/>
-                    <text x="145" y="40" alignment-baseline="middle" class="svg-cota" font-size="12">Z Techo</text>
-                    <text x="145" y="90" alignment-baseline="middle" class="svg-cota" font-size="12">Z Fondo</text>
-                    <line x1="90" y1="40" x2="90" y2="90" stroke="#E3000F" stroke-width="1.5"/>
-                    <line x1="45" y1="60" x2="45" y2="80" stroke="#fff" stroke-width="2"/>
+    'ranura_t': `<svg viewBox="0 0 260 200" style="height:180px; max-width:100%;">
+                    <polyline points="80,10 80,50 160,50 160,150 80,150 80,190" fill="none" stroke="#222" stroke-width="3" stroke-linejoin="miter"/>
+                    <rect x="0" y="10" width="80" height="180" fill="#f0f7ff" />
+                    <!-- Fresa -->
+                    <rect x="80" y="110" width="60" height="40" fill="#E3000F" opacity="0.8"/>
+                    <rect x="140" y="120" width="100" height="20" fill="#E3000F" opacity="0.5"/> 
+                    <!-- Cota Z Fondo -->
+                    <line x1="160" y1="150" x2="250" y2="150" stroke="#E3000F" stroke-width="1.5" stroke-dasharray="5,3"/>
+                    <text x="210" y="165" text-anchor="middle" class="svg-cota" font-size="16">Z Fondo</text>
+                    <!-- Cota Ancho -->
+                    <line x1="180" y1="50" x2="180" y2="150" stroke="#E3000F" stroke-width="1.5"/>
+                    <line x1="170" y1="50" x2="190" y2="50" stroke="#E3000F" stroke-width="1.5"/>
+                    <line x1="170" y1="150" x2="190" y2="150" stroke="#E3000F" stroke-width="1.5"/>
+                    <rect x="155" y="90" width="50" height="20" fill="#fff" />
+                    <text x="180" y="105" text-anchor="middle" class="svg-cota" font-size="16">Ancho</text>
                 </svg>`
 };
 
