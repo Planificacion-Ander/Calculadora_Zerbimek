@@ -329,3 +329,26 @@ img, svg {
     max-width: 100%;
     height: auto;
 }
+/* --- SOLO PARA ORDENADORES (PC) --- */
+@media (min-width: 850px) {
+    
+    /* Ensanchamos la caja principal solo en PC */
+    .app-container {
+        max-width: 1000px !important;
+        padding: 30px !important;
+    }
+
+    /* Creamos una cuadrícula de 2 columnas para los inputs */
+    .grid-pc {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Mitad y mitad */
+        gap: 20px;
+        align-items: end; /* Alinea los inputs por abajo */
+    }
+
+    /* Hacemos que el botón de calcular ocupe las dos columnas */
+    .btn-pc-ancho {
+        grid-column: span 2;
+        margin-top: 20px;
+    }
+}
