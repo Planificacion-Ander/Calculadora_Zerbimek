@@ -64,14 +64,32 @@
             <h2>Trivagometría</h2>
             <h4>Geometría de taller rápida y sin fallos</h4>
             
-            <label>Tipo de cálculo:</label>
-            <select id="t_forma" class="main-selector" style="margin-bottom: 10px;" onchange="cambiarFormaTrigo()">
-                <option value="chaflan" selected>Chaflán en Pieza</option>
-                <option value="triangulo">Triángulo Rectángulo Clásico</option>
-                <option value="pcd">Círculo de Agujeros (PCD)</option>
-                <option value="avellanado">Profundidad de Avellanado</option>
-                <option value="arco">Radio de Arco (Cuerda y Flecha)</option>
-            </select>
+            <!-- NUEVA BOTONERA VISUAL -->
+            <div class="trigo-menu">
+                <div class="trigo-btn active" onclick="cambiarFormaTrigo('chaflan', this)">
+                    <span class="icon">📐</span>
+                    <span class="text">Chaflán Pieza</span>
+                </div>
+                <div class="trigo-btn" onclick="cambiarFormaTrigo('triangulo', this)">
+                    <span class="icon">🔺</span>
+                    <span class="text">Triángulo Rec.</span>
+                </div>
+                <div class="trigo-btn" onclick="cambiarFormaTrigo('pcd', this)">
+                    <span class="icon">⭕</span>
+                    <span class="text">Círculo PCD</span>
+                </div>
+                <div class="trigo-btn" onclick="cambiarFormaTrigo('avellanado', this)">
+                    <span class="icon">🔽</span>
+                    <span class="text">Avellanado</span>
+                </div>
+                <div class="trigo-btn" style="grid-column: span 2;" onclick="cambiarFormaTrigo('arco', this)">
+                    <span class="icon">🪃</span>
+                    <span class="text">Radio de Arco (Cuerda y Flecha)</span>
+                </div>
+            </div>
+
+            <!-- Aquí guardamos el valor de forma invisible para que JS lo lea -->
+            <input type="hidden" id="t_forma" value="chaflan">
 
             <div id="trigo_preview" class="shape-preview-container"></div>
 
@@ -163,7 +181,6 @@
                 </div>
                 
                 <label style="margin-top: 15px;">Ø Taladro Previo [ d ] (0 si es ciego):</label>
-                <!-- AQUÍ ESTÁ EL CAMBIO: añadida la clase 'input-trigo' -->
                 <input type="number" id="ave_d_previo" class="auto-select input-trigo" value="0" onkeypress="handleEnter(event, 'btn_ave')" placeholder="Ej: 8.5">
 
                 <button id="btn_ave" class="btn-calcular" onclick="calcularAvellanado()" style="margin-top: 25px;">CALCULAR Z</button>
