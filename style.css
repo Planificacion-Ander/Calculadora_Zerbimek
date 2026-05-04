@@ -209,12 +209,19 @@ input:focus, select:focus { outline: none; border-color: #E3000F; }
     text-align: center;
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
     cursor: pointer;
+    transition: transform 0.1s ease, background-color 0.2s ease;
     transition: all 0.2s ease;
 }
 
 /* 2. Efecto al pulsarla (borde rojo y fondo rosado) */
 .home-card-original:active {
     transform: scale(0.98);
+    background-color: #f9f9f9;
+}
+
+.emoji-original {
+    font-size: 38px;
+    margin-bottom: 12px;
     border-color: #E3000F;
     background-color: #fff8f8;
     box-shadow: 0 4px 12px rgba(227, 0, 15, 0.15);
@@ -224,6 +231,7 @@ input:focus, select:focus { outline: none; border-color: #E3000F; }
 .home-card-original h3 {
     margin: 0 0 6px 0;
     font-size: 16px;
+    color: #111;
     color: #E3000F;
     font-weight: 800;
     text-transform: uppercase;
@@ -260,95 +268,4 @@ input:focus, select:focus { outline: none; border-color: #E3000F; }
     margin-top: 4px !important;
     letter-spacing: 1.5px !important;
     text-transform: uppercase !important;
-}
-/* =========================================
-   DISEÑO RESPONSIVO (MÓVIL vs PC)
-========================================= */
-
-/* 1. Ajuste del contenedor principal */
-.app-container {
-    width: 100%;
-    max-width: 500px; /* Ancho de móvil por defecto */
-    margin: 0 auto;
-    background-color: #ffffff;
-    min-height: 100vh;
-    transition: max-width 0.4s ease; /* Transición suave al ensanchar */
-}
-
-/* --- REGLAS PARA PANTALLAS GRANDES (PC) --- */
-@media (min-width: 850px) {
-    
-    .app-container {
-        max-width: 1000px; /* Se ensancha en el ordenador */
-        padding: 20px 40px;
-    }
-
-    /* La pantalla de inicio: botones en paralelo */
-    .home-container-original {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr; /* Tres columnas iguales */
-        gap: 20px;
-    }
-
-    /* Módulos de cálculo (Trivagometría, Pesos, etc.) */
-    /* Vamos a hacer que los inputs salgan en dos columnas */
-    .modulo-calculo { 
-        display: grid;
-        grid-template-columns: 1fr 1fr; /* Izquierda dibujo, derecha datos */
-        gap: 30px;
-        align-items: start;
-    }
-
-    /* Forzamos que el título y la imagen ocupen su sitio */
-    .modulo-header {
-        grid-column: span 2; /* El título ocupa todo el ancho */
-        text-align: center;
-    }
-
-    .esquema-img-contenedor {
-        grid-column: 1; /* El dibujo a la izquierda */
-        position: sticky;
-        top: 20px;
-    }
-
-    .inputs-contenedor {
-        grid-column: 2; /* Los cuadritos de texto a la derecha */
-        display: grid;
-        grid-template-columns: 1fr 1fr; /* Los inputs entre ellos en 2 columnas */
-        gap: 15px;
-    }
-
-    /* Los botones de calcular y resultados vuelven a ocupar todo el ancho */
-    .btn-calcular, .resultados-area {
-        grid-column: span 2;
-    }
-}
-
-/* Ajuste para que las imágenes no se desmadren */
-img, svg {
-    max-width: 100%;
-    height: auto;
-}
-/* --- SOLO PARA ORDENADORES (PC) --- */
-@media (min-width: 850px) {
-    
-    /* Ensanchamos la caja principal solo en PC */
-    .app-container {
-        max-width: 1000px !important;
-        padding: 30px !important;
-    }
-
-    /* Creamos una cuadrícula de 2 columnas para los inputs */
-    .grid-pc {
-        display: grid;
-        grid-template-columns: 1fr 1fr; /* Mitad y mitad */
-        gap: 20px;
-        align-items: end; /* Alinea los inputs por abajo */
-    }
-
-    /* Hacemos que el botón de calcular ocupe las dos columnas */
-    .btn-pc-ancho {
-        grid-column: span 2;
-        margin-top: 20px;
-    }
 }
