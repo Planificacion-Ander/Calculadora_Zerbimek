@@ -101,24 +101,16 @@ const svgTrigo = {
     'chaflan': `<svg viewBox="0 0 240 210" style="height:180px; max-width:100%;">
                     <polygon points="15,60 70,60 160,130 160,205 15,205" fill="#f0f7ff" stroke="none" />
                     <polyline points="15,60 70,60 160,130 160,205" fill="none" stroke="#222" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                    
-                    <!-- Esquina fantasma (SOLO EL TRIÁNGULO EN ROJO) -->
                     <line x1="70" y1="60" x2="160" y2="60" stroke="#E3000F" stroke-width="1.5" stroke-dasharray="7.5,4.5" />
                     <line x1="160" y1="60" x2="160" y2="130" stroke="#E3000F" stroke-width="1.5" stroke-dasharray="7.5,4.5" />
-                    
-                    <!-- Cota A (Líneas de referencia GRISES) -->
                     <line x1="70" y1="30" x2="160" y2="30" class="svg-linea" />
                     <line x1="70" y1="22.5" x2="70" y2="55" class="svg-linea" />
                     <line x1="160" y1="22.5" x2="160" y2="55" class="svg-linea" />
                     <text x="115" y="21" text-anchor="middle" class="svg-cota">A</text>
-                    
-                    <!-- Cota B (Líneas de referencia GRISES) -->
                     <line x1="187.5" y1="60" x2="187.5" y2="130" class="svg-linea" />
                     <line x1="165" y1="60" x2="195" y2="60" class="svg-linea" />
                     <line x1="165" y1="130" x2="195" y2="130" class="svg-linea" />
                     <text x="202.5" y="100" text-anchor="start" alignment-baseline="middle" class="svg-cota">B</text>
-                    
-                    <!-- Alpha y C -->
                     <path d="M 160 95 A 35 35 0 0 0 132.4 108.5" fill="none" stroke="#E3000F" stroke-width="1.5" />
                     <text x="140" y="90" text-anchor="middle" alignment-baseline="middle" class="svg-cota" style="font-size: 19px;">&alpha;</text>
                     <text x="100" y="112" class="svg-cota">C</text>
@@ -171,23 +163,35 @@ const svgTrigo = {
                 <text x="88" y="103" class="svg-cota" fill="#E3000F">F</text>
                 <line x1="75" y1="80" x2="85" y2="80" stroke="#E3000F" stroke-width="1.5"/>
                 <line x1="75" y1="117" x2="85" y2="117" stroke="#E3000F" stroke-width="1.5"/>
-            </svg>`
+            </svg>`,
+    'ranura_t': `<svg viewBox="0 0 160 140" style="height:130px; max-width:100%;">
+                    <!-- Pared del agujero con la ranura -->
+                    <polyline points="40,10 40,40 80,40 80,90 40,90 40,130" fill="none" stroke="#222" stroke-width="3" stroke-linejoin="miter"/>
+                    <rect x="0" y="10" width="40" height="120" fill="#f0f7ff" />
+                    <!-- Herramienta (Fresa T) -->
+                    <rect x="40" y="60" width="30" height="20" fill="#E3000F" opacity="0.8"/>
+                    <rect x="60" y="10" width="10" height="50" fill="#E3000F" opacity="0.8"/>
+                    <!-- Cotas Z -->
+                    <line x1="80" y1="40" x2="140" y2="40" class="svg-linea" stroke="#E3000F"/>
+                    <line x1="80" y1="90" x2="140" y2="90" class="svg-linea" stroke="#E3000F"/>
+                    <text x="145" y="40" alignment-baseline="middle" class="svg-cota" font-size="12">Z Techo</text>
+                    <text x="145" y="90" alignment-baseline="middle" class="svg-cota" font-size="12">Z Fondo</text>
+                    <!-- Cota ancho ranura -->
+                    <line x1="90" y1="40" x2="90" y2="90" stroke="#E3000F" stroke-width="1.5"/>
+                    <!-- Cota fresa -->
+                    <line x1="45" y1="60" x2="45" y2="80" stroke="#fff" stroke-width="2"/>
+                </svg>`
 };
 
 function cambiarFormaTrigo(nuevaForma, elementoBoton) {
-    // Si la función se llama sin parámetros (ej. al inicio), lee el valor oculto
     let forma = nuevaForma || document.getElementById("t_forma").value;
-    
-    // Actualizar el valor oculto
     document.getElementById("t_forma").value = forma;
 
-    // Gestionar el color rojo "active" de los botones
     if (elementoBoton) {
         let botones = document.querySelectorAll(".trigo-btn");
         botones.forEach(btn => btn.classList.remove("active"));
         elementoBoton.classList.add("active");
     } else {
-        // Inicializar el primer botón en rojo al cargar
         let primerBoton = document.querySelector(".trigo-btn");
         if(primerBoton) primerBoton.classList.add("active");
     }
@@ -198,22 +202,27 @@ function cambiarFormaTrigo(nuevaForma, elementoBoton) {
     let groupPcd = document.getElementById("inputs_pcd");
     let groupAve = document.getElementById("inputs_ave");
     let groupArco = document.getElementById("inputs_arco");
+    let groupRt = document.getElementById("inputs_ranura_t");
 
     let instTrigo = document.getElementById("instrucciones_trigo");
     let instAve = document.getElementById("instrucciones_ave");
     let instArco = document.getElementById("instrucciones_arco");
+    let instRt = document.getElementById("instrucciones_ranura_t");
 
     // Limpiar pantalla
     groupTrigo.style.display = "none";
     groupPcd.style.display = "none";
     groupAve.style.display = "none";
     groupArco.style.display = "none";
+    groupRt.style.display = "none";
     instTrigo.style.display = "none";
     instAve.style.display = "none";
     instArco.style.display = "none";
+    instRt.style.display = "none";
     document.getElementById("res_pcd").style.display = "none";
     document.getElementById("res_ave").style.display = "none";
     document.getElementById("res_arco").style.display = "none";
+    document.getElementById("res_ranura_t").style.display = "none";
 
     // Mostrar lo correspondiente
     if (forma === 'pcd') {
@@ -224,6 +233,9 @@ function cambiarFormaTrigo(nuevaForma, elementoBoton) {
     } else if (forma === 'arco') {
         groupArco.style.display = "block";
         instArco.style.display = "block";
+    } else if (forma === 'ranura_t') {
+        groupRt.style.display = "block";
+        instRt.style.display = "block";
     } else {
         groupTrigo.style.display = "block";
         instTrigo.style.display = "block";
@@ -245,6 +257,45 @@ function cambiarFormaTrigo(nuevaForma, elementoBoton) {
     }
 }
 
+function calcularRanuraT() {
+    let z_techo = parseFloat(document.getElementById("rt_z_techo").value);
+    let w_ranura = parseFloat(document.getElementById("rt_w_ranura").value);
+    let w_fresa = parseFloat(document.getElementById("rt_w_fresa").value);
+
+    if (isNaN(z_techo) || isNaN(w_ranura) || isNaN(w_fresa) || w_ranura <= 0 || w_fresa <= 0) {
+        alert("Introduce valores válidos. El ancho debe ser mayor que 0.");
+        return;
+    }
+
+    if (w_fresa > w_ranura) {
+        alert("¡Error! La fresa (" + w_fresa + "mm) no cabe en la ranura (" + w_ranura + "mm).");
+        return;
+    }
+
+    // El cálculo asume que el cero de la herramienta se hace en su base inferior.
+    // Z de la pasada del fondo (baja todo lo que da la ranura menos el techo).
+    let z_fondo = z_techo - w_ranura;
+    
+    // Z de la pasada superior (sube hasta que el techo de la fresa toca el techo de la ranura)
+    let z_arriba = z_techo - w_fresa;
+
+    document.getElementById("rt_z_fondo").innerText = "Z " + z_fondo.toFixed(3).replace(".", ",");
+    document.getElementById("rt_z_arriba").innerText = "Z " + z_arriba.toFixed(3).replace(".", ",");
+    
+    let nota = document.getElementById("rt_nota");
+    if (w_ranura > (w_fresa * 2)) {
+        nota.innerHTML = "<span class='title'>Aviso de Mecanizado</span>La ranura es muy ancha. Recomendable programar pasadas intermedias entre el fondo y el techo.";
+        nota.style.display = "block";
+    } else if (w_ranura === w_fresa) {
+        nota.innerHTML = "<span class='title'>Ranura de una pasada</span>La fresa tiene el mismo ancho que la ranura. Haz solo la pasada del <b>Fondo</b>.";
+        nota.style.display = "block";
+    } else {
+        nota.style.display = "none";
+    }
+
+    document.getElementById("res_ranura_t").style.display = "block";
+}
+
 function calcularAvellanado() {
     let d_obj = parseFloat(document.getElementById("ave_d_obj").value);
     let ang = parseFloat(document.getElementById("ave_ang").value);
@@ -260,8 +311,6 @@ function calcularAvellanado() {
         return;
     }
 
-    // Fórmula: Z = (D - d) / ( 2 * tan(ang) )
-    // Al usar el ángulo del chaflán directo (ej. 45º), no hace falta dividirlo entre 2.
     let rad = ang * (Math.PI / 180);
     let z = (d_obj - d_previo) / (2 * Math.tan(rad));
 
