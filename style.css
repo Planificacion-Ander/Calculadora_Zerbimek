@@ -186,58 +186,48 @@ input:focus, select:focus { outline: none; border-color: #E3000F; }
     font-weight: bold;
 }
 /* =========================================
-   PANTALLA INICIO: VERTICAL CON COLOR
+   PANTALLA INICIO: DISEÑO ORIGINAL LIMPIO
 ========================================= */
-.home-container-vertical {
+.home-container-original {
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 15px;
     padding: 15px;
     margin-top: 10px;
 }
 
-.home-card-vertical {
-    background: #ffffff;
-    border-radius: 16px;
+.home-card-original {
+    background-color: #ffffff;
+    border: 1px solid #e8e8e8;
+    border-radius: 12px;
     padding: 25px 15px;
     text-align: center;
-    /* Borde superior rojo de marca */
-    border-top: 6px solid #E3000F;
-    /* Sombra profunda para dar volumen */
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.1s ease, background-color 0.2s ease;
 }
 
-.home-card-vertical:active {
-    transform: scale(0.97);
-    box-shadow: 0 4px 10px rgba(227, 0, 15, 0.2);
+.home-card-original:active {
+    transform: scale(0.98);
+    background-color: #f9f9f9;
 }
 
-.emoji-circle {
-    font-size: 45px;
-    /* Círculo con degradado rojo/rosado suave de fondo */
-    background: linear-gradient(135deg, #fff0f1 0%, #ffd6d9 100%);
-    width: 90px;
-    height: 90px;
-    line-height: 90px;
-    border-radius: 50%;
-    margin: 0 auto 15px auto;
-    /* Sombra interior para darle más realismo */
-    box-shadow: inset 0 3px 6px rgba(227, 0, 15, 0.1);
+.emoji-original {
+    font-size: 38px;
+    margin-bottom: 12px;
 }
 
-.home-text-vertical h3 {
-    margin: 0 0 8px 0;
-    font-size: 18px;
-    color: #222;
+.home-card-original h3 {
+    margin: 0 0 6px 0;
+    font-size: 16px;
+    color: #111;
     font-weight: 800;
+    text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
-.home-text-vertical p {
+.home-card-original p {
     margin: 0;
-    font-size: 14px;
-    color: #666;
-    line-height: 1.4;
+    font-size: 13px;
+    color: #777;
 }
