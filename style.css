@@ -269,3 +269,49 @@ input:focus, select:focus { outline: none; border-color: #E3000F; }
     letter-spacing: 1.5px !important;
     text-transform: uppercase !important;
 }
+/* =========================================
+   RESCATE DEFINITIVO DE LA CABECERA
+========================================= */
+
+/* 1. Ajuste del contenedor del logo y las letras */
+.header-zerbimek {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 15px !important;
+    padding: 30px 15px 25px 15px !important; /* Más aire arriba y abajo */
+}
+
+/* 2. Forzamos el tamaño del SVG (Logo) */
+.header-logo svg {
+    width: 85px !important;  /* El tamaño que querías */
+    height: 85px !important;
+    display: block !important;
+}
+
+/* 3. Estilo del texto ZERBIMEK */
+.header-text h1 {
+    font-size: 38px !important; /* Letras grandes */
+    color: #E3000F !important;
+    margin: 0 !important;
+    line-height: 1 !important;
+    font-weight: 900 !important;
+    letter-spacing: -0.5px !important;
+}
+
+/* 4. Estilo del subtítulo */
+#header_subtitle {
+    display: block !important;
+    font-size: 13px !important;
+    color: #888 !important;
+    margin-top: 4px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1.5px !important;
+}
+
+/* 5. Quitamos el botón 'volver' en la pantalla de inicio */
+/* para que no empuje el logo y quede centrado */
+#home_screen ~ .header-zerbimek #btn_volver,
+.home-container-original:visible ~ .header-zerbimek #btn_volver {
+    display: none;
+}
