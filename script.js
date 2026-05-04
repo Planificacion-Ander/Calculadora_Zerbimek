@@ -87,7 +87,7 @@ function calcularPCD() {
     document.getElementById('res_pcd').style.display = 'block';
 }
 
-// --- LOGICA TRIVAGOMETRÍA ---
+// --- LOGICA TRIVAGOMETRÍA Y NUEVAS FUNCIONES ---
 const svgTrigo = {
     'triangulo': `<svg viewBox="0 0 160 140" style="height:120px; max-width:100%;">
                     <polygon points="30,110 120,110 120,30" fill="#f0f7ff" stroke="#E3000F" stroke-width="3" />
@@ -133,6 +133,33 @@ const svgTrigo = {
                 <line x1="40" y1="135" x2="40" y2="145" class="svg-linea" stroke="#E3000F"/>
                 <line x1="120" y1="135" x2="120" y2="145" class="svg-linea" stroke="#E3000F"/>
                 <text x="80" y="145" class="svg-cota" fill="#E3000F" text-anchor="middle">D</text>
+            </svg>`,
+    'avellanado': `<svg viewBox="0 0 160 140" style="height:120px; max-width:100%;">
+                    <polygon points="20,20 140,20 140,40 100,80 100,140 60,140 60,80 20,40" fill="#f0f7ff" stroke="#222" stroke-width="2"/>
+                    <line x1="80" y1="0" x2="80" y2="150" stroke="#E3000F" stroke-dasharray="4,4" stroke-width="1.5"/>
+                    <line x1="20" y1="10" x2="140" y2="10" class="svg-linea" stroke="#E3000F"/>
+                    <line x1="20" y1="5" x2="20" y2="15" class="svg-linea" stroke="#E3000F"/>
+                    <line x1="140" y1="5" x2="140" y2="15" class="svg-linea" stroke="#E3000F"/>
+                    <text x="80" y="8" text-anchor="middle" class="svg-cota">D</text>
+                    <line x1="60" y1="110" x2="100" y2="110" class="svg-linea" stroke="#E3000F"/>
+                    <line x1="60" y1="105" x2="60" y2="115" class="svg-linea" stroke="#E3000F"/>
+                    <line x1="100" y1="105" x2="100" y2="115" class="svg-linea" stroke="#E3000F"/>
+                    <text x="80" y="106" text-anchor="middle" class="svg-cota">d</text>
+                    <line x1="145" y1="20" x2="145" y2="80" class="svg-linea" stroke="#E3000F"/>
+                    <line x1="140" y1="20" x2="150" y2="20" class="svg-linea" stroke="#E3000F"/>
+                    <line x1="140" y1="80" x2="150" y2="80" class="svg-linea" stroke="#E3000F"/>
+                    <text x="153" y="55" alignment-baseline="middle" class="svg-cota">Z</text>
+                    <path d="M 68 70 A 20 20 0 0 1 92 70" fill="none" stroke="#E3000F" stroke-width="1.5"/>
+                    <text x="80" y="65" text-anchor="middle" font-size="12" font-weight="bold" fill="#E3000F">&alpha;</text>
+                </svg>`,
+    'arco': `<svg viewBox="0 0 160 140" style="height:120px; max-width:100%;">
+                <path d="M 20 80 Q 80 160 140 80" fill="#f0f7ff" stroke="#222" stroke-width="3"/>
+                <line x1="20" y1="80" x2="140" y2="80" stroke="#E3000F" stroke-dasharray="4,4" stroke-width="1.5"/>
+                <text x="80" y="70" text-anchor="middle" class="svg-cota">C (Cuerda)</text>
+                <line x1="80" y1="80" x2="80" y2="117" class="svg-linea" stroke="#E3000F"/>
+                <text x="88" y="103" class="svg-cota" fill="#E3000F">F</text>
+                <line x1="75" y1="80" x2="85" y2="80" stroke="#E3000F" stroke-width="1.5"/>
+                <line x1="75" y1="117" x2="85" y2="117" stroke="#E3000F" stroke-width="1.5"/>
             </svg>`
 };
 
@@ -142,16 +169,37 @@ function cambiarFormaTrigo() {
 
     let groupTrigo = document.getElementById("inputs_trigo");
     let groupPcd = document.getElementById("inputs_pcd");
-    let instTrigo = document.getElementById("instrucciones_trigo");
+    let groupAve = document.getElementById("inputs_ave");
+    let groupArco = document.getElementById("inputs_arco");
 
+    let instTrigo = document.getElementById("instrucciones_trigo");
+    let instAve = document.getElementById("instrucciones_ave");
+    let instArco = document.getElementById("instrucciones_arco");
+
+    // Limpiar pantalla
+    groupTrigo.style.display = "none";
+    groupPcd.style.display = "none";
+    groupAve.style.display = "none";
+    groupArco.style.display = "none";
+    instTrigo.style.display = "none";
+    instAve.style.display = "none";
+    instArco.style.display = "none";
+    document.getElementById("res_pcd").style.display = "none";
+    document.getElementById("res_ave").style.display = "none";
+    document.getElementById("res_arco").style.display = "none";
+
+    // Mostrar lo correspondiente
     if (forma === 'pcd') {
-        groupTrigo.style.display = "none";
-        instTrigo.style.display = "none";
         groupPcd.style.display = "block";
+    } else if (forma === 'avellanado') {
+        groupAve.style.display = "block";
+        instAve.style.display = "block";
+    } else if (forma === 'arco') {
+        groupArco.style.display = "block";
+        instArco.style.display = "block";
     } else {
         groupTrigo.style.display = "block";
         instTrigo.style.display = "block";
-        groupPcd.style.display = "none";
 
         let lblA = document.getElementById("lbl_trigo_a");
         let lblB = document.getElementById("lbl_trigo_b");
@@ -168,6 +216,43 @@ function cambiarFormaTrigo() {
         }
         limpiarTrigo(); 
     }
+}
+
+function calcularAvellanado() {
+    let d_obj = parseFloat(document.getElementById("ave_d_obj").value);
+    let ang = parseFloat(document.getElementById("ave_ang").value);
+    let d_previo = parseFloat(document.getElementById("ave_d_previo").value) || 0;
+
+    if (isNaN(d_obj) || isNaN(ang) || d_obj <= 0 || ang <= 0 || ang >= 180) {
+        alert("Por favor, introduce un diámetro y un ángulo válidos.");
+        return;
+    }
+
+    if (d_previo >= d_obj) {
+        alert("El diámetro previo no puede ser mayor o igual que el diámetro del chaflán.");
+        return;
+    }
+
+    let rad = (ang / 2) * (Math.PI / 180);
+    let z = (d_obj - d_previo) / (2 * Math.tan(rad));
+
+    document.getElementById("ave_z_res").innerText = z.toFixed(3).replace(".", ",") + " mm";
+    document.getElementById("res_ave").style.display = "block";
+}
+
+function calcularArco() {
+    let c = parseFloat(document.getElementById("arco_c").value);
+    let f = parseFloat(document.getElementById("arco_f").value);
+
+    if (isNaN(c) || isNaN(f) || c <= 0 || f <= 0) {
+        alert("Introduce valores válidos y mayores que cero para la Cuerda y la Flecha.");
+        return;
+    }
+
+    let r = (Math.pow(c, 2) / (8 * f)) + (f / 2);
+
+    document.getElementById("arco_r_res").innerText = r.toFixed(3).replace(".", ",") + " mm";
+    document.getElementById("res_arco").style.display = "block";
 }
 
 function limpiarTrigo() {
@@ -244,7 +329,6 @@ const svgShapes = {
     'perfil_u': `<svg viewBox="-20 0 190 140" style="height:110px; max-width:100%;"><path d="M 31 30 L 31 84 L 119 84 L 119 30" fill="none" stroke="#E3000F" stroke-width="12" stroke-linejoin="miter"/><line x1="25" y1="105" x2="125" y2="105" class="svg-linea"/><line x1="25" y1="100" x2="25" y2="110" class="svg-linea"/><line x1="125" y1="100" x2="125" y2="110" class="svg-linea"/><text x="75" y="122" text-anchor="middle" class="svg-cota">A</text><line x1="140" y1="30" x2="140" y2="90" class="svg-linea"/><line x1="135" y1="30" x2="145" y2="30" class="svg-linea"/><line x1="135" y1="90" x2="145" y2="90" class="svg-linea"/><text x="153" y="64" alignment-baseline="middle" text-anchor="middle" class="svg-cota">B</text><line x1="25" y1="30" x2="25" y2="15" class="svg-linea"/><line x1="37" y1="30" x2="37" y2="15" class="svg-linea"/><line x1="25" y1="20" x2="37" y2="20" class="svg-linea"/><text x="31" y="9" text-anchor="middle" class="svg-cota">e</text></svg>`
 };
 
-// NUEVA FUNCIÓN: Mostrar u ocultar la densidad manual
 function cambiarMaterial() {
     let mat = document.getElementById("p_material").value;
     if (mat === "custom") {
@@ -330,7 +414,6 @@ function cambiarFormaPeso() {
 }
 
 function calcularPeso() {
-    // MODIFICADO: Lógica para leer el material manual
     let val_material = document.getElementById("p_material").value;
     let mat_densidad = 0;
     
@@ -348,7 +431,7 @@ function calcularPeso() {
     let d_int = parseFloat(document.getElementById("p_dim_d_int").value) || 0;
     let l = parseFloat(document.getElementById("p_largo").value) || 0;
     let cantidad = parseInt(document.getElementById("p_cantidad").value) || 1; 
-    let precio_kg = parseFloat(document.getElementById("p_precio").value) || 0; // Leemos el precio
+    let precio_kg = parseFloat(document.getElementById("p_precio").value) || 0; 
 
     if (a <= 0 || l <= 0 || cantidad <= 0) return alert("Introduce dimensiones y cantidad válidas.");
 
@@ -404,7 +487,6 @@ function calcularPeso() {
 
     document.getElementById("p_resultado_total_kg").innerText = peso_tot_txt + " kg";
 
-    // MODIFICADO: Lógica para calcular y mostrar el coste si han metido un precio
     let filaCoste = document.getElementById("p_res_coste_fila");
     if (precio_kg > 0) {
         let coste_total = peso_total_kg * precio_kg;
