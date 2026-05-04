@@ -232,34 +232,21 @@ input:focus, select:focus { outline: none; border-color: #E3000F; }
     color: #777;
 }
 /* =========================================
-   CABECERA PRINCIPAL (TAMAÑO AUMENTADO)
+   TEXTOS CABECERA A MEDIDA (TUS CLASES REALES)
 ========================================= */
-
-/* Damos más aire (márgenes) a la cabecera completa */
-.header-zerbimek {
-    padding-top: 30px !important;
-    padding-bottom: 25px !important;
-}
-
-/* Separamos un poco más el logo rojo de las letras */
-.header-logo {
-    gap: 15px !important; 
-}
-
-/* Hacemos el título ZERBIMEK gigante */
-.header-logo h1, 
-.header-logo strong,
-.header-logo .titulo {
-    font-size: 34px !important;
+.header-text h1 {
+    font-size: 38px !important; /* Aquí controlas lo gigante que es ZERBIMEK */
+    color: #E3000F !important;
     margin: 0 !important;
     line-height: 1 !important;
+    font-weight: 900 !important;
 }
 
-/* Ajustamos el subtítulo "Centro de herramientas" */
-.header-logo p, 
-.header-logo span,
-.header-logo .subtitulo {
-    font-size: 12px !important;
+#header_subtitle {
+    display: block !important;
+    font-size: 13px !important; /* Tamaño del subtítulo */
+    color: #888 !important;
+    margin-top: 4px !important;
     letter-spacing: 1.5px !important;
-    margin: 4px 0 0 0 !important;
+    text-transform: uppercase !important;
 }
