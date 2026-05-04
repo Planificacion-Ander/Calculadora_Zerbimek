@@ -186,78 +186,62 @@ input:focus, select:focus { outline: none; border-color: #E3000F; }
     font-weight: bold;
 }
 /* =========================================
-   NUEVA PANTALLA INICIO (TARJETAS)
+   PANTALLA INICIO: PANEL DE CONTROL (GRID)
 ========================================= */
-
-.home-grid {
-    display: flex;
-    flex-direction: column;
+.home-dashboard {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Dos columnas iguales */
     gap: 15px;
-    padding: 10px 15px;
+    padding: 20px;
     margin-top: 10px;
 }
 
-.home-card {
-    display: flex;
-    align-items: center;
+.dash-card {
     background-color: #ffffff;
-    border: 1px solid #eaeaea;
-    border-radius: 12px;
-    padding: 20px 15px;
+    border-radius: 16px;
+    padding: 25px 15px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    border: 2px solid transparent;
     cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.04);
-    position: relative;
-    overflow: hidden;
-    transition: all 0.2s ease-in-out;
-}
-
-/* La franja roja lateral de la marca */
-.home-card::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 6px;
-    background-color: #E3000F;
-    border-radius: 12px 0 0 12px;
-    transition: width 0.2s ease;
-}
-
-/* Efecto al pulsar/pasar el ratón */
-.home-card:active, .home-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(227, 0, 15, 0.15);
-    border-color: #ffd1d4;
-}
-
-.home-card:active::before {
-    width: 10px;
-}
-
-.home-card-icon {
-    background-color: #fff5f6;
-    min-width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    margin-right: 18px;
-    margin-left: 5px;
+    transition: all 0.2s ease;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
-.home-card-text h3 {
-    margin: 0 0 6px 0;
-    font-size: 17px;
+/* La tarjeta CNC ocupa las dos columnas arriba */
+.dash-card.full-width {
+    grid-column: span 2;
+    padding: 30px 20px;
+}
+
+.dash-icon {
+    font-size: 45px;
+    margin-bottom: 12px;
+    /* Un pequeño sombreado para que el emoji resalte más */
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1); 
+}
+
+.dash-card h3 {
+    margin: 0 0 8px 0;
+    font-size: 16px;
     color: #222;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
-.home-card-text p {
+.dash-card p {
     margin: 0;
-    font-size: 14px;
-    color: #666;
+    font-size: 13px;
+    color: #777;
     line-height: 1.3;
+}
+
+/* Efecto al pulsar la tarjeta */
+.dash-card:active {
+    transform: scale(0.97);
+    border-color: #E3000F;
+    box-shadow: 0 2px 8px rgba(227, 0, 15, 0.2);
 }
