@@ -14,10 +14,7 @@
     <link rel="apple-touch-icon" href="./icono.png">
     <link rel="manifest" href="./manifest.json">
 
-    <!-- AQUI LLAMAMOS A LOS ESTILOS -->
     <link rel="stylesheet" href="style.css">
-    
-    <!-- AQUI LLAMAMOS A LA LOGICA -->
     <script src="script.js" defer></script>
 </head>
 <body>
@@ -58,194 +55,102 @@
         </div>
     </div>
 
-<!-- MÓDULO 3: TRIVAGOMETRÍA -->
-    <div id="modulo_trigo" class="app-module">
+    <!-- MÓDULO 1: CALCULADORA DE PESOS -->
+    <div id="modulo_pesos" class="app-module">
         <div class="tab-content" style="display: block;">
-            <h2>Trivagometría</h2>
-            <h4>Geometría de taller rápida y sin fallos</h4>
+            <h2>Calculadora de Material</h2>
             
-            <!-- NUEVA BOTONERA VISUAL CON 6 ICONOS (3x2) -->
-            <div class="trigo-menu">
-                <div class="trigo-btn active" onclick="cambiarFormaTrigo('chaflan', this)">
-                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16V10L14 4H4v16z"/></svg>
-                    <span class="text">Chaflán Pieza</span>
-                </div>
-                <div class="trigo-btn" onclick="cambiarFormaTrigo('triangulo', this)">
-                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5,20 20,20 5,5" /><rect x="5" y="16" width="4" height="4" /></svg>
-                    <span class="text">Triángulo Rec.</span>
-                </div>
-                <div class="trigo-btn" onclick="cambiarFormaTrigo('pcd', this)">
-                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="7" stroke-dasharray="3,3"/><circle cx="12" cy="5" r="1.5" fill="currentColor"/><circle cx="12" cy="19" r="1.5" fill="currentColor"/><circle cx="5" cy="12" r="1.5" fill="currentColor"/><circle cx="19" cy="12" r="1.5" fill="currentColor"/></svg>
-                    <span class="text">Círculo PCD</span>
-                </div>
-                <div class="trigo-btn" onclick="cambiarFormaTrigo('avellanado', this)">
-                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 5h18l-5 7v8H8v-8L3 5z"/><line x1="12" y1="2" x2="12" y2="22" stroke-dasharray="2,2" stroke-width="1"/></svg>
-                    <span class="text">Avellanado</span>
-                </div>
-                <div class="trigo-btn" onclick="cambiarFormaTrigo('arco', this)">
-                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 16 Q 12 4 20 16" /><line x1="4" y1="16" x2="20" y2="16" stroke-dasharray="3,3"/><line x1="12" y1="16" x2="12" y2="10" /></svg>
-                    <span class="text">Radio de Arco</span>
-                </div>
-                <div class="trigo-btn" onclick="cambiarFormaTrigo('ranura_t', this)">
-                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="4" /><line x1="12" y1="4" x2="12" y2="10" /><line x1="12" y1="14" x2="12" y2="20" /></svg>
-                    <span class="text">Ranura Int. (Z)</span>
-                </div>
+            <label>Material:</label>
+            <select id="p_material" class="main-selector" style="margin-bottom: 10px;" onchange="cambiarMaterial()">
+                <option value="7.85">Acero (7.85)</option>
+                <option value="7.93">Inoxidable (7.93)</option>
+                <option value="2.70">Aluminio (2.70)</option>
+                <option value="8.96">Cobre (8.96)</option>
+                <option value="8.50">Latón (8.50)</option>
+                <option value="8.80">Bronce (8.80)</option>
+                <option value="1.42">Delrin / POM (1.42)</option>
+                <option value="1.40">PVC (1.40)</option>
+                <option value="custom">Otro (Manual)...</option>
+            </select>
+
+            <div id="g_mat_custom" style="display: none; margin-bottom: 15px; padding: 10px; background-color: #fffafb; border: 2px dashed #E3000F; border-radius: 6px;">
+                <label style="margin-top: 0; color: #E3000F;">Densidad (g/cm³):</label>
+                <input type="number" id="p_densidad_custom" placeholder="Ej: 4.5 para Titanio" step="0.01" class="auto-select" onkeypress="handleEnter(event, 'btn_pesos')">
             </div>
 
-            <input type="hidden" id="t_forma" value="chaflan">
+            <label>Forma del perfil:</label>
+            <select id="p_forma" class="main-selector" style="margin-bottom: 5px;" onchange="cambiarFormaPeso()">
+                <option value="redondo">Redondo / Cilindro</option>
+                <option value="cuadrado">Cuadrado</option>
+                <option value="hexagonal">Hexagonal</option>
+                <option value="placa">Placa / Pletina / Rectangular</option>
+                <option value="tubo_red">Tubo Redondo</option>
+                <option value="tubo_cua">Tubo Cuadrado</option>
+                <option value="tubo_rect">Tubo Rectangular</option>
+                <option value="perfil_u">Perfil en U</option>
+            </select>
 
-            <div id="trigo_preview" class="shape-preview-container"></div>
-
-            <!-- INSTRUCCIONES -->
-            <div id="instrucciones_trigo" class="info-box" style="margin-bottom: 20px; border-left-color: #1a73e8;">
-                <span class="title" style="color: #1a73e8;">Instrucciones</span>
-                Introduce <b>SOLO 2 DATOS</b> (los que sepas). La calculadora sacará automáticamente los otros dos.
+            <div id="g_modo_tubo_red" style="display: none; margin-bottom: 10px;">
+                <label>Definir hueco por:</label>
+                <select id="p_modo_tubo_red" class="main-selector" style="margin-bottom: 0;" onchange="cambiarFormaPeso()">
+                    <option value="espesor">Espesor de pared [ e ]</option>
+                    <option value="interior">Diámetro Interior [ d ]</option>
+                </select>
             </div>
 
-            <div id="instrucciones_ave" class="info-box" style="display: none; margin-bottom: 20px; border-left-color: #E3000F;">
-                <span class="title" style="color: #E3000F;">Cálculo Z para Chaflán / Avellanado</span>
-                Calcula cuánto tienes que bajar en Z para conseguir el diámetro exterior deseado. Usa el ángulo del plano (ej. 45º).
-            </div>
+            <div id="shape_preview" class="shape-preview-container"></div>
 
-            <div id="instrucciones_arco" class="info-box" style="display: none; margin-bottom: 20px; border-left-color: #E3000F;">
-                <span class="title" style="color: #E3000F;">Ingeniería Inversa de Arcos</span>
-                Calcula el Radio exacto de una curva parcial a partir del ancho total (Cuerda) y la profundidad máxima (Flecha).
-            </div>
-
-            <div id="instrucciones_ranura_t" class="info-box" style="display: none; margin-bottom: 20px; border-left-color: #E3000F;">
-                <span class="title" style="color: #E3000F;">Alturas Z para Fresa de Disco</span>
-                Introduce las medidas en negativo. El cálculo asume que el Cero Pieza (Z0) está arriba y que la herramienta está decantada por su parte <b>inferior</b>.
-            </div>
-
-            <!-- INPUTS CHAFLAN / TRIANGULO -->
-            <div id="inputs_trigo">
-                <div class="dim-grid">
-                    <div>
-                        <label id="lbl_trigo_a">Longitud (Z) [ A ]:</label>
-                        <input type="number" id="t_a" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_trigo')" placeholder="mm">
-                    </div>
-                    <div>
-                        <label id="lbl_trigo_b">Profundidad (X) [ B ]:</label>
-                        <input type="number" id="t_b" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_trigo')" placeholder="mm">
-                    </div>
-                    <div>
-                        <label id="lbl_trigo_c">Chaflán [ C ]:</label>
-                        <input type="number" id="t_c" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_trigo')" placeholder="mm">
-                    </div>
-                    <div>
-                        <label>Ángulo [ &alpha; ]:</label>
-                        <input type="number" id="t_ang" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_trigo')" placeholder="Grados (º)">
-                    </div>
-                </div>
-
-                <div style="display: flex; gap: 10px; margin-top: 25px;">
-                    <button class="btn-calcular" style="background-color: #666; flex: 1;" onclick="limpiarTrigo()">LIMPIAR</button>
-                    <button id="btn_trigo" class="btn-calcular" style="margin-top: 0; flex: 2;" onclick="calcularTrigo()">CALCULAR</button>
-                </div>
-            </div>
-
-            <!-- INPUTS PCD -->
-            <div id="inputs_pcd" style="display: none;">
-                <div class="dim-grid">
-                    <div>
-                        <label>Centro X (mm):</label>
-                        <input type="number" id="pcd_xc" value="0" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_pcd')">
-                    </div>
-                    <div>
-                        <label>Centro Y (mm):</label>
-                        <input type="number" id="pcd_yc" value="0" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_pcd')">
-                    </div>
-                    <div>
-                        <label>Diámetro Paso [ D ]:</label>
-                        <input type="number" id="pcd_d" value="50" step="1" class="auto-select" style="border-color: #1a73e8;" onkeypress="handleEnter(event, 'btn_pcd')">
-                    </div>
-                    <div>
-                        <label>Nº Agujeros [ N ]:</label>
-                        <input type="number" id="pcd_n" value="6" step="1" class="auto-select" style="border-color: #1a73e8;" onkeypress="handleEnter(event, 'btn_pcd')">
-                    </div>
-                </div>
-
-                <label style="margin-top: 10px;">Ángulo inicial [ &alpha; ] (0º = 12 en punto):</label>
-                <input type="number" id="pcd_ang" value="0" step="1" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_pcd')">
-
-                <button id="btn_pcd" class="btn-calcular" onclick="calcularPCD()" style="margin-top: 25px;">CALCULAR COORDENADAS</button>
-
-                <div class="results" id="res_pcd" style="display: none; padding: 10px 15px;">
-                    <div id="res_pcd_list"></div>
-                </div>
-            </div>
-
-            <!-- INPUTS AVELLANADO -->
-            <div id="inputs_ave" style="display: none;">
-                <div class="dim-grid">
-                    <div>
-                        <label>Ø Mayor a dejar [ D ]:</label>
-                        <input type="number" id="ave_d_obj" class="auto-select input-trigo" style="border-color: #E3000F;" onkeypress="handleEnter(event, 'btn_ave')" placeholder="Ej: 10.5">
-                    </div>
-                    <div>
-                        <label>Ángulo Chaflán [ &alpha; ]:</label>
-                        <input type="number" id="ave_ang" class="auto-select input-trigo" value="45" onkeypress="handleEnter(event, 'btn_ave')" placeholder="Ej: 45">
-                    </div>
+            <div class="dim-grid">
+                <div id="g_dim_a">
+                    <label id="lbl_dim_a">Diámetro [ A ] (mm):</label>
+                    <input type="number" id="p_dim_a" value="50" step="1" class="auto-select" onkeypress="handleEnter(event, 'btn_pesos')" oninput="calcularHexagonoD()">
                 </div>
                 
-                <label style="margin-top: 15px;">Ø Taladro Previo [ d ] (0 si es ciego):</label>
-                <input type="number" id="ave_d_previo" class="auto-select input-trigo" value="0" onkeypress="handleEnter(event, 'btn_ave')" placeholder="Ej: 8.5">
-
-                <button id="btn_ave" class="btn-calcular" onclick="calcularAvellanado()" style="margin-top: 25px;">CALCULAR Z</button>
-
-                <div class="results" id="res_ave" style="display: none; margin-top: 15px; text-align: center;">
-                    <p style="justify-content: center;">Bajar herramienta en Z: &nbsp;<span class="peso-gigante" id="ave_z_res"></span></p>
-                </div>
-            </div>
-
-            <!-- INPUTS RADIO DE ARCO -->
-            <div id="inputs_arco" style="display: none;">
-                <div class="dim-grid">
-                    <div>
-                        <label>Cuerda (Ancho) [ C ]:</label>
-                        <input type="number" id="arco_c" class="auto-select input-trigo" style="border-color: #E3000F;" onkeypress="handleEnter(event, 'btn_arco')" placeholder="mm">
-                    </div>
-                    <div>
-                        <label>Flecha (Prof.) [ F ]:</label>
-                        <input type="number" id="arco_f" class="auto-select input-trigo" style="border-color: #E3000F;" onkeypress="handleEnter(event, 'btn_arco')" placeholder="mm">
-                    </div>
+                <div id="g_dim_b" class="dynamic-input-group">
+                    <label id="lbl_dim_b">Alto [ B ] (mm):</label>
+                    <input type="number" id="p_dim_b" value="20" step="1" class="auto-select" onkeypress="handleEnter(event, 'btn_pesos')">
                 </div>
 
-                <button id="btn_arco" class="btn-calcular" onclick="calcularArco()" style="margin-top: 25px;">CALCULAR RADIO</button>
-
-                <div class="results" id="res_arco" style="display: none; margin-top: 15px; text-align: center;">
-                    <p style="justify-content: center;">Radio exacto ( R ): &nbsp;<span class="peso-gigante" id="arco_r_res"></span></p>
-                </div>
-            </div>
-
-            <!-- INPUTS RANURA T (NUEVO) -->
-            <div id="inputs_ranura_t" style="display: none;">
-                <div class="dim-grid">
-                    <div>
-                        <label>Techo de la Ranura (Z):</label>
-                        <input type="number" id="rt_z_techo" class="auto-select input-trigo" style="border-color: #E3000F;" onkeypress="handleEnter(event, 'btn_rt')" placeholder="Ej: -10">
-                    </div>
-                    <div>
-                        <label>Ancho total Ranura:</label>
-                        <input type="number" id="rt_w_ranura" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_rt')" placeholder="Ej: 5">
-                    </div>
+                <div id="g_dim_hex" class="dynamic-input-group">
+                    <label>Diámetro ext. Ø (mm):</label>
+                    <input type="text" id="p_dim_hex_calc" class="input-readonly" readonly placeholder="Auto...">
                 </div>
                 
-                <label style="margin-top: 15px;">Espesor de la Fresa de disco:</label>
-                <input type="number" id="rt_w_fresa" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_rt')" placeholder="Ej: 2.5">
+                <div id="g_dim_t" class="dynamic-input-group">
+                    <label id="lbl_dim_t">Pared [ e ] (mm):</label>
+                    <input type="number" id="p_dim_t" value="5" step="0.5" class="auto-select" onkeypress="handleEnter(event, 'btn_pesos')">
+                </div>
 
-                <button id="btn_rt" class="btn-calcular" onclick="calcularRanuraT()" style="margin-top: 25px;">CALCULAR PASADAS Z</button>
-
-                <div class="results" id="res_ranura_t" style="display: none; margin-top: 15px;">
-                    <p>Pasada 1 (Fondo): <span class="highlight" id="rt_z_fondo"></span></p>
-                    <p>Pasada 2 (Techo): <span class="highlight" id="rt_z_arriba"></span></p>
-                    <div id="rt_nota" class="info-box" style="display: none; margin-top: 10px;"></div>
+                <div id="g_dim_d_int" class="dynamic-input-group">
+                    <label id="lbl_dim_d_int">Diám. Int. [ d ] (mm):</label>
+                    <input type="number" id="p_dim_d_int" value="40" step="1" class="auto-select" onkeypress="handleEnter(event, 'btn_pesos')">
                 </div>
             </div>
 
+            <label style="margin-top: 15px;">Longitud (mm):</label>
+            <input type="number" id="p_largo" value="1000" step="10" class="auto-select" style="border-color: #1a73e8; background-color: #f0f7ff;" onkeypress="handleEnter(event, 'btn_pesos')">
+
+            <div class="dim-grid" style="margin-top: 15px;">
+                <div style="padding: 10px; background-color: #f8f9fa; border: 2px dashed #ddd; border-radius: 8px;">
+                    <label style="margin-top: 0; color: #444;">✖ Cantidad:</label>
+                    <input type="number" id="p_cantidad" value="1" step="1" min="1" class="auto-select" style="border: 2px solid #222; font-weight: bold; color: #E3000F;" onkeypress="handleEnter(event, 'btn_pesos')">
+                </div>
+                <div style="padding: 10px; background-color: #f0f7ff; border: 2px dashed #1a73e8; border-radius: 8px;">
+                    <label style="margin-top: 0; color: #1a73e8;">Coste (€/kg):</label>
+                    <input type="number" id="p_precio" placeholder="Opcional..." step="0.1" class="auto-select" style="border: 2px solid #1a73e8; font-weight: bold;" onkeypress="handleEnter(event, 'btn_pesos')">
+                </div>
+            </div>
+
+            <button id="btn_pesos" class="btn-calcular" onclick="calcularPeso()">CALCULAR PESO</button>
+
+            <div class="results" id="res_pesos" style="display: none;">
+                <p id="p_res_unidad_fila" style="display: none; color: #666; font-size: 14px;">Peso por unidad: <span id="p_resultado_unidad_kg"></span></p>
+                <p style="font-weight: bold;">Peso Total: <span class="peso-gigante" id="p_resultado_total_kg"></span></p>
+                <p id="p_res_coste_fila" style="display: none; color: #1a73e8; font-weight: bold; margin-top: 10px; padding-top: 10px; border-top: 2px dashed #ccc;">Coste Material: <span id="p_resultado_coste" style="font-size: 20px;"></span></p>
+            </div>
         </div>
     </div>
-    
+
     <!-- MÓDULO 2: CALCULADORA CNC -->
     <div id="modulo_cnc" class="app-module">
         <div class="menu">
@@ -500,6 +405,194 @@
                 <p>Avance trabajo (F): <span class="highlight" id="esc_f"></span></p>
                 <p>Avance rev. (fn): <span class="highlight" id="esc_fn"></span></p>
             </div>
+        </div>
+    </div>
+
+    <!-- MÓDULO 3: TRIVAGOMETRÍA -->
+    <div id="modulo_trigo" class="app-module">
+        <div class="tab-content" style="display: block;">
+            <h2>Trivagometría</h2>
+            <h4>Geometría de taller rápida y sin fallos</h4>
+            
+            <!-- NUEVA BOTONERA VISUAL CON 6 ICONOS (3x2) -->
+            <div class="trigo-menu">
+                <div class="trigo-btn active" onclick="cambiarFormaTrigo('chaflan', this)">
+                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16V10L14 4H4v16z"/></svg>
+                    <span class="text">Chaflán Pieza</span>
+                </div>
+                <div class="trigo-btn" onclick="cambiarFormaTrigo('triangulo', this)">
+                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5,20 20,20 5,5" /><rect x="5" y="16" width="4" height="4" /></svg>
+                    <span class="text">Triángulo Rec.</span>
+                </div>
+                <div class="trigo-btn" onclick="cambiarFormaTrigo('pcd', this)">
+                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="7" stroke-dasharray="3,3"/><circle cx="12" cy="5" r="1.5" fill="currentColor"/><circle cx="12" cy="19" r="1.5" fill="currentColor"/><circle cx="5" cy="12" r="1.5" fill="currentColor"/><circle cx="19" cy="12" r="1.5" fill="currentColor"/></svg>
+                    <span class="text">Círculo PCD</span>
+                </div>
+                <div class="trigo-btn" onclick="cambiarFormaTrigo('avellanado', this)">
+                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 5h18l-5 7v8H8v-8L3 5z"/><line x1="12" y1="2" x2="12" y2="22" stroke-dasharray="2,2" stroke-width="1"/></svg>
+                    <span class="text">Avellanado</span>
+                </div>
+                <div class="trigo-btn" onclick="cambiarFormaTrigo('arco', this)">
+                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 16 Q 12 4 20 16" /><line x1="4" y1="16" x2="20" y2="16" stroke-dasharray="3,3"/><line x1="12" y1="16" x2="12" y2="10" /></svg>
+                    <span class="text">Radio de Arco</span>
+                </div>
+                <div class="trigo-btn" onclick="cambiarFormaTrigo('ranura_t', this)">
+                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="4" /><line x1="12" y1="4" x2="12" y2="10" /><line x1="12" y1="14" x2="12" y2="20" /></svg>
+                    <span class="text">Ranura Int. (Z)</span>
+                </div>
+            </div>
+
+            <input type="hidden" id="t_forma" value="chaflan">
+
+            <div id="trigo_preview" class="shape-preview-container"></div>
+
+            <!-- INSTRUCCIONES -->
+            <div id="instrucciones_trigo" class="info-box" style="margin-bottom: 20px; border-left-color: #1a73e8;">
+                <span class="title" style="color: #1a73e8;">Instrucciones</span>
+                Introduce <b>SOLO 2 DATOS</b> (los que sepas). La calculadora sacará automáticamente los otros dos.
+            </div>
+
+            <div id="instrucciones_ave" class="info-box" style="display: none; margin-bottom: 20px; border-left-color: #E3000F;">
+                <span class="title" style="color: #E3000F;">Cálculo Z para Chaflán / Avellanado</span>
+                Calcula cuánto tienes que bajar en Z para conseguir el diámetro exterior deseado. Usa el ángulo del plano (ej. 45º).
+            </div>
+
+            <div id="instrucciones_arco" class="info-box" style="display: none; margin-bottom: 20px; border-left-color: #E3000F;">
+                <span class="title" style="color: #E3000F;">Ingeniería Inversa de Arcos</span>
+                Calcula el Radio exacto de una curva parcial a partir del ancho total (Cuerda) y la profundidad máxima (Flecha).
+            </div>
+
+            <div id="instrucciones_ranura_t" class="info-box" style="display: none; margin-bottom: 20px; border-left-color: #E3000F;">
+                <span class="title" style="color: #E3000F;">Alturas Z para Fresa de Disco</span>
+                Introduce las medidas en negativo. El cálculo asume que el Cero Pieza (Z0) está arriba y que la herramienta está decantada por su parte <b>inferior</b>.
+            </div>
+
+            <!-- INPUTS CHAFLAN / TRIANGULO -->
+            <div id="inputs_trigo">
+                <div class="dim-grid">
+                    <div>
+                        <label id="lbl_trigo_a">Longitud (Z) [ A ]:</label>
+                        <input type="number" id="t_a" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_trigo')" placeholder="mm">
+                    </div>
+                    <div>
+                        <label id="lbl_trigo_b">Profundidad (X) [ B ]:</label>
+                        <input type="number" id="t_b" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_trigo')" placeholder="mm">
+                    </div>
+                    <div>
+                        <label id="lbl_trigo_c">Chaflán [ C ]:</label>
+                        <input type="number" id="t_c" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_trigo')" placeholder="mm">
+                    </div>
+                    <div>
+                        <label>Ángulo [ &alpha; ]:</label>
+                        <input type="number" id="t_ang" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_trigo')" placeholder="Grados (º)">
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 25px;">
+                    <button class="btn-calcular" style="background-color: #666; flex: 1;" onclick="limpiarTrigo()">LIMPIAR</button>
+                    <button id="btn_trigo" class="btn-calcular" style="margin-top: 0; flex: 2;" onclick="calcularTrigo()">CALCULAR</button>
+                </div>
+            </div>
+
+            <!-- INPUTS PCD -->
+            <div id="inputs_pcd" style="display: none;">
+                <div class="dim-grid">
+                    <div>
+                        <label>Centro X (mm):</label>
+                        <input type="number" id="pcd_xc" value="0" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_pcd')">
+                    </div>
+                    <div>
+                        <label>Centro Y (mm):</label>
+                        <input type="number" id="pcd_yc" value="0" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_pcd')">
+                    </div>
+                    <div>
+                        <label>Diámetro Paso [ D ]:</label>
+                        <input type="number" id="pcd_d" value="50" step="1" class="auto-select" style="border-color: #1a73e8;" onkeypress="handleEnter(event, 'btn_pcd')">
+                    </div>
+                    <div>
+                        <label>Nº Agujeros [ N ]:</label>
+                        <input type="number" id="pcd_n" value="6" step="1" class="auto-select" style="border-color: #1a73e8;" onkeypress="handleEnter(event, 'btn_pcd')">
+                    </div>
+                </div>
+
+                <label style="margin-top: 10px;">Ángulo inicial [ &alpha; ] (0º = 12 en punto):</label>
+                <input type="number" id="pcd_ang" value="0" step="1" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_pcd')">
+
+                <button id="btn_pcd" class="btn-calcular" onclick="calcularPCD()" style="margin-top: 25px;">CALCULAR COORDENADAS</button>
+
+                <div class="results" id="res_pcd" style="display: none; padding: 10px 15px;">
+                    <div id="res_pcd_list"></div>
+                </div>
+            </div>
+
+            <!-- INPUTS AVELLANADO -->
+            <div id="inputs_ave" style="display: none;">
+                <div class="dim-grid">
+                    <div>
+                        <label>Ø Mayor a dejar [ D ]:</label>
+                        <input type="number" id="ave_d_obj" class="auto-select input-trigo" style="border-color: #E3000F;" onkeypress="handleEnter(event, 'btn_ave')" placeholder="Ej: 10.5">
+                    </div>
+                    <div>
+                        <label>Ángulo Chaflán [ &alpha; ]:</label>
+                        <input type="number" id="ave_ang" class="auto-select input-trigo" value="45" onkeypress="handleEnter(event, 'btn_ave')" placeholder="Ej: 45">
+                    </div>
+                </div>
+                
+                <label style="margin-top: 15px;">Ø Taladro Previo [ d ] (0 si es ciego):</label>
+                <input type="number" id="ave_d_previo" class="auto-select input-trigo" value="0" onkeypress="handleEnter(event, 'btn_ave')" placeholder="Ej: 8.5">
+
+                <button id="btn_ave" class="btn-calcular" onclick="calcularAvellanado()" style="margin-top: 25px;">CALCULAR Z</button>
+
+                <div class="results" id="res_ave" style="display: none; margin-top: 15px; text-align: center;">
+                    <p style="justify-content: center;">Bajar herramienta en Z: &nbsp;<span class="peso-gigante" id="ave_z_res"></span></p>
+                </div>
+            </div>
+
+            <!-- INPUTS RADIO DE ARCO -->
+            <div id="inputs_arco" style="display: none;">
+                <div class="dim-grid">
+                    <div>
+                        <label>Cuerda (Ancho) [ C ]:</label>
+                        <input type="number" id="arco_c" class="auto-select input-trigo" style="border-color: #E3000F;" onkeypress="handleEnter(event, 'btn_arco')" placeholder="mm">
+                    </div>
+                    <div>
+                        <label>Flecha (Prof.) [ F ]:</label>
+                        <input type="number" id="arco_f" class="auto-select input-trigo" style="border-color: #E3000F;" onkeypress="handleEnter(event, 'btn_arco')" placeholder="mm">
+                    </div>
+                </div>
+
+                <button id="btn_arco" class="btn-calcular" onclick="calcularArco()" style="margin-top: 25px;">CALCULAR RADIO</button>
+
+                <div class="results" id="res_arco" style="display: none; margin-top: 15px; text-align: center;">
+                    <p style="justify-content: center;">Radio exacto ( R ): &nbsp;<span class="peso-gigante" id="arco_r_res"></span></p>
+                </div>
+            </div>
+
+            <!-- INPUTS RANURA T -->
+            <div id="inputs_ranura_t" style="display: none;">
+                <div class="dim-grid">
+                    <div>
+                        <label>Techo de la Ranura (Z):</label>
+                        <input type="number" id="rt_z_techo" class="auto-select input-trigo" style="border-color: #E3000F;" onkeypress="handleEnter(event, 'btn_rt')" placeholder="Ej: -10">
+                    </div>
+                    <div>
+                        <label>Ancho total Ranura:</label>
+                        <input type="number" id="rt_w_ranura" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_rt')" placeholder="Ej: 5">
+                    </div>
+                </div>
+                
+                <label style="margin-top: 15px;">Espesor de la Fresa de disco:</label>
+                <input type="number" id="rt_w_fresa" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_rt')" placeholder="Ej: 2.5">
+
+                <button id="btn_rt" class="btn-calcular" onclick="calcularRanuraT()" style="margin-top: 25px;">CALCULAR PASADAS Z</button>
+
+                <div class="results" id="res_ranura_t" style="display: none; margin-top: 15px;">
+                    <p>Pasada 1 (Fondo): <span class="highlight" id="rt_z_fondo"></span></p>
+                    <p>Pasada 2 (Techo): <span class="highlight" id="rt_z_arriba"></span></p>
+                    <div id="rt_nota" class="info-box" style="display: none; margin-top: 10px;"></div>
+                </div>
+            </div>
+
         </div>
     </div>
 
