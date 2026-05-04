@@ -83,7 +83,7 @@
 
             <div id="instrucciones_ave" class="info-box" style="display: none; margin-bottom: 20px; border-left-color: #E3000F;">
                 <span class="title" style="color: #E3000F;">Cálculo Z para Chaflán / Avellanado</span>
-                Calcula cuánto tienes que bajar en Z para conseguir el diámetro exterior deseado con una herramienta de ángulo conocido.
+                Calcula cuánto tienes que bajar en Z para conseguir el diámetro exterior deseado. Usa el ángulo del plano (ej. 45º).
             </div>
 
             <div id="instrucciones_arco" class="info-box" style="display: none; margin-bottom: 20px; border-left-color: #E3000F;">
@@ -157,8 +157,8 @@
                         <input type="number" id="ave_d_obj" class="auto-select input-trigo" style="border-color: #E3000F;" onkeypress="handleEnter(event, 'btn_ave')" placeholder="Ej: 10.5">
                     </div>
                     <div>
-                        <label>Ángulo Herr. [ &alpha; ]:</label>
-                        <input type="number" id="ave_ang" class="auto-select input-trigo" value="90" onkeypress="handleEnter(event, 'btn_ave')" placeholder="Ej: 90">
+                        <label>Ángulo Chaflán [ &alpha; ]:</label>
+                        <input type="number" id="ave_ang" class="auto-select input-trigo" value="45" onkeypress="handleEnter(event, 'btn_ave')" placeholder="Ej: 45">
                     </div>
                 </div>
                 
@@ -194,7 +194,7 @@
 
         </div>
     </div>
-
+    
   <!-- MÓDULOS 1: CALCULADORA DE PESOS -->
     <div id="modulo_pesos" class="app-module">
         <div class="tab-content" style="display: block;">
