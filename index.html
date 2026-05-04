@@ -58,7 +58,7 @@
         </div>
     </div>
 
-    <!-- MÓDULO 3: TRIVAGOMETRÍA -->
+<!-- MÓDULO 3: TRIVAGOMETRÍA -->
     <div id="modulo_trigo" class="app-module">
         <div class="tab-content" style="display: block;">
             <h2>Trivagometría</h2>
@@ -69,14 +69,26 @@
                 <option value="chaflan" selected>Chaflán en Pieza</option>
                 <option value="triangulo">Triángulo Rectángulo Clásico</option>
                 <option value="pcd">Círculo de Agujeros (PCD)</option>
+                <option value="avellanado">Profundidad de Avellanado</option>
+                <option value="arco">Radio de Arco (Cuerda y Flecha)</option>
             </select>
 
             <div id="trigo_preview" class="shape-preview-container"></div>
 
-            <!-- INSTRUCCIONES CHAFLAN / TRIANGULO -->
+            <!-- INSTRUCCIONES -->
             <div id="instrucciones_trigo" class="info-box" style="margin-bottom: 20px; border-left-color: #1a73e8;">
                 <span class="title" style="color: #1a73e8;">Instrucciones</span>
                 Introduce <b>SOLO 2 DATOS</b> (los que sepas). La calculadora sacará automáticamente los otros dos.
+            </div>
+
+            <div id="instrucciones_ave" class="info-box" style="display: none; margin-bottom: 20px; border-left-color: #E3000F;">
+                <span class="title" style="color: #E3000F;">Cálculo Z para Chaflán / Avellanado</span>
+                Calcula cuánto tienes que bajar en Z para conseguir el diámetro exterior deseado con una herramienta de ángulo conocido.
+            </div>
+
+            <div id="instrucciones_arco" class="info-box" style="display: none; margin-bottom: 20px; border-left-color: #E3000F;">
+                <span class="title" style="color: #E3000F;">Ingeniería Inversa de Arcos</span>
+                Calcula el Radio exacto de una curva parcial a partir del ancho total (Cuerda) y la profundidad máxima (Flecha).
             </div>
 
             <!-- INPUTS CHAFLAN / TRIANGULO -->
@@ -134,6 +146,49 @@
 
                 <div class="results" id="res_pcd" style="display: none; padding: 10px 15px;">
                     <div id="res_pcd_list"></div>
+                </div>
+            </div>
+
+            <!-- INPUTS AVELLANADO -->
+            <div id="inputs_ave" style="display: none;">
+                <div class="dim-grid">
+                    <div>
+                        <label>Ø Mayor a dejar [ D ]:</label>
+                        <input type="number" id="ave_d_obj" class="auto-select input-trigo" style="border-color: #E3000F;" onkeypress="handleEnter(event, 'btn_ave')" placeholder="Ej: 10.5">
+                    </div>
+                    <div>
+                        <label>Ángulo Herr. [ &alpha; ]:</label>
+                        <input type="number" id="ave_ang" class="auto-select input-trigo" value="90" onkeypress="handleEnter(event, 'btn_ave')" placeholder="Ej: 90">
+                    </div>
+                </div>
+                
+                <label style="margin-top: 15px;">Ø Taladro Previo [ d ] (0 si es ciego):</label>
+                <input type="number" id="ave_d_previo" class="auto-select" value="0" onkeypress="handleEnter(event, 'btn_ave')" placeholder="Ej: 8.5">
+
+                <button id="btn_ave" class="btn-calcular" onclick="calcularAvellanado()" style="margin-top: 25px;">CALCULAR Z</button>
+
+                <div class="results" id="res_ave" style="display: none; margin-top: 15px; text-align: center;">
+                    <p style="justify-content: center;">Bajar herramienta en Z: &nbsp;<span class="peso-gigante" id="ave_z_res"></span></p>
+                </div>
+            </div>
+
+            <!-- INPUTS RADIO DE ARCO -->
+            <div id="inputs_arco" style="display: none;">
+                <div class="dim-grid">
+                    <div>
+                        <label>Cuerda (Ancho) [ C ]:</label>
+                        <input type="number" id="arco_c" class="auto-select input-trigo" style="border-color: #E3000F;" onkeypress="handleEnter(event, 'btn_arco')" placeholder="mm">
+                    </div>
+                    <div>
+                        <label>Flecha (Prof.) [ F ]:</label>
+                        <input type="number" id="arco_f" class="auto-select input-trigo" style="border-color: #E3000F;" onkeypress="handleEnter(event, 'btn_arco')" placeholder="mm">
+                    </div>
+                </div>
+
+                <button id="btn_arco" class="btn-calcular" onclick="calcularArco()" style="margin-top: 25px;">CALCULAR RADIO</button>
+
+                <div class="results" id="res_arco" style="display: none; margin-top: 15px; text-align: center;">
+                    <p style="justify-content: center;">Radio exacto ( R ): &nbsp;<span class="peso-gigante" id="arco_r_res"></span></p>
                 </div>
             </div>
 
