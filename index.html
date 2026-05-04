@@ -140,13 +140,13 @@
         </div>
     </div>
 
-   <!-- MÓDULOS 1: CALCULADORA DE PESOS -->
+  <!-- MÓDULOS 1: CALCULADORA DE PESOS -->
     <div id="modulo_pesos" class="app-module">
         <div class="tab-content" style="display: block;">
             <h2>Calculadora de Material</h2>
             
             <label>Material:</label>
-            <select id="p_material" class="main-selector" style="margin-bottom: 10px;">
+            <select id="p_material" class="main-selector" style="margin-bottom: 10px;" onchange="cambiarMaterial()">
                 <option value="7.85">Acero (7.85)</option>
                 <option value="7.93">Inoxidable (7.93)</option>
                 <option value="2.70">Aluminio (2.70)</option>
@@ -155,7 +155,14 @@
                 <option value="8.80">Bronce (8.80)</option>
                 <option value="1.42">Delrin / POM (1.42)</option>
                 <option value="1.40">PVC (1.40)</option>
+                <option value="custom">Otro (Manual)...</option>
             </select>
+
+            <!-- CAJA PARA DENSIDAD MANUAL (Oculta por defecto) -->
+            <div id="g_mat_custom" style="display: none; margin-bottom: 15px; padding: 10px; background-color: #fffafb; border: 2px dashed #E3000F; border-radius: 6px;">
+                <label style="margin-top: 0; color: #E3000F;">Densidad (g/cm³):</label>
+                <input type="number" id="p_densidad_custom" placeholder="Ej: 4.5 para Titanio" step="0.01" class="auto-select" onkeypress="handleEnter(event, 'btn_pesos')">
+            </div>
 
             <label>Forma del perfil:</label>
             <select id="p_forma" class="main-selector" style="margin-bottom: 5px;" onchange="cambiarFormaPeso()">
@@ -209,14 +216,20 @@
                 </div>
             </div>
 
-            <!-- LONGITUD (Vuelve a ser de ancho completo) -->
+            <!-- LONGITUD -->
             <label style="margin-top: 15px;">Longitud (mm):</label>
             <input type="number" id="p_largo" value="1000" step="10" class="auto-select" style="border-color: #1a73e8; background-color: #f0f7ff;" onkeypress="handleEnter(event, 'btn_pesos')">
 
-            <!-- CAJA ESPECIAL PARA CANTIDAD -->
-            <div style="margin-top: 20px; padding: 15px; background-color: #f8f9fa; border: 2px dashed #ddd; border-radius: 8px; display: flex; align-items: center; justify-content: space-between;">
-                <label style="margin-top: 0; color: #444; font-size: 15px; font-weight: 900;">✖ Cantidad de piezas:</label>
-                <input type="number" id="p_cantidad" value="1" step="1" min="1" class="auto-select" style="width: 100px; margin-top: 0; border: 2px solid #222; font-weight: 900; text-align: center; font-size: 18px; color: #E3000F; background-color: #fff;" onkeypress="handleEnter(event, 'btn_pesos')">
+            <!-- CANTIDAD Y PRECIO -->
+            <div class="dim-grid" style="margin-top: 15px;">
+                <div style="padding: 10px; background-color: #f8f9fa; border: 2px dashed #ddd; border-radius: 8px;">
+                    <label style="margin-top: 0; color: #444;">✖ Cantidad:</label>
+                    <input type="number" id="p_cantidad" value="1" step="1" min="1" class="auto-select" style="border: 2px solid #222; font-weight: bold; color: #E3000F;" onkeypress="handleEnter(event, 'btn_pesos')">
+                </div>
+                <div style="padding: 10px; background-color: #f0f7ff; border: 2px dashed #1a73e8; border-radius: 8px;">
+                    <label style="margin-top: 0; color: #1a73e8;">Coste (€/kg):</label>
+                    <input type="number" id="p_precio" placeholder="Opcional..." step="0.1" class="auto-select" style="border: 2px solid #1a73e8; font-weight: bold;" onkeypress="handleEnter(event, 'btn_pesos')">
+                </div>
             </div>
 
             <button id="btn_pesos" class="btn-calcular" onclick="calcularPeso()">CALCULAR PESO</button>
@@ -225,6 +238,7 @@
             <div class="results" id="res_pesos" style="display: none;">
                 <p id="p_res_unidad_fila" style="display: none; color: #666; font-size: 14px;">Peso por unidad: <span id="p_resultado_unidad_kg"></span></p>
                 <p style="font-weight: bold;">Peso Total: <span class="peso-gigante" id="p_resultado_total_kg"></span></p>
+                <p id="p_res_coste_fila" style="display: none; color: #1a73e8; font-weight: bold; margin-top: 10px; padding-top: 10px; border-top: 2px dashed #ccc;">Coste Material: <span id="p_resultado_coste" style="font-size: 20px;"></span></p>
             </div>
         </div>
     </div>
