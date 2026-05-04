@@ -37,24 +37,54 @@
     </div>
 
     <!-- PANTALLA INICIO -->
-    <div id="home_screen">
-        <div class="home-btn" onclick="abrirModulo('cnc')">
-            <span class="icon">⚙️</span>
-            <span class="title">Calculadora CNC</span>
-            <span class="desc">RPM, Avances, Roscado y Herramientas</span>
+    <div id="home_screen" class="home-grid">
+        
+        <!-- Tarjeta CNC -->
+        <div class="home-card" onclick="abrirModulo('cnc')">
+            <div class="home-card-icon">
+                <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="#E3000F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                </svg>
+            </div>
+            <div class="home-card-text">
+                <h3>CALCULADORA CNC</h3>
+                <p>RPM, Avances, Roscado y Herramientas</p>
+            </div>
         </div>
-        <div class="home-btn" onclick="abrirModulo('pesos')">
-            <span class="icon">⚖️</span>
-            <span class="title">Calculadora de Pesos</span>
-            <span class="desc">Estimación de peso por material y geometría</span>
-        </div>
-        <div class="home-btn" onclick="abrirModulo('trigo')">
-            <span class="icon">📐</span>
-            <span class="title">Trivagometría</span>
-            <span class="desc">Chaflanes, triángulos y círculos PCD</span>
-        </div>
-    </div>
 
+        <!-- Tarjeta Pesos -->
+        <div class="home-card" onclick="abrirModulo('pesos')">
+            <div class="home-card-icon">
+                <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="#E3000F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 3v18"></path>
+                    <path d="M3 10l9-4 9 4"></path>
+                    <path d="M5 10v6a3 3 0 0 0 6 0v-6"></path>
+                    <path d="M13 10v6a3 3 0 0 0 6 0v-6"></path>
+                </svg>
+            </div>
+            <div class="home-card-text">
+                <h3>CALCULADORA DE PESOS</h3>
+                <p>Estimación de peso por material y geometría</p>
+            </div>
+        </div>
+
+        <!-- Tarjeta Trivagometría -->
+        <div class="home-card" onclick="abrirModulo('trigo')">
+            <div class="home-card-icon">
+                <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="#E3000F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="3 20 21 20 12 4 3 20"></polygon>
+                    <path d="M12 10v4"></path>
+                    <path d="M12 18h.01"></path>
+                </svg>
+            </div>
+            <div class="home-card-text">
+                <h3>TRIVAGOMETRÍA</h3>
+                <p>Chaflanes, triángulos y círculos PCD</p>
+            </div>
+        </div>
+
+    </div>
     <!-- MÓDULO 1: CALCULADORA DE PESOS -->
     <div id="modulo_pesos" class="app-module">
         <div class="tab-content" style="display: block;">
