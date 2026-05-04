@@ -315,3 +315,13 @@ input:focus, select:focus { outline: none; border-color: #E3000F; }
 .home-container-original:visible ~ .header-zerbimek #btn_volver {
     display: none;
 }
+/* Limpieza de los recuadros detrás de los emojis */
+.emoji-original {
+    background: none !important;      /* Quita cualquier color de fondo */
+    border: none !important;          /* Quita cualquier borde o recuadro */
+    box-shadow: none !important;      /* Quita sombras que puedan parecer recuadros */
+    padding: 0 !important;            /* Evita que el área ocupe espacio extra */
+    margin-bottom: 10px !important;   /* Solo dejamos espacio con el título */
+    display: block !important;
+    font-size: 40px !important;       /* Aseguramos un buen tamaño para el emoji */
+}
