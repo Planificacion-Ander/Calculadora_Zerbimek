@@ -101,19 +101,27 @@ const svgTrigo = {
     'chaflan': `<svg viewBox="0 0 240 210" style="height:180px; max-width:100%;">
                     <polygon points="15,60 70,60 160,130 160,205 15,205" fill="#f0f7ff" stroke="none" />
                     <polyline points="15,60 70,60 160,130 160,205" fill="none" stroke="#222" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                    <line x1="70" y1="60" x2="187.5" y2="60" stroke="#E3000F" stroke-width="1.5" stroke-dasharray="7.5,4.5" />
+                    
+                    <!-- Esquina fantasma (SOLO EL TRIÁNGULO EN ROJO) -->
+                    <line x1="70" y1="60" x2="160" y2="60" stroke="#E3000F" stroke-width="1.5" stroke-dasharray="7.5,4.5" />
                     <line x1="160" y1="60" x2="160" y2="130" stroke="#E3000F" stroke-width="1.5" stroke-dasharray="7.5,4.5" />
-                    <line x1="70" y1="30" x2="160" y2="30" class="svg-linea" stroke="#E3000F" />
-                    <line x1="70" y1="22.5" x2="70" y2="37.5" class="svg-linea" stroke="#E3000F"/>
-                    <line x1="160" y1="22.5" x2="160" y2="37.5" class="svg-linea" stroke="#E3000F"/>
-                    <text x="115" y="21" text-anchor="middle" class="svg-cota" fill="#E3000F">A</text>
-                    <line x1="187.5" y1="60" x2="187.5" y2="130" class="svg-linea" stroke="#E3000F" />
-                    <line x1="180" y1="60" x2="195" y2="60" class="svg-linea" stroke="#E3000F"/>
-                    <line x1="180" y1="130" x2="195" y2="130" class="svg-linea" stroke="#E3000F"/>
-                    <text x="202.5" y="100" text-anchor="start" alignment-baseline="middle" class="svg-cota" fill="#E3000F">B</text>
+                    
+                    <!-- Cota A (Líneas de referencia GRISES) -->
+                    <line x1="70" y1="30" x2="160" y2="30" class="svg-linea" />
+                    <line x1="70" y1="22.5" x2="70" y2="55" class="svg-linea" />
+                    <line x1="160" y1="22.5" x2="160" y2="55" class="svg-linea" />
+                    <text x="115" y="21" text-anchor="middle" class="svg-cota">A</text>
+                    
+                    <!-- Cota B (Líneas de referencia GRISES) -->
+                    <line x1="187.5" y1="60" x2="187.5" y2="130" class="svg-linea" />
+                    <line x1="165" y1="60" x2="195" y2="60" class="svg-linea" />
+                    <line x1="165" y1="130" x2="195" y2="130" class="svg-linea" />
+                    <text x="202.5" y="100" text-anchor="start" alignment-baseline="middle" class="svg-cota">B</text>
+                    
+                    <!-- Alpha y C -->
                     <path d="M 160 95 A 35 35 0 0 0 132.4 108.5" fill="none" stroke="#E3000F" stroke-width="1.5" />
-                    <text x="140" y="90" text-anchor="middle" alignment-baseline="middle" class="svg-cota" style="font-size: 19px;" fill="#E3000F">&alpha;</text>
-                    <text x="100" y="112" class="svg-cota" fill="#E3000F">C</text>
+                    <text x="140" y="90" text-anchor="middle" alignment-baseline="middle" class="svg-cota" style="font-size: 19px;">&alpha;</text>
+                    <text x="100" y="112" class="svg-cota">C</text>
                 </svg>`,
     'pcd': `<svg viewBox="0 0 160 160" style="height:120px; max-width:100%;">
                 <line x1="80" y1="20" x2="80" y2="120" stroke="#aaa" stroke-width="1" stroke-dasharray="4,4" />
@@ -137,24 +145,20 @@ const svgTrigo = {
     'avellanado': `<svg viewBox="0 0 260 220" style="height:180px; max-width:100%;">
                     <polygon points="50,50 210,50 170,120 170,200 90,200 90,120" fill="#f0f7ff" stroke="#222" stroke-width="2.5"/>
                     <line x1="130" y1="20" x2="130" y2="210" stroke="#E3000F" stroke-dasharray="10,5,3,5" stroke-width="1.5"/>
-                    <!-- D -->
                     <line x1="50" y1="30" x2="210" y2="30" stroke="#E3000F" stroke-width="1.5"/>
                     <line x1="50" y1="22" x2="50" y2="38" stroke="#E3000F" stroke-width="1.5"/>
                     <line x1="210" y1="22" x2="210" y2="38" stroke="#E3000F" stroke-width="1.5"/>
                     <rect x="115" y="16" width="30" height="20" fill="#fff" />
                     <text x="130" y="32" text-anchor="middle" class="svg-cota" font-size="18">D</text>
-                    <!-- d -->
                     <line x1="90" y1="180" x2="170" y2="180" stroke="#E3000F" stroke-width="1.5"/>
                     <line x1="90" y1="172" x2="90" y2="188" stroke="#E3000F" stroke-width="1.5"/>
                     <line x1="170" y1="172" x2="170" y2="188" stroke="#E3000F" stroke-width="1.5"/>
                     <rect x="115" y="166" width="30" height="20" fill="#fff" />
                     <text x="130" y="182" text-anchor="middle" class="svg-cota" font-size="18">d</text>
-                    <!-- Z -->
                     <line x1="210" y1="50" x2="245" y2="50" stroke="#E3000F" stroke-width="1.5"/>
                     <line x1="170" y1="120" x2="245" y2="120" stroke="#E3000F" stroke-width="1.5"/>
                     <line x1="230" y1="50" x2="230" y2="120" stroke="#E3000F" stroke-width="1.5"/>
                     <text x="245" y="90" alignment-baseline="middle" class="svg-cota" font-size="18">Z</text>
-                    <!-- Alpha -->
                     <line x1="170" y1="50" x2="170" y2="120" stroke="#E3000F" stroke-dasharray="4,4" stroke-width="1.5"/>
                     <path d="M 170 80 A 40 40 0 0 1 189.8 85.3" fill="none" stroke="#E3000F" stroke-width="2"/>
                     <text x="178" y="70" class="svg-cota" font-size="16" font-weight="bold">&alpha;</text>
