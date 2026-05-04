@@ -185,3 +185,79 @@ input:focus, select:focus { outline: none; border-color: #E3000F; }
     font-size: 13px;
     font-weight: bold;
 }
+/* =========================================
+   NUEVA PANTALLA INICIO (TARJETAS)
+========================================= */
+
+.home-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 10px 15px;
+    margin-top: 10px;
+}
+
+.home-card {
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    border: 1px solid #eaeaea;
+    border-radius: 12px;
+    padding: 20px 15px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.2s ease-in-out;
+}
+
+/* La franja roja lateral de la marca */
+.home-card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 6px;
+    background-color: #E3000F;
+    border-radius: 12px 0 0 12px;
+    transition: width 0.2s ease;
+}
+
+/* Efecto al pulsar/pasar el ratón */
+.home-card:active, .home-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(227, 0, 15, 0.15);
+    border-color: #ffd1d4;
+}
+
+.home-card:active::before {
+    width: 10px;
+}
+
+.home-card-icon {
+    background-color: #fff5f6;
+    min-width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-right: 18px;
+    margin-left: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.home-card-text h3 {
+    margin: 0 0 6px 0;
+    font-size: 17px;
+    color: #222;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.home-card-text p {
+    margin: 0;
+    font-size: 14px;
+    color: #666;
+    line-height: 1.3;
+}
