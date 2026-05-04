@@ -196,6 +196,11 @@ input:focus, select:focus { outline: none; border-color: #E3000F; }
     margin-top: 10px;
 }
 
+/* =========================================
+   TARJETAS DE INICIO (DISEÑO DEFINITIVO)
+========================================= */
+
+/* 1. Tarjeta en reposo (limpia y con borde gris) */
 .home-card-original {
     background-color: #ffffff;
     border: 1px solid #e8e8e8;
@@ -204,32 +209,38 @@ input:focus, select:focus { outline: none; border-color: #E3000F; }
     text-align: center;
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
     cursor: pointer;
-    transition: transform 0.1s ease, background-color 0.2s ease;
+    transition: all 0.2s ease;
 }
 
+/* 2. Efecto al pulsarla (borde rojo y fondo rosado) */
 .home-card-original:active {
     transform: scale(0.98);
-    background-color: #f9f9f9;
+    border-color: #E3000F;
+    background-color: #fff8f8;
+    box-shadow: 0 4px 12px rgba(227, 0, 15, 0.15);
 }
 
-.emoji-original {
-    font-size: 38px;
-    margin-bottom: 12px;
-}
-
+/* 3. Títulos principales en Rojo Zerbimek */
 .home-card-original h3 {
     margin: 0 0 6px 0;
     font-size: 16px;
-    color: #111;
+    color: #E3000F;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
+/* 4. Textos pequeños en gris oscuro */
 .home-card-original p {
     margin: 0;
     font-size: 13px;
     color: #777;
+}
+
+.emoji-original {
+    font-size: 38px;
+    margin-bottom: 12px;
+
 }
 /* =========================================
    TEXTOS CABECERA A MEDIDA (TUS CLASES REALES)
