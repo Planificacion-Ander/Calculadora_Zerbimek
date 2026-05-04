@@ -164,36 +164,37 @@ const svgTrigo = {
                 <line x1="75" y1="80" x2="85" y2="80" stroke="#E3000F" stroke-width="1.5"/>
                 <line x1="75" y1="117" x2="85" y2="117" stroke="#E3000F" stroke-width="1.5"/>
             </svg>`,
-'ranura_t': `<svg viewBox="0 0 280 240" style="height:220px; max-width:100%;">
+'ranura_t': `<svg viewBox="0 0 280 260" style="height:240px; max-width:100%;">
                     <!-- Pieza (Sección lateral) -->
-                    <path d="M 40 10 L 40 70 L 110 70 L 110 170 L 40 170 L 40 230" fill="none" stroke="#222" stroke-width="3" />
-                    <rect x="0" y="10" width="40" height="220" fill="#f0f7ff" />
+                    <path d="M 40 10 L 40 70 L 110 70 L 110 190 L 40 170" fill="none" stroke="none" /> <!-- Espacio para relleno -->
+                    <rect x="0" y="10" width="40" height="240" fill="#f0f7ff" />
+                    <path d="M 40 10 L 40 80 L 110 80 L 110 180 L 40 180 L 40 250" fill="none" stroke="#222" stroke-width="3" />
                     
-                    <!-- Fresa en T (Siguiendo plano vertical del usuario) -->
-                    <g transform="translate(10, 10)">
-                        <!-- Mango (Cilíndrico superior) -->
-                        <rect x="90" y="0" width="20" height="90" fill="#bbb" stroke="#444" stroke-width="1"/>
-                        <!-- Cuello (Cónico/Taper) -->
-                        <path d="M 90 90 L 110 90 L 104 125 L 96 125 Z" fill="#999" stroke="#444" stroke-width="1"/>
-                        <!-- Disco de corte (Parte inferior) -->
-                        <rect x="75" y="125" width="50" height="20" rx="1" fill="#E3000F" stroke="#900" stroke-width="1.5"/>
-                        <!-- Dientes/Líneas de la fresa -->
-                        <line x1="85" y1="125" x2="85" y2="145" stroke="#fff" opacity="0.4" stroke-width="1.5"/>
-                        <line x1="95" y1="125" x2="95" y2="145" stroke="#fff" opacity="0.4" stroke-width="1.5"/>
-                        <line x1="105" y1="125" x2="105" y2="145" stroke="#fff" opacity="0.4" stroke-width="1.5"/>
-                        <line x1="115" y1="125" x2="115" y2="145" stroke="#fff" opacity="0.4" stroke-width="1.5"/>
+                    <!-- Fresa en T Vertical (Corregida: Mango fuera) -->
+                    <g transform="translate(15, 5)">
+                        <!-- Mango (Cilíndrico superior - FUERA de la ranura) -->
+                        <rect x="90" y="0" width="20" height="70" fill="#bbb" stroke="#444" stroke-width="1"/>
+                        <!-- Cuello Largo (Para evitar choque) -->
+                        <path d="M 90 70 L 110 70 L 103 135 L 97 135 Z" fill="#999" stroke="#444" stroke-width="1"/>
+                        <!-- Disco de corte (Posicionado en la ranura) -->
+                        <rect x="75" y="135" width="50" height="20" rx="1" fill="#E3000F" stroke="#900" stroke-width="1.5"/>
+                        <!-- Dientes -->
+                        <line x1="85" y1="135" x2="85" y2="155" stroke="#fff" opacity="0.4" stroke-width="1.2"/>
+                        <line x1="95" y1="135" x2="95" y2="155" stroke="#fff" opacity="0.4" stroke-width="1.2"/>
+                        <line x1="105" y1="135" x2="105" y2="155" stroke="#fff" opacity="0.4" stroke-width="1.2"/>
+                        <line x1="115" y1="135" x2="115" y2="155" stroke="#fff" opacity="0.4" stroke-width="1.2"/>
                     </g>
 
                     <!-- Cota Z Fondo -->
-                    <line x1="110" y1="170" x2="260" y2="170" stroke="#E3000F" stroke-width="2" stroke-dasharray="6,4"/>
-                    <text x="210" y="190" text-anchor="middle" class="svg-cota" font-size="16" font-weight="bold" fill="#E3000F">Z Fondo</text>
+                    <line x1="110" y1="180" x2="260" y2="180" stroke="#E3000F" stroke-width="2" stroke-dasharray="6,4"/>
+                    <text x="215" y="200" text-anchor="middle" class="svg-cota" font-size="16" font-weight="bold" fill="#E3000F">Z Fondo</text>
                     
                     <!-- Cota Ancho Ranura -->
-                    <line x1="150" y1="70" x2="150" y2="170" stroke="#222" stroke-width="1.5"/>
-                    <line x1="140" y1="70" x2="160" y2="70" stroke="#222" stroke-width="1.5"/>
-                    <line x1="140" y1="170" x2="160" y2="170" stroke="#222" stroke-width="1.5"/>
-                    <rect x="125" y="105" width="50" height="30" fill="#fff" />
-                    <text x="150" y="125" text-anchor="middle" class="svg-cota" font-size="16" fill="#222">Ancho</text>
+                    <line x1="155" y1="80" x2="155" y2="180" stroke="#222" stroke-width="1.5"/>
+                    <line x1="145" y1="80" x2="165" y2="80" stroke="#222" stroke-width="1.5"/>
+                    <line x1="145" y1="180" x2="165" y2="180" stroke="#222" stroke-width="1.5"/>
+                    <rect x="130" y="115" width="50" height="30" fill="#fff" />
+                    <text x="155" y="135" text-anchor="middle" class="svg-cota" font-size="16" fill="#222">Ancho</text>
                 </svg>`
 };
 
