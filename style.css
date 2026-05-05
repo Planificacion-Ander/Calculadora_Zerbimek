@@ -21,15 +21,44 @@ body {
     min-height: 95vh;
 }
 
-/* CABECERA CON BOTÓN VOLVER */
+/* =========================================
+   CABECERA ZERBIMEK Y TEXTOS
+========================================= */
 .header-zerbimek {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px 10px 15px 10px;
+    padding: 30px 15px 25px 15px; 
     background-color: #ffffff;
     gap: 15px;
     position: relative;
+}
+
+.header-logo svg {
+    width: 85px;  
+    height: 85px;
+    display: block;
+}
+
+.header-text { text-align: left; }
+
+.header-text h1 {
+    font-size: 38px;
+    color: #E3000F;
+    margin: 0;
+    line-height: 1;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    text-transform: uppercase;
+}
+
+#header_subtitle {
+    display: block;
+    font-size: 13px;
+    color: #888;
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
 }
 
 .btn-volver {
@@ -47,52 +76,72 @@ body {
     padding: 5px 10px;
 }
 
-.header-logo { display: flex; align-items: center; justify-content: center; }
+/* Ocultar el botón volver en la pantalla de inicio */
+#home_screen ~ .header-zerbimek #btn_volver,
+.home-container-original:visible ~ .header-zerbimek #btn_volver {
+    display: none;
+}
 
-.header-text { text-align: left; }
-.header-text h1 { margin: 0; color: #E3000F; font-size: 28px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; line-height: 1; }
-.header-text span { display: block; font-size: 11px; color: #777; text-transform: uppercase; letter-spacing: 2px; margin-top: 4px; }
-
-/* PANTALLA DE INICIO (HOME) EN LISTA */
-#home_screen {
-    padding: 40px 20px;
+/* =========================================
+   PANTALLA DE INICIO Y TARJETAS
+========================================= */
+.home-container-original {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 15px;
+    padding: 20px;
+    margin-top: 10px;
     flex-grow: 1;
     justify-content: center;
 }
 
-.home-btn {
-    background-color: #fcfcfc;
-    border: 2px solid #ddd;
+.home-card-original {
+    background-color: #ffffff;
+    border: 1px solid #e8e8e8;
     border-radius: 12px;
-    padding: 30px 20px;
+    padding: 25px 15px;
     text-align: center;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
     cursor: pointer;
-    transition: 0.2s;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    transition: transform 0.1s ease, background-color 0.2s ease, border-color 0.2s ease;
 }
 
-.home-btn:hover, .home-btn:active {
+.home-card-original:hover, .home-card-original:active {
+    transform: scale(0.98);
+    background-color: #f9f9f9;
     border-color: #E3000F;
-    background-color: #fffafb;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(227, 0, 15, 0.1);
 }
 
-.home-btn span.icon { font-size: 40px; }
-.home-btn span.title { font-size: 18px; font-weight: 900; color: #222; text-transform: uppercase; letter-spacing: 1px;}
-.home-btn span.desc { font-size: 13px; color: #666; }
+.home-card-original h3 {
+    margin: 0 0 6px 0;
+    font-size: 16px;
+    color: #E3000F;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
 
-/* MÓDULOS DE APP */
+.home-card-original p {
+    margin: 0;
+    font-size: 13px;
+    color: #777;
+}
+
+.emoji-original {
+    background: none;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    margin-bottom: 10px;
+    display: block;
+    font-size: 40px;
+}
+
+/* =========================================
+   MÓDULOS DE APP Y NAVEGACIÓN
+========================================= */
 .app-module { display: none; flex-grow: 1; }
 
-/* MENÚ 3x2 PERFECTO PARA CNC */
 .menu { display: grid; grid-template-columns: repeat(3, 1fr); background-color: #222; }
 .menu button { background-color: inherit; color: #e6e6e6; border: none; padding: 14px 2px; cursor: pointer; font-size: 13.5px; font-weight: 900; transition: 0.3s; border-bottom: 3px solid #222; letter-spacing: 0.5px; text-transform: uppercase; }
 .menu button:hover { color: #fff; }
@@ -113,6 +162,9 @@ input:focus, select:focus { outline: none; border-color: #E3000F; }
 .btn-calcular { background-color: #E3000F; color: white; border: none; cursor: pointer; font-weight: bold; margin-top: 25px; font-size: 16px; padding: 15px; width: 100%; border-radius: 6px; transition: 0.2s; text-transform: uppercase; letter-spacing: 1px;}
 .btn-calcular:active { transform: scale(0.98); background-color: #B3000C; }
 
+/* =========================================
+   RESULTADOS Y ALERTAS
+========================================= */
 .results { margin-top: 25px; padding: 15px; background-color: #f8f9fa; border-radius: 6px; border-left: 6px solid #E3000F; box-shadow: inset 0 0 5px rgba(0,0,0,0.02);}
 .results p { margin: 10px 0; font-size: 15px; display: flex; justify-content: space-between; border-bottom: 1px dashed #ddd; padding-bottom: 6px; align-items: center;}
 .results p:last-child { border-bottom: none; padding-bottom: 0; }
@@ -133,18 +185,17 @@ input:focus, select:focus { outline: none; border-color: #E3000F; }
 .dynamic-input-group { display: none; }
 .dim-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
-/* Contenedor de la vista previa SVG */
+/* =========================================
+   GRÁFICOS SVG Y TRIVAGOMETRÍA
+========================================= */
 .shape-preview-container { text-align: center; margin: 15px 0; min-height: 110px; display: flex; justify-content: center; align-items: center;}
 
-/* Estilos texto cotas SVG */
 .svg-cota { font-family: sans-serif; font-size: 15px; font-weight: bold; fill: #E3000F; }
 .svg-linea { stroke: #999; stroke-width: 1.5; }
 
-/* Input Trigovagometria resaltado */
 .input-trigo { background-color: #fffafb; border: 1px solid #ccc; font-weight: bold; color: #222;}
 .input-trigo:focus { border-color: #E3000F; background-color: #fff;}
 
-/* BOTONERA TRIVAGOMETRÍA */
 .trigo-menu {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -177,151 +228,5 @@ input:focus, select:focus { outline: none; border-color: #E3000F; }
     color: white;
 }
 
-.trigo-btn span.icon {
-    font-size: 24px;
-}
-
-.trigo-btn span.text {
-    font-size: 13px;
-    font-weight: bold;
-}
-/* =========================================
-   PANTALLA INICIO: DISEÑO ORIGINAL LIMPIO
-========================================= */
-.home-container-original {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    padding: 15px;
-    margin-top: 10px;
-}
-
-/* =========================================
-   TARJETAS DE INICIO (DISEÑO DEFINITIVO)
-========================================= */
-
-/* 1. Tarjeta en reposo (limpia y con borde gris) */
-.home-card-original {
-    background-color: #ffffff;
-    border: 1px solid #e8e8e8;
-    border-radius: 12px;
-    padding: 25px 15px;
-    text-align: center;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
-    cursor: pointer;
-    transition: transform 0.1s ease, background-color 0.2s ease;
-    transition: all 0.2s ease;
-}
-
-/* 2. Efecto al pulsarla (borde rojo y fondo rosado) */
-.home-card-original:active {
-    transform: scale(0.98);
-    background-color: #f9f9f9;
-}
-
-.emoji-original {
-    font-size: 38px;
-    margin-bottom: 12px;
-    border-color: #E3000F;
-    background-color: #fff8f8;
-    box-shadow: 0 4px 12px rgba(227, 0, 15, 0.15);
-}
-
-/* 3. Títulos principales en Rojo Zerbimek */
-.home-card-original h3 {
-    margin: 0 0 6px 0;
-    font-size: 16px;
-    color: #111;
-    color: #E3000F;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-/* 4. Textos pequeños en gris oscuro */
-.home-card-original p {
-    margin: 0;
-    font-size: 13px;
-    color: #777;
-}
-
-.emoji-original {
-    font-size: 38px;
-    margin-bottom: 12px;
-
-}
-/* =========================================
-   TEXTOS CABECERA A MEDIDA (TUS CLASES REALES)
-========================================= */
-.header-text h1 {
-    font-size: 38px !important; /* Aquí controlas lo gigante que es ZERBIMEK */
-    color: #E3000F !important;
-    margin: 0 !important;
-    line-height: 1 !important;
-    font-weight: 900 !important;
-}
-
-#header_subtitle {
-    display: block !important;
-    font-size: 13px !important; /* Tamaño del subtítulo */
-    color: #888 !important;
-    margin-top: 4px !important;
-    letter-spacing: 1.5px !important;
-    text-transform: uppercase !important;
-}
-/* =========================================
-   RESCATE DEFINITIVO DE LA CABECERA
-========================================= */
-
-/* 1. Ajuste del contenedor del logo y las letras */
-.header-zerbimek {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 15px !important;
-    padding: 30px 15px 25px 15px !important; /* Más aire arriba y abajo */
-}
-
-/* 2. Forzamos el tamaño del SVG (Logo) */
-.header-logo svg {
-    width: 85px !important;  /* El tamaño que querías */
-    height: 85px !important;
-    display: block !important;
-}
-
-/* 3. Estilo del texto ZERBIMEK */
-.header-text h1 {
-    font-size: 38px !important; /* Letras grandes */
-    color: #E3000F !important;
-    margin: 0 !important;
-    line-height: 1 !important;
-    font-weight: 900 !important;
-    letter-spacing: -0.5px !important;
-}
-
-/* 4. Estilo del subtítulo */
-#header_subtitle {
-    display: block !important;
-    font-size: 13px !important;
-    color: #888 !important;
-    margin-top: 4px !important;
-    text-transform: uppercase !important;
-    letter-spacing: 1.5px !important;
-}
-
-/* 5. Quitamos el botón 'volver' en la pantalla de inicio */
-/* para que no empuje el logo y quede centrado */
-#home_screen ~ .header-zerbimek #btn_volver,
-.home-container-original:visible ~ .header-zerbimek #btn_volver {
-    display: none;
-}
-/* Limpieza de los recuadros detrás de los emojis */
-.emoji-original {
-    background: none !important;      /* Quita cualquier color de fondo */
-    border: none !important;          /* Quita cualquier borde o recuadro */
-    box-shadow: none !important;      /* Quita sombras que puedan parecer recuadros */
-    padding: 0 !important;            /* Evita que el área ocupe espacio extra */
-    margin-bottom: 10px !important;   /* Solo dejamos espacio con el título */
-    display: block !important;
-    font-size: 40px !important;       /* Aseguramos un buen tamaño para el emoji */
-}
+.trigo-btn span.icon { font-size: 24px; }
+.trigo-btn span.text { font-size: 13px; font-weight: bold; }
