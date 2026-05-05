@@ -239,3 +239,17 @@ input:focus, select:focus { outline: none; border-color: #E3000F; }
 
 .trigo-btn span.icon { font-size: 24px; }
 .trigo-btn span.text { font-size: 13px; font-weight: bold; }
+
+/* =========================================
+   PIE DE PÁGINA (HOME)
+========================================= */
+.home-footer {
+    text-align: center;
+    margin-top: auto; /* Lo empuja abajo del todo automáticamente */
+    padding-top: 20px;
+    font-size: 11px;
+    color: #999;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
