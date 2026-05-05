@@ -24,7 +24,7 @@
     <div class="header-zerbimek">
         <button id="btn_volver" class="btn-volver" onclick="irInicio()">&#8592;</button>
         <div class="header-logo">
-        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="85" height="85">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="85" height="85">
                 <circle cx="100" cy="100" r="100" fill="#E3000F"/>
                 <polygon points="50,45 90,45 75,75 50,75" fill="#ffffff"/>
                 <polygon points="105,45 152,45 112,125 152,125 152,155 50,155" fill="#ffffff"/>
@@ -36,9 +36,8 @@
         </div>
     </div>
 
-<!-- PANTALLA INICIO (DISEÑO ORIGINAL LIMPIO) -->
+    <!-- PANTALLA INICIO -->
     <div id="home_screen" class="home-container-original">
-
         <div class="home-card-original" onclick="abrirModulo('cnc')">
             <div class="emoji-original">⚙️</div>
             <h3>CALCULADORA CNC</h3>
@@ -56,8 +55,8 @@
             <h3>TRIVAGOMETRÍA</h3>
             <p>Chaflanes, triángulos y círculos PCD</p>
         </div>
-
     </div>
+
     <!-- MÓDULO 1: CALCULADORA DE PESOS -->
     <div id="modulo_pesos" class="app-module">
         <div class="tab-content" style="display: block;">
@@ -190,7 +189,6 @@
         <div id="calcBrocas" class="tab-content">
             <h2>Brocas</h2>
             <h4 id="brocas_subtitulo">MD - Refrig. Interna</h4>
-
             <label>Tipo de Broca:</label>
             <select id="tipo_broca" onchange="actualizarInfoBroca()">
                 <option value="int" selected>MD - Refrig. Interna</option>
@@ -198,10 +196,8 @@
                 <option value="hss">HSS - Acero Rápido</option>
                 <option value="placas">Broca de Placas</option>
             </select>
-
             <label>Diámetro de la broca (mm):</label>
             <input type="number" id="diam_broca_uni" value="10.0" step="0.1" class="auto-select" onkeypress="handleEnter(event, 'btn_brocas')">
-
             <label>Material a mecanizar:</label>
             <select id="mat_broca_uni" onkeypress="handleEnter(event, 'btn_brocas')">
                 <option value="acero">Acero</option>
@@ -209,9 +205,7 @@
                 <option value="inox">Inoxidable</option>
                 <option value="alu">Aluminio</option>
             </select>
-
             <button id="btn_brocas" class="btn-calcular" onclick="calcularBrocas()">CALCULAR PARÁMETROS</button>
-
             <div class="results" id="res_brocas_uni" style="display: none;">
                 <p>Ciclo sugerido: <span class="badge-warn" id="b_ciclo">G81 o G82</span></p>
                 <p>Revoluciones (S): <span class="highlight" id="b_s"></span></p>
@@ -226,45 +220,40 @@
         <div id="calcRosca" class="tab-content">
             <h2>Roscado</h2>
             <h4>Broca Previa y Condiciones (G84)</h4>
-
             <label>Tipo de Rosca:</label>
             <select id="tipo_rosca" onchange="mostrarDesplegableRosca()">
                 <option value="M" selected>Métrica Normal (M)</option>
                 <option value="MF">Métrica Fina (MF)</option>
                 <option value="G">Rosca Gas (G)</option>
             </select>
-
             <label>Medida:</label>
-            <select id="select_rosca_m" onchange="actualizarRosca()" onkeypress="handleEnter(event, 'btn_rosca')">
+            <select id="select_rosca_m" onchange="actualizarRosca()">
                 <option value="">Selecciona...</option>
                 <option value="M3">M3</option><option value="M4">M4</option><option value="M5">M5</option>
                 <option value="M6">M6</option><option value="M8">M8</option><option value="M10">M10</option>
                 <option value="M12">M12</option><option value="M16">M16</option><option value="M20">M20</option>
                 <option value="M24">M24</option>
             </select>
-            <select id="select_rosca_mf" onchange="actualizarRosca()" onkeypress="handleEnter(event, 'btn_rosca')" style="display: none;">
+            <select id="select_rosca_mf" onchange="actualizarRosca()" style="display: none;">
                 <option value="">Selecciona...</option>
                 <option value="M6x0.75">M6 x 0.75</option><option value="M8x1">M8 x 1</option><option value="M10x1">M10 x 1</option>
                 <option value="M10x1.25">M10 x 1.25</option><option value="M12x1">M12 x 1</option><option value="M12x1.25">M12 x 1.25</option>
                 <option value="M12x1.5">M12 x 1.5</option><option value="M16x1.5">M16 x 1.5</option>
             </select>
-            <select id="select_rosca_g" onchange="actualizarRosca()" onkeypress="handleEnter(event, 'btn_rosca')" style="display: none;">
+            <select id="select_rosca_g" onchange="actualizarRosca()" style="display: none;">
                 <option value="">Selecciona...</option>
                 <option value="G1/8">G 1/8"</option><option value="G1/4">G 1/4"</option>
                 <option value="G3/8">G 3/8"</option><option value="G1/2">G 1/2"</option>
                 <option value="G5/8">G 5/8"</option><option value="G3/4">G 3/4"</option>
                 <option value="G1">G 1"</option>
             </select>
-
             <label>Material a mecanizar:</label>
-            <select id="mat_rosca" onchange="actualizarRosca()" onkeypress="handleEnter(event, 'btn_rosca')">
+            <select id="mat_rosca" onchange="actualizarRosca()">
                 <option value="acero">Acero</option>
                 <option value="acero_duro">Acero Duro / Aleado</option>
                 <option value="inox">Inoxidable</option>
                 <option value="alu">Aluminio</option>
             </select>
-
-            <button id="btn_rosca" class="btn-calcular" style="display: none;"></button> 
 
             <div class="results" id="res_rosca" style="display: none; margin-top: 15px;">
                 <p>Paso / Hilos: <span class="highlight" id="r_paso"></span></p>
@@ -279,14 +268,12 @@
         <!-- 4. FRESADO -->
         <div id="calcFresado" class="tab-content">
             <h2>Parámetros de Fresado</h2>
-
             <select id="tipo_fresa_sel" class="main-selector" onchange="cambiarTipoFresa()">
                 <option value="general">Calculadora General (S × Z × fz)</option>
                 <option value="cocodrilo">Fresa de Cocodrilo</option>
                 <option value="ranuras">Fresa para Ranuras T</option>
             </select>
 
-            <!-- SECCIÓN: Fresa General -->
             <div id="ui_fresa_general">
                 <label>Revoluciones S (RPM):</label>
                 <input type="number" id="rpm_fresa" value="3000" step="50" class="auto-select" onkeypress="handleEnter(event, 'btn_fresa')">
@@ -296,7 +283,6 @@
                 <input type="number" id="fz_fresa" value="0.05" step="0.01" class="auto-select" onkeypress="handleEnter(event, 'btn_fresa')">
             </div>
 
-            <!-- SECCIÓN: Fresa Cocodrilo -->
             <div id="ui_fresa_cocodrilo" style="display:none;">
                 <label>Diámetro de la Fresa (mm):</label>
                 <input type="number" id="d_coco" value="11" step="1" class="auto-select" onkeypress="handleEnter(event, 'btn_fresa')">
@@ -309,7 +295,6 @@
                 </select>
             </div>
 
-            <!-- SECCIÓN: Fresa Ranuras -->
             <div id="ui_fresa_ranuras" style="display:none;">
                 <label>Diámetro Exterior Disco (mm):</label>
                 <input type="number" id="d_ran" value="10.5" step="0.5" class="auto-select" onkeypress="handleEnter(event, 'btn_fresa')">
@@ -332,11 +317,9 @@
             <button id="btn_fresa" class="btn-calcular" onclick="calcularFresado()">CALCULAR PARÁMETROS</button>
 
             <div class="results" id="res_fresa" style="display: none;">
-                <!-- Resultados Fresa General -->
                 <div id="res_fresa_general">
                     <p>Avance trabajo (F): <span class="highlight" id="f_total_fresa"></span></p>
                 </div>
-                <!-- Resultados Fresas Avanzadas -->
                 <div id="res_fresa_avanzada" style="display:none;">
                     <p>Revoluciones (S): <span class="highlight" id="s_fresa_avz"></span></p>
                     <p>Avance trabajo (F): <span class="highlight" id="f_fresa_avz"></span></p>
@@ -370,7 +353,6 @@
                 <p>Avance trabajo (F): <span class="highlight" id="f_tungaloy"></span></p>
                 <p>Pasada (Ap): <span class="highlight" id="ap_tungaloy"></span></p>
                 <p>Avance rev. (fn): <span class="highlight" id="fn_tungaloy"></span></p>
-
                 <p style="margin-top: 15px; margin-bottom: 0; color: #444; font-weight: bold; font-size: 14px; text-align: center; border-bottom: none;">
                     Refrigeración recomendada: <span class="badge-info">Aire (G38)</span>
                 </p>
@@ -381,16 +363,13 @@
         <div id="calcEscariador" class="tab-content">
             <h2>Escariadores H7</h2>
             <h4>Broca Previa y Condiciones (G85)</h4>
-
             <label>Material de la herramienta:</label>
             <select id="tipo_esc">
                 <option value="hss" selected>HSS (Acero Rápido)</option>
                 <option value="mdi">MDI (Metal Duro)</option>
             </select>
-
             <label>Diámetro del Escariador (mm):</label>
             <input type="number" id="diam_esc" value="8.0" step="0.1" class="auto-select" onkeypress="handleEnter(event, 'btn_esc')">
-
             <label>Material a mecanizar:</label>
             <select id="mat_esc" onkeypress="handleEnter(event, 'btn_esc')">
                 <option value="acero">Acero</option>
@@ -398,9 +377,7 @@
                 <option value="inox">Inoxidable</option>
                 <option value="alu">Aluminio</option>
             </select>
-
             <button id="btn_esc" class="btn-calcular" onclick="calcularEscariador()">CALCULAR PARÁMETROS</button>
-
             <div class="results" id="res_escariador" style="display: none;">
                 <p>Ciclo sugerido: <span class="badge-warn">G85</span></p>
                 <p>Taladro Previo: <span class="badge-info" id="esc_broca"></span></p>
@@ -417,7 +394,6 @@
             <h2>Trivagometría</h2>
             <h4>Geometría de taller rápida y sin fallos</h4>
 
-            <!-- NUEVA BOTONERA VISUAL CON 6 ICONOS (3x2) -->
             <div class="trigo-menu">
                 <div class="trigo-btn active" onclick="cambiarFormaTrigo('chaflan', this)">
                     <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16V10L14 4H4v16z"/></svg>
@@ -441,11 +417,8 @@
                 </div>
             <div class="trigo-btn" onclick="cambiarFormaTrigo('ranura_t', this)">
                     <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <!-- Perfil de la pieza (Fondo ajustado en X para rozar la herramienta) -->
                         <path d="M 11 2 V 5 H 17 V 19 H 11 V 22" />
-                        <!-- Mango de la fresa -->
                         <line x1="9" y1="2" x2="9" y2="10" />
-                        <!-- Disco de la fresa (Entrando a tope en el material) -->
                         <rect x="3" y="10" width="12" height="4" rx="0.5" />
                     </svg>
                     <span class="text">Ranura Int. (Z)</span>
@@ -453,7 +426,6 @@
             </div>
 
             <input type="hidden" id="t_forma" value="chaflan">
-
             <div id="trigo_preview" class="shape-preview-container"></div>
 
             <!-- INSTRUCCIONES -->
@@ -461,17 +433,14 @@
                 <span class="title" style="color: #1a73e8;">Instrucciones</span>
                 Introduce <b>SOLO 2 DATOS</b> (los que sepas). La calculadora sacará automáticamente los otros dos.
             </div>
-
             <div id="instrucciones_ave" class="info-box" style="display: none; margin-bottom: 20px; border-left-color: #E3000F;">
                 <span class="title" style="color: #E3000F;">Cálculo Z para Chaflán / Avellanado</span>
                 Calcula cuánto tienes que bajar en Z para conseguir el diámetro exterior deseado. Usa el ángulo del plano (ej. 45º).
             </div>
-
             <div id="instrucciones_arco" class="info-box" style="display: none; margin-bottom: 20px; border-left-color: #E3000F;">
                 <span class="title" style="color: #E3000F;">Ingeniería Inversa de Arcos</span>
                 Calcula el Radio exacto de una curva parcial a partir del ancho total (Cuerda) y la profundidad máxima (Flecha).
             </div>
-
             <div id="instrucciones_ranura_t" class="info-box" style="display: none; margin-bottom: 20px; border-left-color: #E3000F;">
                 <span class="title" style="color: #E3000F;">Alturas Z para Fresa de Disco</span>
                 Introduce las medidas en negativo. El cálculo asume que el Cero Pieza (Z0) está arriba y que la herramienta está decantada por su parte <b>inferior</b>.
@@ -497,7 +466,6 @@
                         <input type="number" id="t_ang" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_trigo')" placeholder="Grados (º)">
                     </div>
                 </div>
-
                 <div style="display: flex; gap: 10px; margin-top: 25px;">
                     <button class="btn-calcular" style="background-color: #666; flex: 1;" onclick="limpiarTrigo()">LIMPIAR</button>
                     <button id="btn_trigo" class="btn-calcular" style="margin-top: 0; flex: 2;" onclick="calcularTrigo()">CALCULAR</button>
@@ -524,12 +492,9 @@
                         <input type="number" id="pcd_n" value="6" step="1" class="auto-select" style="border-color: #1a73e8;" onkeypress="handleEnter(event, 'btn_pcd')">
                     </div>
                 </div>
-
                 <label style="margin-top: 10px;">Ángulo inicial [ &alpha; ] (0º = 12 en punto):</label>
                 <input type="number" id="pcd_ang" value="0" step="1" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_pcd')">
-
                 <button id="btn_pcd" class="btn-calcular" onclick="calcularPCD()" style="margin-top: 25px;">CALCULAR COORDENADAS</button>
-
                 <div class="results" id="res_pcd" style="display: none; padding: 10px 15px;">
                     <div id="res_pcd_list"></div>
                 </div>
@@ -547,12 +512,9 @@
                         <input type="number" id="ave_ang" class="auto-select input-trigo" value="45" onkeypress="handleEnter(event, 'btn_ave')" placeholder="Ej: 45">
                     </div>
                 </div>
-
                 <label style="margin-top: 15px;">Ø Taladro Previo [ d ] (0 si es ciego):</label>
                 <input type="number" id="ave_d_previo" class="auto-select input-trigo" value="0" onkeypress="handleEnter(event, 'btn_ave')" placeholder="Ej: 8.5">
-
                 <button id="btn_ave" class="btn-calcular" onclick="calcularAvellanado()" style="margin-top: 25px;">CALCULAR Z</button>
-
                 <div class="results" id="res_ave" style="display: none; margin-top: 15px; text-align: center;">
                     <p style="justify-content: center;">Bajar herramienta en Z: &nbsp;<span class="peso-gigante" id="ave_z_res"></span></p>
                 </div>
@@ -570,9 +532,7 @@
                         <input type="number" id="arco_f" class="auto-select input-trigo" style="border-color: #E3000F;" onkeypress="handleEnter(event, 'btn_arco')" placeholder="mm">
                     </div>
                 </div>
-
                 <button id="btn_arco" class="btn-calcular" onclick="calcularArco()" style="margin-top: 25px;">CALCULAR RADIO</button>
-
                 <div class="results" id="res_arco" style="display: none; margin-top: 15px; text-align: center;">
                     <p style="justify-content: center;">Radio exacto ( R ): &nbsp;<span class="peso-gigante" id="arco_r_res"></span></p>
                 </div>
@@ -590,12 +550,9 @@
                         <input type="number" id="rt_w_ranura" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_rt')" placeholder="Ej: 7">
                     </div>
                 </div>
-
                 <label style="margin-top: 15px;">Espesor de la Fresa de disco:</label>
                 <input type="number" id="rt_w_fresa" class="auto-select input-trigo" onkeypress="handleEnter(event, 'btn_rt')" placeholder="Ej: 2">
-
                 <button id="btn_rt" class="btn-calcular" onclick="calcularRanuraT()" style="margin-top: 25px;">CALCULAR PASADAS Z</button>
-
                 <div class="results" id="res_ranura_t" style="display: none; margin-top: 15px;">
                     <div id="res_ranura_t_list"></div>
                     <div id="rt_nota" class="info-box" style="display: none; margin-top: 15px;"></div>
