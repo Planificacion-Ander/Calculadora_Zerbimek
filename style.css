@@ -106,10 +106,19 @@ body {
     transition: transform 0.1s ease, background-color 0.2s ease, border-color 0.2s ease;
 }
 
-.home-card-original:hover, .home-card-original:active {
-    transform: scale(0.98);
-    background-color: #f9f9f9;
-    border-color: #E3000F;
+/* Efecto al pasar el ratón por encima (Hover) */
+.home-card-original:hover {
+    background-color: #fff5f5; /* Fondo rojo muy clarito */
+    border-color: #E3000F; /* Borde rojo Zerbimek */
+    transform: translateY(-3px); /* Se levanta un poquito hacia arriba */
+    box-shadow: 0 8px 15px rgba(227, 0, 15, 0.15); /* Resplandor rojizo debajo */
+}
+
+/* Efecto al hacer clic (Active) */
+.home-card-original:active {
+    transform: scale(0.97); /* Se hunde ligeramente al hacer clic */
+    background-color: #ffebeb; /* Un rojo un pelín más marcado al pulsar */
+    box-shadow: 0 2px 5px rgba(227, 0, 15, 0.1);
 }
 
 .home-card-original h3 {
